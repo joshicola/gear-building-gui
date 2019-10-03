@@ -89,15 +89,19 @@ class mywindow(QtWidgets.QMainWindow):
             'flywheel/' + manifest['name'] + ':' + manifest['version']
         gear_builder = {}
         # edit this later utility/analysis
-        gear_builder['category'] = 'analysis'
+        if self.ui.rdo_analysis.isChecked():
+            gear_builder['category'] = 'analysis'
+        else:
+             gear_builder['category'] = 'utility'
+             
         gear_builder['image'] = custom['docker-image']
         
         custom['gear-builder'] = gear_builder
         # if "suite"
-        flywheel = {}
-        flywheel['suite'] = "How Suite it is"
-
-        custom['flywheel'] = flywheel
+        if self.ui.chk_flywheel.isChecked():    
+            flywheel = {}
+            flywheel['suite'] = self.ui.txt_suite.text()
+            custom['flywheel'] = flywheel
 
         manifest['custom'] = custom
 

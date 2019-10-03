@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>373</width>
+    <height>274</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add or Edit Inputs</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">

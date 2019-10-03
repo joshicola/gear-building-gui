@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_dlg_inputs(object):
     def setupUi(self, dlg_inputs):
         dlg_inputs.setObjectName("dlg_inputs")
-        dlg_inputs.resize(400, 300)
+        dlg_inputs.resize(373, 274)
         self.buttonBox = QtWidgets.QDialogButtonBox(dlg_inputs)
         self.buttonBox.setGeometry(QtCore.QRect(110, 230, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -61,7 +61,7 @@ class Ui_dlg_inputs(object):
 
     def retranslateUi(self, dlg_inputs):
         _translate = QtCore.QCoreApplication.translate
-        dlg_inputs.setWindowTitle(_translate("dlg_inputs", "Dialog"))
+        dlg_inputs.setWindowTitle(_translate("dlg_inputs", "Add or Edit Inputs"))
         self.label.setText(_translate("dlg_inputs", "name:"))
         self.label_2.setText(_translate("dlg_inputs", "description:"))
         self.label_3.setText(_translate("dlg_inputs", "base:"))

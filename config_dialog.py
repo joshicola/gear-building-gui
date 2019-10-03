@@ -19,9 +19,8 @@ class config_dialog(QtWidgets.QDialog):
                     obj.setCurrentIndex(i)
                 elif key == 'enum':
                     obj = eval('self.ui.lst_'+key)
+                    obj.clear()
                     obj.addItems(editD[key])
-                    for item in editD[key]:
-                        obj.addItem(item)
                 elif key == 'default':
                     obj = self.ui.txt_default
                     obj.setText(editD[key])               

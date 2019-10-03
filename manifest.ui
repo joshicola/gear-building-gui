@@ -6,417 +6,498 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>670</width>
+    <height>647</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="txt_name">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>test-gear</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lblName">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>0</y>
-      <width>60</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>name:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Test Gear</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lblLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>60</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>label:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>0</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Description:</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="txt_description">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>20</y>
-      <width>221</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="plainText">
-     <string>This is a Test Gear. Use with caution.</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>290</y>
-      <width>60</width>
-      <height>16</height>
+      <y>10</y>
+      <width>621</width>
+      <height>571</height>
      </rect>
     </property>
-    <property name="text">
-     <string>inputs:</string>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>370</y>
-      <width>60</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>config:</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>100</y>
-      <width>78</width>
-      <height>174</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Author:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>maintainer:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>License:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>url:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>source:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>cite:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>version:</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>100</y>
-      <width>135</width>
-      <height>171</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout_2">
-     <item row="0" column="0">
-      <widget class="QLineEdit" name="txt_author">
-       <property name="text">
-        <string>Flywheel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="txt_maintainer">
-       <property name="text">
-        <string>Flywheel &lt;support@flywheel.io&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLineEdit" name="txt_license">
-       <property name="text">
-        <string>Other</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLineEdit" name="txt_url">
-       <property name="text">
-        <string>https://github.com/flywheel-apps/test-gear</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLineEdit" name="txt_source"/>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLineEdit" name="txt_cite"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLineEdit" name="txt_version">
-       <property name="text">
-        <string>0.0.1</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QPushButton" name="btn_make_manifest">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>460</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>save manifest</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="cmbo_inputs">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>290</y>
-      <width>171</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Item 1</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Item 2</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QComboBox" name="cmbo_config">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>370</y>
-      <width>171</width>
-      <height>26</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="rdo_utility">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>240</y>
-      <width>100</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Utility</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="rdo_analysis">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>260</y>
-      <width>100</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Analysis</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="chk_flywheel">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>190</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>flywheel suite</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_suite">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>190</y>
-      <width>125</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>One Suite World</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_input_add">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>310</y>
-      <width>51</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_input_edit">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>310</y>
-      <width>51</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_input_delete">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>310</y>
-      <width>61</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_config_delete">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>390</y>
-      <width>61</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_config_edit">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>390</y>
-      <width>51</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_config_add">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>390</y>
-      <width>51</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_make_manifest_2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>460</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>load manifest</string>
-    </property>
+    <widget class="QWidget" name="tb_manifest">
+     <attribute name="title">
+      <string>Manifest</string>
+     </attribute>
+     <widget class="QPushButton" name="btn_input_delete">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>340</y>
+        <width>61</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>320</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>inputs:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_config_edit">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>420</y>
+        <width>51</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edit</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="txt_label">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>90</y>
+        <width>113</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Test Gear</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="txt_name">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>50</y>
+        <width>113</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>test-gear</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>30</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Description:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblName">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>name:</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="rdo_analysis">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>200</y>
+        <width>100</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Analysis</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="txt_description">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>50</y>
+        <width>221</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="plainText">
+       <string>This is a Test Gear. Use with caution.</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="txt_suite">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>130</y>
+        <width>125</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>One Suite World</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>130</y>
+        <width>78</width>
+        <height>174</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Author:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>maintainer:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>License:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>url:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>source:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>cite:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>version:</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="btn_config_add">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>420</y>
+        <width>51</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_config_delete">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>420</y>
+        <width>61</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_input_add">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>340</y>
+        <width>51</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="rdo_utility">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>180</y>
+        <width>100</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Utility</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_make_manifest_2">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>490</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>load manifest</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>130</y>
+        <width>135</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="txt_author">
+         <property name="text">
+          <string>Flywheel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="txt_maintainer">
+         <property name="text">
+          <string>Flywheel &lt;support@flywheel.io&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="txt_license">
+         <property name="text">
+          <string>Other</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLineEdit" name="txt_url">
+         <property name="text">
+          <string>https://github.com/flywheel-apps/test-gear</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLineEdit" name="txt_source"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLineEdit" name="txt_cite"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLineEdit" name="txt_version">
+         <property name="text">
+          <string>0.0.1</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="btn_input_edit">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>340</y>
+        <width>51</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edit</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cmbo_inputs">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>320</y>
+        <width>171</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="chk_flywheel">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>130</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>flywheel suite</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_make_manifest">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>490</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>save manifest</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cmbo_config">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>400</y>
+        <width>171</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblLabel">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>70</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>label:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>400</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>config:</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tb_dockerfile">
+     <attribute name="title">
+      <string>Dockerfile</string>
+     </attribute>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>20</y>
+        <width>181</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Source Image:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>60</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Indicate apt-get dependencies:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>100</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Indicate python dependencies:</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="scripts">
+     <attribute name="title">
+      <string>Script Management</string>
+     </attribute>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>20</y>
+        <width>451</width>
+        <height>391</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Provide the base run.py and utils package.
+Creating build/validate/execute functional modules around specific command-line programs.
+Add a command-line &quot;switch-detector&quot; to populate the manifest config with values to loop through.
+Provide a library of code-blocks that facilitate certain functionality
+module-based log reporting
+bids functionality
+verbose config validation against manifest
+compress working directory to a file in output
+notify on pep8 violations(??)</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -424,7 +505,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>670</width>
      <height>22</height>
     </rect>
    </property>
