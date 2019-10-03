@@ -12,9 +12,11 @@ source, url, cite, and version
 * provides add, edit, delete functionality of input elements.
 * saves to a 'manifest.json' file
 
+![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
+
 ## Proposed Functionality
 
-This is a prototype and a work in process that will take time and concerted effort
+This is a prototype and a work-in-progress that will take time and concerted effort
 to make ready for public release. Below are some of the proposed functionality
 for future development.  It is envisioned that the following sections will have
 their own "tab" in the PyQt gui.
