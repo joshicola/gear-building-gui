@@ -3,6 +3,8 @@ PyQt5 forms and functionality to ease the pain of the gear building experience.
 It is currently a prototype that writes the manifest.json variables and input
 specifications.  See notes below for proposed functionality.
 
+PyQt5 is a platform-independent gui framework. Build on any deploy on every. Installation is possible through both conda and pip.
+
 The manifest portion of the gear-building-gui is developed as the prototype.
 It currently:
 
@@ -10,6 +12,7 @@ It currently:
 source, url, cite, and version
 * automatically populates the "custom" section with the docker file names
 * provides add, edit, delete functionality of input elements.
+* provides add, edit, delete functionality of config elements.
 * saves to a 'manifest.json' file
 
 ![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
@@ -25,7 +28,6 @@ their own "tab" in the PyQt gui.
 
 Although the manifest portion is the most developed, it requires some additional functionality to make it truly useful:
 
-* add, edit, delete config functionality
 * load and parse existing manifest.json file
 * load and display options from gear specification where required
 * validate entries with respects to the gear specification
