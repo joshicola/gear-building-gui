@@ -5,6 +5,8 @@ specifications.  See notes below for proposed functionality.
 
 PyQt5 is a platform-independent gui framework. Build on any deploy on every. Installation is possible through both conda and pip.
 
+Would it be possible to package in a pip-installable repository?
+
 The manifest portion of the gear-building-gui is developed as the prototype.
 It currently:
 
