@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from manifest import Ui_MainWindow
 from input_dialog import input_dialog
+from config_dialog import config_dialog
 import sys
 import json
 
@@ -12,6 +13,9 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_input_add.clicked.connect(self.add_input)
         self.ui.btn_input_edit.clicked.connect(self.edit_input)
         self.ui.btn_input_delete.clicked.connect(self.delete_input)
+        self.ui.btn_config_add.clicked.connect(self.add_config)
+        self.ui.btn_config_edit.clicked.connect(self.edit_config)
+        self.ui.btn_config_delete.clicked.connect(self.delete_config)    
         self.ui.btn_make_manifest.clicked.connect(self.save_manifest)
     
     def add_input(self):
@@ -34,6 +38,28 @@ class mywindow(QtWidgets.QMainWindow):
     def delete_input(self):
         i = self.ui.cmbo_inputs.currentIndex()
         self.ui.cmbo_inputs.removeItem(i)
+
+    def add_config(self):
+        dialog = config_dialog()
+        name, data = dialog.get_data()
+        if name!=None:
+            self.ui.cmbo_config.addItem(name,userData=data)
+    
+    def edit_config(self):
+        obj = self.ui.cmbo_config
+        name = obj.currentText()
+        data = obj.currentData()
+        dialog = config_dialog()
+        name_upd, data = dialog.get_data(cbo_val=[name,data])
+        if name_upd!=None:
+            i = obj.findText(name)
+            obj.setItemText(i,name_upd)
+            obj.setItemData(i,data)
+
+    def delete_config(self):
+        i = self.ui.cmbo_config.currentIndex()
+        self.ui.cmbo_config.removeItem(i)
+
     def save_manifest(self):
         manifest = {}
         keys = [
