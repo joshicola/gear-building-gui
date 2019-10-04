@@ -7,6 +7,7 @@ This project provides a cross-platform graphical user interface to ease the pain
     - Manually specify dependencies
 * Write a minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
+* Provide a pip and conda-installable utility
 
 ![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
 
