@@ -1,4 +1,5 @@
 # gear-building-gui
+
 PyQt5 forms and functionality to ease the pain of the gear building experience.
 It is currently a prototype that writes the manifest.json variables and input
 specifications.  See notes below for proposed functionality.
@@ -23,13 +24,14 @@ source, url, cite, and version
 
 This is a prototype and a work-in-progress that will take time and concerted effort
 to make ready for public release. Below are some of the proposed functionality
-for future development.  It is envisioned that the following sections will have
+for future development.  The following sections have
 their own "tab" in the PyQt gui.
 
 ### Manifest
 
 Although the manifest portion is the most developed, it requires some additional functionality to make it truly useful:
 
+* Need to add max/min vals and array size
 * load and parse existing manifest.json file
 * load and display options from gear specification where required
 * validate entries with respects to the gear specification

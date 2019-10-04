@@ -18,6 +18,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_config_delete.clicked.connect(self.delete_config)    
         self.ui.btn_make_manifest.clicked.connect(self.save_manifest)
     
+    # Add functionality to the input add/edit/deleted buttons
     def add_input(self):
         dialog = input_dialog()
         name, data = dialog.get_data()
@@ -38,7 +39,8 @@ class mywindow(QtWidgets.QMainWindow):
     def delete_input(self):
         i = self.ui.cmbo_inputs.currentIndex()
         self.ui.cmbo_inputs.removeItem(i)
-
+        
+    # add functionality to the add/edit/delete config buttons
     def add_config(self):
         dialog = config_dialog()
         name, data = dialog.get_data()
@@ -88,7 +90,7 @@ class mywindow(QtWidgets.QMainWindow):
         custom['docker-image'] = \
             'flywheel/' + manifest['name'] + ':' + manifest['version']
         gear_builder = {}
-        # edit this later utility/analysis
+        # gear category on radio button
         if self.ui.rdo_analysis.isChecked():
             gear_builder['category'] = 'analysis'
         else:
@@ -106,6 +108,8 @@ class mywindow(QtWidgets.QMainWindow):
         manifest['custom'] = custom
 
         # Build inputs section
+        # Each input item consists of the text (key) of a combo box and 
+        # specifically constructed data (a dictionary).
         inputs = {}
         cbo_obj = self.ui.cmbo_inputs
         for i in range(cbo_obj.count()):
@@ -114,6 +118,8 @@ class mywindow(QtWidgets.QMainWindow):
         manifest['inputs'] = inputs
 
         # Build config section
+        # Each config item consists of the text (key) of a combo box and 
+        # specifically constructed data (a dictionary).        
         config = {}
         cbo_obj = self.ui.cmbo_config
         for i in range(cbo_obj.count()):
