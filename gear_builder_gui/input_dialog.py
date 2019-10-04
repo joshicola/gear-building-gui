@@ -1,4 +1,4 @@
-from inputs import  Ui_dlg_inputs
+from .inputs import  Ui_dlg_inputs
 from PyQt5 import QtWidgets
 
 class input_dialog(QtWidgets.QDialog):

@@ -1,4 +1,4 @@
-from config import  Ui_dlg_config
+from .config import  Ui_dlg_config
 from PyQt5 import QtWidgets
 
 class config_dialog(QtWidgets.QDialog):

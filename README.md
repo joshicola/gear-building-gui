@@ -1,8 +1,6 @@
 # gear-building-gui
 
-PyQt5 forms and functionality to ease the pain of the gear building experience.
-It is currently a prototype that writes the manifest.json variables and input
-specifications.  We would like this to start with the following MVP (Minimally Viable Product). 
+This project provides a cross-platform graphical user interface to ease the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  Although a functional prototype (see below),  extending to the following MVP would increase its utility, ease of use, and adoption:
 
 * Read/Write/Validate of a complete manifest.json file
 * Write a minimal, yet fully functional, Dockerfile
@@ -10,13 +8,17 @@ specifications.  We would like this to start with the following MVP (Minimally V
 * Write a fully functional script/package/module structure as a basis
     - Manually customize for specific application
 
-See notes below for addtional proposed functionality.
+![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
 
-PyQt5 is a platform-independent gui framework. Build on any deploy on every. Installation is possible through both conda and pip.
+See notes below for current and proposed functionality.
 
-Would it be possible to package in a pip-installable repository?
+This project is build in PyQt5, a platform-independent gui framework. Build on any deploy on every. The PyQt5 framework is available through both both conda and pip installers.
 
-The manifest portion of the gear-building-gui is developed as the prototype.
+## Current Functionality
+
+### Manifest
+
+The manifest portion of the gear-building-gui is the most developed.
 It currently:
 
 * provides edit functionality for gear name, label, description, author, maintainer,
@@ -24,9 +26,17 @@ source, url, cite, and version
 * automatically populates the "custom" section with the docker file names
 * provides add, edit, delete functionality of input elements.
 * provides add, edit, delete functionality of config elements.
+    - maximum/minimum value bounds not provided in gui
+    - maximum/minimum array size not provided in gui
 * saves to a 'manifest.json' file
 
-![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
+### Dockerfile
+
+A fully functional Dockerfile is provided as a template to work from.  Knowledge of docker commands is assumed.
+
+### Gear script and modules
+
+A fully functional "Hello World" Python gear script and utils package is provided as a template to work from. Familiarity with flywheel Python SDK is assumed.
 
 ## Proposed Functionality
 
@@ -35,7 +45,7 @@ to make ready for public release. Below are some of the proposed functionality
 for future development.  The following sections have
 their own "tab" in the PyQt gui.
 
-### Manifest
+### Manifest Editting
 
 Although the manifest portion is the most developed, it requires some additional functionality to make it truly useful:
 
@@ -44,7 +54,7 @@ Although the manifest portion is the most developed, it requires some additional
 * load and display options from gear specification where required
 * validate entries with respects to the gear specification
 
-### Dockerfile
+### Dockerfile Editting
 
 We want to be able to view, edit, and validate dependecies for our gear image.
 
@@ -64,3 +74,9 @@ The main purpose of the "runscript prototyping" is to give the user a self-docum
     - verbose config validation against manifest
     - compress working directory to a file in output
 * notify on pep8 violations(??)
+
+### Other
+
+Other "Nice to Haves":
+
+* create a pip-installable and conda-installable packages of the gear-builder-gui for ease of use and version management.
