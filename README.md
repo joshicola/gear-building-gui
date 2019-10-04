@@ -2,10 +2,10 @@
 
 This project provides a cross-platform graphical user interface to ease the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  Although a functional prototype (see below),  extending to the following MVP would increase its utility, ease of use, and adoption:
 
-* Read/Write/Validate of a complete manifest.json file
+* Read/Write/Validation of a complete manifest.json file
 * Write a minimal, yet fully functional, Dockerfile
     - Manually specify dependencies
-* Write a fully functional script/package/module structure as a basis
+* Write a minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
 
 ![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
@@ -45,7 +45,7 @@ to make ready for public release. Below are some of the proposed functionality
 for future development.  The following sections have
 their own "tab" in the PyQt gui.
 
-### Manifest Editting
+### Manifest Editing
 
 Although the manifest portion is the most developed, it requires some additional functionality to make it truly useful:
 
@@ -54,7 +54,7 @@ Although the manifest portion is the most developed, it requires some additional
 * load and display options from gear specification where required
 * validate entries with respects to the gear specification
 
-### Dockerfile Editting
+### Dockerfile Editing
 
 We want to be able to view, edit, and validate dependecies for our gear image.
 
