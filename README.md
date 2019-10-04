@@ -2,7 +2,15 @@
 
 PyQt5 forms and functionality to ease the pain of the gear building experience.
 It is currently a prototype that writes the manifest.json variables and input
-specifications.  See notes below for proposed functionality.
+specifications.  We would like this to start with the following MVP (Minimally Viable Product). 
+
+* Read/Write/Validate of a complete manifest.json file
+* Write a minimal, yet fully functional, Dockerfile
+    - Introduce dependencies by hand
+* Write a fully functional script/package/module structure as a basis
+    - Customize for specific application
+
+See notes below for addtional proposed functionality.
 
 PyQt5 is a platform-independent gui framework. Build on any deploy on every. Installation is possible through both conda and pip.
 
