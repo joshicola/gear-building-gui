@@ -45,7 +45,7 @@ We want to be able to view, edit, and validate dependecies for our gear image.
 
 ### Runscript prototyping
 
-The main purpose of the "runscript prototyping" is to give the user a self-documenting script/package/module framework to build their gears within...giving them support to automatically employ best practices while simultaneously providing the rational (developer-provided comments around code-blocks).
+The main purpose of the "runscript prototyping" is to give the user a self-documenting script/package/module framework to build their gears within...giving them support to automatically employ best practices while simultaneously providing the rationale (developer-provided comments around code-blocks).
 
 * Provide the base run.py and utils package.
 * Creating build/validate/execute functional modules around specific command-line programs.  
