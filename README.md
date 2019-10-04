@@ -6,9 +6,9 @@ specifications.  We would like this to start with the following MVP (Minimally V
 
 * Read/Write/Validate of a complete manifest.json file
 * Write a minimal, yet fully functional, Dockerfile
-    - Introduce dependencies by hand
+    - Manually specify dependencies
 * Write a fully functional script/package/module structure as a basis
-    - Customize for specific application
+    - Manually customize for specific application
 
 See notes below for addtional proposed functionality.
 
