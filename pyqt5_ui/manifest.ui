@@ -548,6 +548,9 @@ notify on pep8 violations(??)</string>
       <property name="text">
        <string>Simple Script</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QLineEdit" name="txt_simple_script">
       <property name="geometry">

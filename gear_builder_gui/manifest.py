@@ -169,6 +169,7 @@ class Ui_MainWindow(object):
         self.label_14.setObjectName("label_14")
         self.ck_simple_script = QtWidgets.QCheckBox(self.scripts)
         self.ck_simple_script.setGeometry(QtCore.QRect(10, 20, 111, 20))
+        self.ck_simple_script.setChecked(True)
         self.ck_simple_script.setObjectName("ck_simple_script")
         self.txt_simple_script = QtWidgets.QLineEdit(self.scripts)
         self.txt_simple_script.setGeometry(QtCore.QRect(10, 70, 171, 21))
@@ -190,7 +191,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
