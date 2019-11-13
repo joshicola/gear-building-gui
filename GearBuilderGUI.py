@@ -20,6 +20,18 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_save_manifest.clicked.connect(self.save_manifest)
         self.ui.btn_export_gear.clicked.connect(self.export_gear)
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
+        self.ui.btn_APT_add.clicked.connect(self.add_APT)
+        self.ui.btn_APT_del.clicked.connect(self.del_APT)
+        # Set the APT table to select row only
+        self.ui.tblAPT.setSelectionBehavior(1)
+        self.ui.btn_PIP_add.clicked.connect(self.add_PIP)
+        self.ui.btn_PIP_del.clicked.connect(self.del_PIP)
+        # Set the PIP table to select row only
+        self.ui.tblPIP.setSelectionBehavior(1)                
+        self.ui.btn_ENV_add.clicked.connect(self.add_ENV)
+        self.ui.btn_ENV_del.clicked.connect(self.del_ENV)
+        # Set the ENV table to select row only
+        self.ui.tblENV.setSelectionBehavior(1)
     
     def update_maintainers(self):
         self.ui.txt_maintainer_2.setText(
@@ -152,6 +164,43 @@ class mywindow(QtWidgets.QMainWindow):
             indent=2
         )
     
+    def add_APT(self,obj):
+        self.add_Row(self.ui.tblAPT)
+
+    def del_APT(self,obj):
+        self.del_Row(self.ui.tblAPT)
+    
+    def add_PIP(self,obj):
+        self.add_Row(self.ui.tblPIP)
+
+    def del_PIP(self,obj):
+        self.del_Row(self.ui.tblPIP)
+
+    def add_ENV(self,obj):
+        self.add_Row(self.ui.tblENV)
+
+    def del_ENV(self,obj):
+        self.del_Row(self.ui.tblENV)
+
+    # add functionality to the add/del docker ENV variables buttons
+    def add_Row(self,obj):
+        rowPosition = obj.rowCount()
+        obj.insertRow(rowPosition)
+
+    def del_Row(self,obj):
+        # get all selected indices
+        selectedInds = obj.selectedIndexes()
+        # parse through them for unique rows
+        rows = []
+
+        for ind in selectedInds:
+            if ind.row() not in rows:
+                rows.append(ind.row())
+        # make sure we iterate in reverse order!
+        rows.sort(reverse=True)
+        for row in rows:
+            obj.removeRow(row)
+    
     def save_dockerfile_to_dir(self, directory):
         dockerstrings = []
         dockerstrings.extend([
@@ -174,6 +223,67 @@ class mywindow(QtWidgets.QMainWindow):
         # Section for installing apt and pip dependencies
         # What version of python... etc....
         ##########
+
+        ########################################################################
+        # Specify APT dependencies
+        # TODO: I may want to parse a packages.list file
+        APTs = ['# Install APT dependencies']
+        APTs.extend([
+            'RUN apt-get update && \\',
+            '    apt-get install -y --no-install-recommends \\'
+        ])
+        obj = self.ui.tblAPT
+        for i in range(obj.rowCount()):
+            Package = obj.item(i,0).text()
+            Version = obj.item(i,1).text()
+            line = '    {}{} '.format(Package,Version)
+            if i==(obj.rowCount()-1):
+                line += '&&'
+            line += ' \\ '
+            APTs.append(line)
+        APTs.extend(['    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*',''])
+        dockerstrings.extend(APTs)
+
+        ########################################################################
+        # Specify PIP dependencies
+        # TODO: I may want to parse a 'requirements.txt' file
+        PIPs = ['# Install PIP Dependencies']
+        PIPs.extend([
+            'RUN pip3 install --upgrade pip && \\ ',
+            '    pip install \\'
+        ])
+        obj = self.ui.tblPIP
+        for i in range(obj.rowCount()):
+            Package = obj.item(i,0).text()
+            Version = obj.item(i,1).text()
+            line = '    {}{} '.format(Package,Version)
+            if i==(obj.rowCount()-1):
+                line += '&&'
+            line += ' \\ '
+            PIPs.append(line)
+        PIPs.extend(['    rm -rf /root/.cache/pip',''])
+
+        dockerstrings.extend(PIPs)
+
+        ########################################################################
+        # Specify ENV Variables
+        # TODO: I may want to parse a 'gear_environ.json' file
+        ENVs = ['# Specify ENV Variables']
+        ENVs.extend([
+            'ENV \\ '
+        ])
+        obj = self.ui.tblENV
+        for i in range(obj.rowCount()):
+            Variable = obj.item(i,0).text()
+            Value = obj.item(i,1).text()
+            env_var = '    {}={} '.format(Variable,Value)
+            if i < (obj.rowCount()-1):
+                env_var = env_var + ' \\ '
+            ENVs.append(env_var)
+        ENVs.extend([''])
+        dockerstrings.extend(ENVs)
+
+
         # # Export Flywheel Spec
         dockerstrings.extend([
             '# Make directory for flywheel spec (v0):',
@@ -239,6 +349,7 @@ class mywindow(QtWidgets.QMainWindow):
                 self, "Select Folder to export gear template"
             )
         )
+        
         self.save_manifest_to_dir(directory)
         self.save_dockerfile_to_dir(directory)
         self.save_script_to_dir(directory)
