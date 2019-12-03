@@ -1,9 +1,10 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui, QtCore
 from gear_builder_gui.manifest import Ui_MainWindow
 from gear_builder_gui.input_dialog import input_dialog
 from gear_builder_gui.config_dialog import config_dialog
 import sys
 import json
+import urllib.request
 import os, os.path as op
 
 class mywindow(QtWidgets.QMainWindow):
@@ -32,7 +33,51 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_ENV_del.clicked.connect(self.del_ENV)
         # Set the ENV table to select row only
         self.ui.tblENV.setSelectionBehavior(1)
-    
+        self.init_validators()
+
+    def init_validators(self):
+        spec_url = "https://raw.githubusercontent.com/flywheel-io/gears/master/spec/manifest.schema.json"
+        url = urllib.request.urlopen(spec_url)
+        gear_spec = json.loads(url.read().decode())
+        keys = [
+            'name',
+            'label',
+            'description',
+            'author',
+            'maintainer',
+            'license',
+            'url',
+            'source',
+            'cite',
+            'version'
+        ]
+        for key in keys:
+            gear_spec_item = gear_spec['properties'][key]
+            if key == 'license':
+                text_obj = self.ui.txt_license
+                text_obj.addItems(gear_spec['properties']['license']['enum'])
+                text_obj.setCurrentIndex(text_obj.__len__()-1)
+            else:
+                text_obj = eval('self.ui.txt_' + key)
+                text_type = type(eval('self.ui.txt_' + key))
+                if 'maxLength' in gear_spec_item.keys():
+                    text_obj.maxLength = gear_spec_item['maxLength']
+
+                if 'pattern' in gear_spec_item.keys():
+                    rx = QtCore.QRegExp(gear_spec_item['pattern'])
+                    val = QtGui.QRegExpValidator(rx,self)
+                    text_obj.setValidator(val)
+
+                if  text_type == QtWidgets.QPlainTextEdit:
+                    text_obj.textChanged.connect(self.checkText)
+
+            if 'description' in gear_spec_item.keys():
+                    text_obj.whatsThis = gear_spec_item['description']
+                    text_obj.setToolTip(gear_spec_item['description'])
+                
+
+
+
     def update_maintainers(self):
         self.ui.txt_maintainer_2.setText(
             self.ui.txt_maintainer.text()
@@ -110,6 +155,8 @@ class mywindow(QtWidgets.QMainWindow):
             text_type = type(eval('self.ui.txt_' + key))
             if  text_type == QtWidgets.QPlainTextEdit:
                 text_value = text_obj.toPlainText()
+            elif text_type == QtWidgets.QComboBox:
+                text_value = text_obj.currentText()
             else:
                 text_value = text_obj.text()
             manifest[key] = text_value
@@ -181,6 +228,12 @@ class mywindow(QtWidgets.QMainWindow):
 
     def del_ENV(self,obj):
         self.del_Row(self.ui.tblENV)
+
+    def checkText(self):
+        obj = self.ui.txt_description
+        if len(obj.toPlainText())>obj.maxLength:
+            obj.textCursor().deletePreviousChar()
+
 
     # add functionality to the add/del docker ENV variables buttons
     def add_Row(self,obj):

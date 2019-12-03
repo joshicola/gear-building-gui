@@ -81,6 +81,9 @@
       <property name="text">
        <string>Test Gear</string>
       </property>
+      <property name="maxLength">
+       <number>100</number>
+      </property>
      </widget>
      <widget class="QLineEdit" name="txt_name">
       <property name="geometry">
@@ -93,6 +96,9 @@
       </property>
       <property name="text">
        <string>test-gear</string>
+      </property>
+      <property name="maxLength">
+       <number>100</number>
       </property>
      </widget>
      <widget class="QLabel" name="label">
@@ -289,59 +295,6 @@
        <string>load manifest</string>
       </property>
      </widget>
-     <widget class="QWidget" name="layoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>130</y>
-        <width>151</width>
-        <height>209</height>
-       </rect>
-      </property>
-      <layout class="QFormLayout" name="formLayout_2">
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="txt_author">
-         <property name="text">
-          <string>Flywheel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="txt_maintainer">
-         <property name="text">
-          <string>Flywheel &lt;support@flywheel.io&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLineEdit" name="txt_license">
-         <property name="text">
-          <string>Other</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLineEdit" name="txt_url">
-         <property name="text">
-          <string>https://github.com/flywheel-apps/test-gear</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLineEdit" name="txt_source"/>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLineEdit" name="txt_cite"/>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLineEdit" name="txt_version">
-         <property name="text">
-          <string>0.0.1</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QPushButton" name="btn_input_edit">
       <property name="geometry">
        <rect>
@@ -426,6 +379,72 @@
       <property name="text">
        <string>config:</string>
       </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>168</x>
+        <y>131</y>
+        <width>131</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLineEdit" name="txt_author">
+         <property name="text">
+          <string>Flywheel</string>
+         </property>
+         <property name="maxLength">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="txt_maintainer">
+         <property name="text">
+          <string>Flywheel &lt;support@flywheel.io&gt;</string>
+         </property>
+         <property name="maxLength">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="txt_license">
+         <property name="currentText">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="txt_url">
+         <property name="text">
+          <string>https://github.com/flywheel-apps/test-gear</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="txt_source"/>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="txt_cite">
+         <property name="maxLength">
+          <number>5000</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="txt_version">
+         <property name="text">
+          <string>0.0.1</string>
+         </property>
+         <property name="maxLength">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tb_dockerfile">
