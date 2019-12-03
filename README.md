@@ -1,13 +1,13 @@
 # gear-building-gui
 
-This project provides a cross-platform graphical user interface to ease the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  Although a functional prototype (see below),  extending to the following MVP would increase its utility, ease of use, and adoption:
+This project provides a cross-platform graphical user interface to ease the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  This functional prototype delivers the following Minimum Viable Product to provide utility, ease of use, and adoption:
 
-* Read/Write/Validation of a complete manifest.json file
+* Write of a complete manifest.json file
 * Write a minimal, yet fully functional, Dockerfile
-    - Manually specify dependencies
+    - With appropriately asigned apt and pip packages
+    - Asigning environment variables
 * Write a minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
-* Provide a pip and conda-installable utility
 
 ![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
 
@@ -27,13 +27,17 @@ source, url, cite, and version
 * automatically populates the "custom" section with the docker file names
 * provides add, edit, delete functionality of input elements.
 * provides add, edit, delete functionality of config elements.
-    - maximum/minimum value bounds not provided in gui
-    - maximum/minimum array size not provided in gui
+* validates entries with respects to the gear specification
 * saves to a 'manifest.json' file
 
 ### Dockerfile
 
 A fully functional Dockerfile is provided as a template to work from.  Knowledge of docker commands is assumed.
+
+* Provides interface to specify apt-get packages to install in Dockerfile
+* Provides interface to specify pip packages to install in Dockerfile
+* Provides interface to specify multiple environment values in Dockerfile
+* Cross-references values with Manifest section to ensure consistency
 
 ### Gear script and modules
 
@@ -52,14 +56,11 @@ Although the manifest portion is the most developed, it requires some additional
 
 * Need to add max/min vals and array size
 * load and parse existing manifest.json file
-* load and display options from gear specification where required
-* validate entries with respects to the gear specification
 
 ### Dockerfile Editing
 
 We want to be able to view, edit, and validate dependecies for our gear image.
 
-* add, edit, delete dockerfile blocks that automate apt-get installations, pip dependencies, and clean-up after those blocks.  More downloaded application-specific blocks should be edited by hand.
 * listing of flywheel-provided base images with add, edit, delete (not flywheel) functionality.
 
 ### Runscript prototyping
@@ -75,9 +76,14 @@ The main purpose of the "runscript prototyping" is to give the user a self-docum
     - verbose config validation against manifest
     - compress working directory to a file in output
 * notify on pep8 violations(??)
+* integration with gear-toolkit
 
 ### Other
 
 Other "Nice to Haves":
 
 * create a pip-installable and conda-installable packages of the gear-builder-gui for ease of use and version management.
+* Save a "Project" file that can be used as a template to add or remove desired features.
+    - a json format having manifest, dockerfile, runscript sections (.gear???).
+* Bundle all gear-essentials into a compressed file
+    - manifest/dockerfile/runscripts/gear_definition (.gear???)
