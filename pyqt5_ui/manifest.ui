@@ -168,6 +168,9 @@
       <property name="text">
        <string>One Suite World</string>
       </property>
+      <property name="maxLength">
+       <number>100</number>
+      </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
@@ -425,7 +428,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="txt_source"/>
+        <widget class="QLineEdit" name="txt_source">
+         <property name="whatsThis">
+          <string/>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="txt_cite">

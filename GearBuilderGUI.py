@@ -170,7 +170,7 @@ class mywindow(QtWidgets.QMainWindow):
         if self.ui.rdo_analysis.isChecked():
             gear_builder['category'] = 'analysis'
         else:
-             gear_builder['category'] = 'utility'
+             gear_builder['category'] = 'converter'
              
         gear_builder['image'] = custom['docker-image']
         
@@ -341,6 +341,7 @@ class mywindow(QtWidgets.QMainWindow):
         dockerstrings.extend([
             '# Make directory for flywheel spec (v0):',
             'ENV FLYWHEEL /flywheel/v0',
+            'WORKDIR ${FLYWHEEL}'
         ])
         
         # Gears will always have a 'run.py' and a 'manifest'
