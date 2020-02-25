@@ -1,5 +1,6 @@
 import json
 
+
 def validate_config_against_manifest(context):
     """
     This function compares the automatically produced configuration file (config.json)
@@ -11,7 +12,11 @@ def validate_config_against_manifest(context):
     - checks for the length of arrays submitted
     """
     c_config = context.config
-    manifest = json.load(open('/flywheel/v0/manifest.json','r',errors='ignore'))
+    manifest = json.load(
+        open(
+            '/flywheel/v0/manifest.json',
+            'r',
+            errors='ignore'))
     m_config = manifest['config']
     errors = []
     if 'config' in manifest.keys():
@@ -21,43 +26,45 @@ def validate_config_against_manifest(context):
             if key not in c_config.keys():
                 if 'optional' not in m_item.keys():
                     errors.append(
-                        'The config parameter, {}, is not optional.'.format(key)
-                    )
+                        'The config parameter, {}, is not optional.'.format(key))
                 elif not m_item['optional']:
                     errors.append(
-                        'The config parameter, {}, is not optional.'.format(key)
-                    )
+                        'The config parameter, {}, is not optional.'.format(key))
             else:
                 c_val = c_config[key]
                 if 'maximum' in m_item.keys():
                     if c_val > m_item['maximum']:
                         errors.append(
-                            'The value of {}, {}, exceeds '.format(key,c_val) + \
-                            'the maximum of {}.'.format(m_item['maximum'])
-                        )
+                            'The value of {}, {}, exceeds '.format(
+                                key,
+                                c_val) +
+                            'the maximum of {}.'.format(
+                                m_item['maximum']))
                 if 'minimum' in m_item.keys():
                     if c_val < m_item['minimum']:
                         errors.append(
-                            'The value of {}, {}, is less than '.format(key,c_val) + \
+                            'The value of {}, {}, is less than '.format(key, c_val) +
                             'the minimum of {}.'.format(m_item['minimum'])
                         )
                 if 'items' in m_item.keys():
                     if 'maxItems' in m_item['items'].keys():
                         maxItems = m_item['items']['maxItems']
-                        if len (c_val) > maxItems:
+                        if len(c_val) > maxItems:
                             errors.append(
-                                'The array {} has {} '.format(key,len(c_val)) + \
-                                'elements. More than the {} '.format(maxItems) + \
-                                'required.'
-                            )
+                                'The array {} has {} '.format(
+                                    key,
+                                    len(c_val)) +
+                                'elements. More than the {} '.format(maxItems) +
+                                'required.')
                     if 'minItems' in m_item['items'].keys():
                         minItems = m_item['items']['minItems']
-                        if len (c_val) > minItems:
+                        if len(c_val) > minItems:
                             errors.append(
-                                'The array {} has {} '.format(key,len(c_val)) + \
-                                'elements. Less than the {} '.format(minItems) + \
-                                'required.'
-                            )
+                                'The array {} has {} '.format(
+                                    key,
+                                    len(c_val)) +
+                                'elements. Less than the {} '.format(minItems) +
+                                'required.')
     if 'inputs' in manifest.keys():
         c_inputs = context._invocation['inputs']
         m_inputs = manifest['inputs']
@@ -76,15 +83,15 @@ def validate_config_against_manifest(context):
                     )
             # Or if it is there, check to see if it is the right type
             elif 'type' in m_inputs[key].keys():
-                m_f_type = m_inputs[key]['type']['enum'][0] ##??
+                m_f_type = m_inputs[key]['type']['enum'][0]  # ??
                 c_f_type = c_inputs[key]['object']['type']
                 if m_f_type != c_f_type:
                     errors.append(
-                    'The input, {}, '.format(key) + \
-                    ' is a "{}" file.'.format(c_f_type) + \
-                    ' It needs to be a "{}" file.'.format(m_f_type)
+                        'The input, {}, '.format(key) +
+                        ' is a "{}" file.'.format(c_f_type) +
+                        ' It needs to be a "{}" file.'.format(m_f_type)
                     )
     if len(errors) > 0:
         raise Exception(
-        'Your gear is not configured correctly: \n{}'.format('\n'.join(errors))
-        )
+            'Your gear is not configured correctly: \n{}'.format(
+                '\n'.join(errors)))

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import os, os.path as op
+import os
+import os.path as op
 import json
 import subprocess as sp
 import copy
@@ -26,10 +27,10 @@ if __name__ == '__main__':
         )
         os.sys.exit(1)
     # Set up Custom Dicionary to host user variables
-    context.custom_dict={}
+    context.custom_dict = {}
 
     # Instantiate Environment Variables
-    # This will always be '/tmp/gear_environ.json' with these 
+    # This will always be '/tmp/gear_environ.json' with these
     # environments defined in the Dockerfile and exported from there.
     with open('/tmp/gear_environ.json', 'r') as f:
         environ = json.load(f)
@@ -39,12 +40,12 @@ if __name__ == '__main__':
     # Report on Inputs and configuration parameters to the log
     log_config(context)
 
-    # Build, Validate, and execute Parameters Hello World 
+    # Build, Validate, and execute Parameters Hello World
     try:
         args.build(context)
         args.validate(context)
         args.execute(context)
-        
+
     except Exception as e:
         context.log.fatal(e,)
         context.log.fatal(

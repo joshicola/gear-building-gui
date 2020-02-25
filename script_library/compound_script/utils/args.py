@@ -1,7 +1,9 @@
 import shutil
 import re
-import os, os.path as op
+import os
+import os.path as op
 import subprocess as sp
+
 
 def build(context):
     """
@@ -18,7 +20,7 @@ def build(context):
 
     for key in config.keys():
         # Use only those boolean values that are True
-        if type(config[key]) == bool:
+        if isinstance(config[key], bool):
             if config[key]:
                 params[key] = True
         else:
@@ -52,7 +54,7 @@ def BuildCommandList(command, ParamList):
         # Multi-Character command-line parameters preceded by a double '--'
         else:
             # If Param is boolean and true include, else exclude
-            if type(ParamList[key]) == bool:
+            if isinstance(ParamList[key], bool):
                 if ParamList[key]:
                     command.append('--' + key)
             else:
@@ -64,10 +66,11 @@ def BuildCommandList(command, ParamList):
                     command.append('--' + key + '=' + str(ParamList[key]))
     return command
 
-def execute(context,dry_run=False):
+
+def execute(context, dry_run=False):
     command = ['echo', '"Hello World"']
     #command = BuildCommandList(command, context.custom_dict['params'])
-    context.log.info('Hello World Command:'+' '.join(command))
+    context.log.info('Hello World Command:' + ' '.join(command))
     environ = context.custom_dict['environ']
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE,
                     universal_newlines=True, env=environ)
@@ -77,7 +80,7 @@ def execute(context,dry_run=False):
 
     if result.returncode != 0:
         context.log.error('The command:\n ' +
-                            ' '.join(command) +
-                            '\nfailed. See log for debugging.')
+                          ' '.join(command) +
+                          '\nfailed. See log for debugging.')
         context.log.error(result.stderr)
         os.sys.exit(result.returncode)

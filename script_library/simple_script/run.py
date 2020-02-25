@@ -1,51 +1,42 @@
 #!/usr/bin/env python3
-import os, os.path as op
-import json
-import subprocess as sp
-import copy
-import shutil
+import os
 import logging
 
-import flywheel
+from gear_toolkit import gear_toolkit_context
+from gear_toolkit import command_line
 
-if __name__ == '__main__':
-    # Get the Gear Context
-    context = flywheel.GearContext()
+log = logging.getLogger(__name__)
 
-    # Activate custom logger
-    log_name = '[{name}]'
-    log_level = logging.INFO
-    fmt = '%(asctime)s.%(msecs)03d %(levelname)-8s [%(name)s %(funcName)s()]: %(message)s'
-    logging.basicConfig(level=log_level, format=fmt, datefmt='%H:%M:%S')
-    context.log = logging.getLogger(log_name)
-    context.log.critical('{} log level is {}'.format(log_name, log_level))
 
-    context.log_config()
-
-    # Build, Validate, and execute Parameters Hello World 
+def main(context):
+    # build and execute Parameters for {name}
     try:
         # build the command string
-        command = ['{simple_script_name}']
+        command = ['{base_command}']
+
+        # this gathers the configuration values ONLY
+        # for including input values, see build_validate_execute
         for key in context.config.keys():
             command.append(context.config[key])
-        
+
         # execute the command string
-        result = sp.Popen(command, stdout=sp.PIPE, stderr=sp.PIPE,
-                    universal_newlines=True)
-        stdout, stderr = result.communicate()
-        context.log.info('Command return code: {}'.format(result.returncode))
+        command_line.exec_command(command)
 
-        context.log.info(stdout)
-
-        if result.returncode != 0:
-            raise Exception(stderr)
-        
     except Exception as e:
-        context.log.fatal(e,)
-        context.log.fatal(
+        log.exception(e,)
+        log.fatal(
             'Error executing {name}.',
         )
-        os.sys.exit(1)
+        return 1
 
-    context.log.info("{name} completed Successfully!")
-    os.sys.exit(0)
+    log.info("{name} completed Successfully!")
+    return 0
+
+
+if __name__ == '__main__':
+    with gear_toolkit_context.GearToolkitContext() as gear_context:
+        gear_context.init_logging()
+        exit_status = main(gear_context)
+
+    log.info('exit_status is %s', exit_status)
+    os.sys.exit(exit_status)

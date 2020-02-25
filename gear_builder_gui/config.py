@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_dlg_config(object):
     def setupUi(self, dlg_config):
         dlg_config.setObjectName("dlg_config")
@@ -15,7 +16,8 @@ class Ui_dlg_config(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(dlg_config)
         self.buttonBox.setGeometry(QtCore.QRect(110, 230, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.label = QtWidgets.QLabel(dlg_config)
         self.label.setGeometry(QtCore.QRect(55, 22, 37, 16))
@@ -51,29 +53,37 @@ class Ui_dlg_config(object):
         self.widget.setGeometry(QtCore.QRect(100, 21, 171, 121))
         self.widget.setObjectName("widget")
         self.formLayout = QtWidgets.QFormLayout(self.widget)
-        self.formLayout.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.formLayout.setLabelAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.formLayout.setObjectName("formLayout")
         self.ck_optional = QtWidgets.QCheckBox(self.widget)
         self.ck_optional.setText("")
         self.ck_optional.setObjectName("ck_optional")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.ck_optional)
+        self.formLayout.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.ck_optional)
         self.cbo_type = QtWidgets.QComboBox(self.widget)
         self.cbo_type.setObjectName("cbo_type")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.cbo_type)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.SpanningRole, self.cbo_type)
         self.txt_default = QtWidgets.QLineEdit(self.widget)
         self.txt_default.setObjectName("txt_default")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.txt_default)
+        self.formLayout.setWidget(
+            3, QtWidgets.QFormLayout.SpanningRole, self.txt_default)
         self.txt_description = QtWidgets.QLineEdit(self.widget)
         self.txt_description.setObjectName("txt_description")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.txt_description)
+        self.formLayout.setWidget(
+            1,
+            QtWidgets.QFormLayout.SpanningRole,
+            self.txt_description)
         self.txt_name = QtWidgets.QLineEdit(self.widget)
         self.txt_name.setObjectName("txt_name")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.SpanningRole, self.txt_name)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.SpanningRole, self.txt_name)
 
         self.retranslateUi(dlg_config)
         self.buttonBox.accepted.connect(dlg_config.accept)
@@ -82,7 +92,10 @@ class Ui_dlg_config(object):
 
     def retranslateUi(self, dlg_config):
         _translate = QtCore.QCoreApplication.translate
-        dlg_config.setWindowTitle(_translate("dlg_config", "Add or Edit Configs"))
+        dlg_config.setWindowTitle(
+            _translate(
+                "dlg_config",
+                "Add or Edit Configs"))
         self.label.setText(_translate("dlg_config", "name:"))
         self.label_2.setText(_translate("dlg_config", "description:"))
         self.label_3.setText(_translate("dlg_config", "type:"))
@@ -96,4 +109,3 @@ class Ui_dlg_config(object):
         self.cbo_type.setItemText(1, _translate("dlg_config", "number"))
         self.cbo_type.setItemText(2, _translate("dlg_config", "integer"))
         self.cbo_type.setItemText(3, _translate("dlg_config", "boolean"))
-

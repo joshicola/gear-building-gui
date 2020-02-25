@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -51,6 +52,7 @@ class Ui_MainWindow(object):
         self.txt_description.setObjectName("txt_description")
         self.txt_suite = QtWidgets.QLineEdit(self.tb_manifest)
         self.txt_suite.setGeometry(QtCore.QRect(430, 130, 125, 21))
+        self.txt_suite.setMaxLength(100)
         self.txt_suite.setObjectName("txt_suite")
         self.layoutWidget = QtWidgets.QWidget(self.tb_manifest)
         self.layoutWidget.setGeometry(QtCore.QRect(80, 130, 78, 174))
@@ -60,25 +62,32 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.label_2 = QtWidgets.QLabel(self.layoutWidget)
         self.label_2.setObjectName("label_2")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.label_3 = QtWidgets.QLabel(self.layoutWidget)
         self.label_3.setObjectName("label_3")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_3)
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.label_3)
         self.label_4 = QtWidgets.QLabel(self.layoutWidget)
         self.label_4.setObjectName("label_4")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_4)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.label_4)
         self.label_5 = QtWidgets.QLabel(self.layoutWidget)
         self.label_5.setObjectName("label_5")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_5)
+        self.formLayout.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.label_5)
         self.label_6 = QtWidgets.QLabel(self.layoutWidget)
         self.label_6.setObjectName("label_6")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_6)
+        self.formLayout.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.label_6)
         self.label_7 = QtWidgets.QLabel(self.layoutWidget)
         self.label_7.setObjectName("label_7")
-        self.formLayout.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.label_7)
+        self.formLayout.setWidget(
+            5, QtWidgets.QFormLayout.LabelRole, self.label_7)
         self.label_8 = QtWidgets.QLabel(self.layoutWidget)
         self.label_8.setObjectName("label_8")
-        self.formLayout.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.label_8)
+        self.formLayout.setWidget(
+            6, QtWidgets.QFormLayout.LabelRole, self.label_8)
         self.btn_config_add = QtWidgets.QPushButton(self.tb_manifest)
         self.btn_config_add.setGeometry(QtCore.QRect(130, 420, 51, 32))
         self.btn_config_add.setObjectName("btn_config_add")
@@ -115,35 +124,36 @@ class Ui_MainWindow(object):
         self.label_10 = QtWidgets.QLabel(self.tb_manifest)
         self.label_10.setGeometry(QtCore.QRect(80, 400, 60, 16))
         self.label_10.setObjectName("label_10")
-        self.widget = QtWidgets.QWidget(self.tb_manifest)
-        self.widget.setGeometry(QtCore.QRect(168, 131, 131, 171))
-        self.widget.setObjectName("widget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.layoutWidget1 = QtWidgets.QWidget(self.tb_manifest)
+        self.layoutWidget1.setGeometry(QtCore.QRect(168, 131, 131, 171))
+        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget1)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.txt_author = QtWidgets.QLineEdit(self.widget)
+        self.txt_author = QtWidgets.QLineEdit(self.layoutWidget1)
         self.txt_author.setMaxLength(100)
         self.txt_author.setObjectName("txt_author")
         self.verticalLayout.addWidget(self.txt_author)
-        self.txt_maintainer = QtWidgets.QLineEdit(self.widget)
+        self.txt_maintainer = QtWidgets.QLineEdit(self.layoutWidget1)
         self.txt_maintainer.setMaxLength(100)
         self.txt_maintainer.setObjectName("txt_maintainer")
         self.verticalLayout.addWidget(self.txt_maintainer)
-        self.txt_license = QtWidgets.QComboBox(self.widget)
+        self.txt_license = QtWidgets.QComboBox(self.layoutWidget1)
         self.txt_license.setCurrentText("")
         self.txt_license.setObjectName("txt_license")
         self.verticalLayout.addWidget(self.txt_license)
-        self.txt_url = QtWidgets.QLineEdit(self.widget)
+        self.txt_url = QtWidgets.QLineEdit(self.layoutWidget1)
         self.txt_url.setObjectName("txt_url")
         self.verticalLayout.addWidget(self.txt_url)
-        self.txt_source = QtWidgets.QLineEdit(self.widget)
+        self.txt_source = QtWidgets.QLineEdit(self.layoutWidget1)
+        self.txt_source.setWhatsThis("")
         self.txt_source.setObjectName("txt_source")
         self.verticalLayout.addWidget(self.txt_source)
-        self.txt_cite = QtWidgets.QLineEdit(self.widget)
+        self.txt_cite = QtWidgets.QLineEdit(self.layoutWidget1)
         self.txt_cite.setMaxLength(5000)
         self.txt_cite.setObjectName("txt_cite")
         self.verticalLayout.addWidget(self.txt_cite)
-        self.txt_version = QtWidgets.QLineEdit(self.widget)
+        self.txt_version = QtWidgets.QLineEdit(self.layoutWidget1)
         self.txt_version.setMaxLength(100)
         self.txt_version.setObjectName("txt_version")
         self.verticalLayout.addWidget(self.txt_version)
@@ -267,16 +277,20 @@ class Ui_MainWindow(object):
         self.label_14 = QtWidgets.QLabel(self.scripts)
         self.label_14.setGeometry(QtCore.QRect(80, 290, 451, 181))
         self.label_14.setObjectName("label_14")
-        self.ck_simple_script = QtWidgets.QCheckBox(self.scripts)
-        self.ck_simple_script.setGeometry(QtCore.QRect(10, 20, 111, 20))
-        self.ck_simple_script.setChecked(True)
-        self.ck_simple_script.setObjectName("ck_simple_script")
         self.txt_simple_script = QtWidgets.QLineEdit(self.scripts)
         self.txt_simple_script.setGeometry(QtCore.QRect(10, 70, 171, 21))
         self.txt_simple_script.setObjectName("txt_simple_script")
         self.label_16 = QtWidgets.QLabel(self.scripts)
         self.label_16.setGeometry(QtCore.QRect(10, 50, 131, 16))
         self.label_16.setObjectName("label_16")
+        self.cbo_script_template = QtWidgets.QComboBox(self.scripts)
+        self.cbo_script_template.setGeometry(QtCore.QRect(10, 20, 170, 26))
+        self.cbo_script_template.setObjectName("cbo_script_template")
+        self.cbo_script_template.addItem("")
+        self.cbo_script_template.addItem("")
+        self.label_18 = QtWidgets.QLabel(self.scripts)
+        self.label_18.setGeometry(QtCore.QRect(10, 0, 131, 16))
+        self.label_18.setObjectName("label_18")
         self.tabWidget.addTab(self.scripts, "")
         self.btn_export_gear = QtWidgets.QPushButton(self.centralwidget)
         self.btn_export_gear.setGeometry(QtCore.QRect(20, 570, 101, 32))
@@ -305,7 +319,10 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Description:"))
         self.lblName.setText(_translate("MainWindow", "name:"))
         self.rdo_analysis.setText(_translate("MainWindow", "Analysis"))
-        self.txt_description.setPlainText(_translate("MainWindow", "This is a Test Gear. Use with caution."))
+        self.txt_description.setPlainText(
+            _translate(
+                "MainWindow",
+                "This is a Test Gear. Use with caution."))
         self.txt_suite.setText(_translate("MainWindow", "One Suite World"))
         self.label_2.setText(_translate("MainWindow", "Author:"))
         self.label_3.setText(_translate("MainWindow", "maintainer:"))
@@ -318,23 +335,44 @@ class Ui_MainWindow(object):
         self.btn_config_delete.setText(_translate("MainWindow", "Delete"))
         self.btn_input_add.setText(_translate("MainWindow", "Add"))
         self.rdo_utility.setText(_translate("MainWindow", "Utility"))
-        self.btn_load_manifest.setText(_translate("MainWindow", "load manifest"))
+        self.btn_load_manifest.setText(
+            _translate("MainWindow", "load manifest"))
         self.btn_input_edit.setText(_translate("MainWindow", "Edit"))
         self.chk_flywheel.setText(_translate("MainWindow", "flywheel suite"))
-        self.btn_save_manifest.setText(_translate("MainWindow", "save manifest"))
+        self.btn_save_manifest.setText(
+            _translate("MainWindow", "save manifest"))
         self.lblLabel.setText(_translate("MainWindow", "label:"))
         self.label_10.setText(_translate("MainWindow", "config:"))
         self.txt_author.setText(_translate("MainWindow", "Flywheel"))
-        self.txt_maintainer.setText(_translate("MainWindow", "Flywheel <support@flywheel.io>"))
-        self.txt_url.setText(_translate("MainWindow", "https://github.com/flywheel-apps/test-gear"))
+        self.txt_maintainer.setText(
+            _translate(
+                "MainWindow",
+                "Flywheel <support@flywheel.io>"))
+        self.txt_url.setText(
+            _translate(
+                "MainWindow",
+                "https://github.com/flywheel-apps/test-gear"))
         self.txt_version.setText(_translate("MainWindow", "0.0.1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tb_manifest), _translate("MainWindow", "Manifest"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(
+                self.tb_manifest), _translate(
+                "MainWindow", "Manifest"))
         self.label_11.setText(_translate("MainWindow", "Select Source Image:"))
-        self.label_12.setText(_translate("MainWindow", "Indicate apt-get dependencies:"))
-        self.label_13.setText(_translate("MainWindow", "Indicate python dependencies:"))
-        self.txt_maintainer_2.setText(_translate("MainWindow", "Flywheel <support@flywheel.io>"))
+        self.label_12.setText(
+            _translate(
+                "MainWindow",
+                "Indicate apt-get dependencies:"))
+        self.label_13.setText(
+            _translate(
+                "MainWindow",
+                "Indicate python dependencies:"))
+        self.txt_maintainer_2.setText(
+            _translate(
+                "MainWindow",
+                "Flywheel <support@flywheel.io>"))
         self.label_15.setText(_translate("MainWindow", "maintainer:"))
-        self.txt_docker_source.setText(_translate("MainWindow", "ubuntu:xenial"))
+        self.txt_docker_source.setText(
+            _translate("MainWindow", "ubuntu:xenial"))
         self.label_17.setText(_translate("MainWindow", "Set ENV variables:"))
         item = self.tblENV.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
@@ -385,19 +423,30 @@ class Ui_MainWindow(object):
         self.tblAPT.setSortingEnabled(__sortingEnabled)
         self.btn_APT_del.setText(_translate("MainWindow", "Del"))
         self.btn_APT_add.setText(_translate("MainWindow", "Add"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tb_dockerfile), _translate("MainWindow", "Dockerfile"))
-        self.label_14.setText(_translate("MainWindow", "Provide the base run.py and utils package.\n"
-"Creating build/validate/execute functional modules around specific command-line programs.\n"
-"Add a command-line \"switch-detector\" to populate the manifest config with values to loop through.\n"
-"Provide a library of code-blocks that facilitate certain functionality\n"
-"module-based log reporting\n"
-"bids functionality\n"
-"verbose config validation against manifest\n"
-"compress working directory to a file in output\n"
-"notify on pep8 violations(??)"))
-        self.ck_simple_script.setText(_translate("MainWindow", "Simple Script"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(
+                self.tb_dockerfile), _translate(
+                "MainWindow", "Dockerfile"))
+        self.label_14.setText(
+            _translate(
+                "MainWindow", "Provide the base run.py and utils package.\n"
+                "Creating build/validate/execute functional modules around specific command-line programs.\n"
+                "Add a command-line \"switch-detector\" to populate the manifest config with values to loop through.\n"
+                "Provide a library of code-blocks that facilitate certain functionality\n"
+                "module-based log reporting\n"
+                "bids functionality\n"
+                "verbose config validation against manifest\n"
+                "compress working directory to a file in output\n"
+                "notify on pep8 violations(??)"))
         self.txt_simple_script.setText(_translate("MainWindow", "echo"))
-        self.label_16.setText(_translate("MainWindow", "Simple Script Name:"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.scripts), _translate("MainWindow", "Script Management"))
+        self.label_16.setText(_translate("MainWindow", "Command Name:"))
+        self.cbo_script_template.setItemText(
+            0, _translate("MainWindow", "Simple Script"))
+        self.cbo_script_template.setItemText(
+            1, _translate("MainWindow", "Build/Validate/Execute"))
+        self.label_18.setText(_translate("MainWindow", "Script Template:"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(
+                self.scripts), _translate(
+                "MainWindow", "Script Management"))
         self.btn_export_gear.setText(_translate("MainWindow", "Export Gear"))
-

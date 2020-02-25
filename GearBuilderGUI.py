@@ -5,11 +5,13 @@ from gear_builder_gui.config_dialog import config_dialog
 import sys
 import json
 import urllib.request
-import os, os.path as op
+import os
+import os.path as op
+
 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(mywindow,self).__init__()
+        super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.btn_input_add.clicked.connect(self.add_input)
@@ -17,7 +19,7 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_input_delete.clicked.connect(self.delete_input)
         self.ui.btn_config_add.clicked.connect(self.add_config)
         self.ui.btn_config_edit.clicked.connect(self.edit_config)
-        self.ui.btn_config_delete.clicked.connect(self.delete_config)    
+        self.ui.btn_config_delete.clicked.connect(self.delete_config)
         self.ui.btn_save_manifest.clicked.connect(self.save_manifest)
         self.ui.btn_export_gear.clicked.connect(self.export_gear)
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
@@ -28,12 +30,20 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.btn_PIP_add.clicked.connect(self.add_PIP)
         self.ui.btn_PIP_del.clicked.connect(self.del_PIP)
         # Set the PIP table to select row only
-        self.ui.tblPIP.setSelectionBehavior(1)                
+        self.ui.tblPIP.setSelectionBehavior(1)
         self.ui.btn_ENV_add.clicked.connect(self.add_ENV)
         self.ui.btn_ENV_del.clicked.connect(self.del_ENV)
         # Set the ENV table to select row only
         self.ui.tblENV.setSelectionBehavior(1)
         self.init_validators()
+        # Set the script template data
+        self.ui.cbo_script_template.setItemData(
+            0, ['script_library/simple_script/run.py'])
+        self.ui.cbo_script_template.setItemData(
+            1,
+            [
+                'script_library/build_validate_execute/run.py',
+                'script_library/build_validate_execute/utils/args.py'])
 
     def init_validators(self):
         spec_url = "https://raw.githubusercontent.com/flywheel-io/gears/master/spec/manifest.schema.json"
@@ -56,7 +66,7 @@ class mywindow(QtWidgets.QMainWindow):
             if key == 'license':
                 text_obj = self.ui.txt_license
                 text_obj.addItems(gear_spec['properties']['license']['enum'])
-                text_obj.setCurrentIndex(text_obj.__len__()-1)
+                text_obj.setCurrentIndex(text_obj.__len__() - 1)
             else:
                 text_obj = eval('self.ui.txt_' + key)
                 text_type = type(eval('self.ui.txt_' + key))
@@ -65,63 +75,60 @@ class mywindow(QtWidgets.QMainWindow):
 
                 if 'pattern' in gear_spec_item.keys():
                     rx = QtCore.QRegExp(gear_spec_item['pattern'])
-                    val = QtGui.QRegExpValidator(rx,self)
+                    val = QtGui.QRegExpValidator(rx, self)
                     text_obj.setValidator(val)
 
-                if  text_type == QtWidgets.QPlainTextEdit:
+                if text_type == QtWidgets.QPlainTextEdit:
                     text_obj.textChanged.connect(self.checkText)
 
             if 'description' in gear_spec_item.keys():
-                    text_obj.whatsThis = gear_spec_item['description']
-                    text_obj.setToolTip(gear_spec_item['description'])
-                
-
-
+                text_obj.whatsThis = gear_spec_item['description']
+                text_obj.setToolTip(gear_spec_item['description'])
 
     def update_maintainers(self):
         self.ui.txt_maintainer_2.setText(
             self.ui.txt_maintainer.text()
         )
-    
+
     # Add functionality to the input add/edit/deleted buttons
     def add_input(self):
         dialog = input_dialog()
         name, data = dialog.get_data()
-        if name!=None:
-            self.ui.cmbo_inputs.addItem(name,userData=data)
-    
+        if name is not None:
+            self.ui.cmbo_inputs.addItem(name, userData=data)
+
     def edit_input(self):
         obj = self.ui.cmbo_inputs
         name = obj.currentText()
         data = obj.currentData()
         dialog = input_dialog()
-        name_upd, data = dialog.get_data(cbo_val=[name,data])
-        if name_upd!=None:
+        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        if name_upd is not None:
             i = obj.findText(name)
-            obj.setItemText(i,name_upd)
-            obj.setItemData(i,data)
+            obj.setItemText(i, name_upd)
+            obj.setItemData(i, data)
 
     def delete_input(self):
         i = self.ui.cmbo_inputs.currentIndex()
         self.ui.cmbo_inputs.removeItem(i)
-        
+
     # add functionality to the add/edit/delete config buttons
     def add_config(self):
         dialog = config_dialog()
         name, data = dialog.get_data()
-        if name!=None:
-            self.ui.cmbo_config.addItem(name,userData=data)
-    
+        if name is not None:
+            self.ui.cmbo_config.addItem(name, userData=data)
+
     def edit_config(self):
         obj = self.ui.cmbo_config
         name = obj.currentText()
         data = obj.currentData()
         dialog = config_dialog()
-        name_upd, data = dialog.get_data(cbo_val=[name,data])
-        if name_upd!=None:
+        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        if name_upd is not None:
             i = obj.findText(name)
-            obj.setItemText(i,name_upd)
-            obj.setItemData(i,data)
+            obj.setItemText(i, name_upd)
+            obj.setItemData(i, data)
 
     def delete_config(self):
         i = self.ui.cmbo_config.currentIndex()
@@ -133,10 +140,10 @@ class mywindow(QtWidgets.QMainWindow):
                 self, "Select Folder to save manifest.json"
             )
         )
-        if len(directory)>0:
+        if len(directory) > 0:
             self.save_manifest_to_dir(directory)
 
-    def save_manifest_to_dir(self,directory):
+    def save_manifest_to_dir(self, directory):
         manifest = {}
         keys = [
             'name',
@@ -153,7 +160,7 @@ class mywindow(QtWidgets.QMainWindow):
         for key in keys:
             text_obj = eval('self.ui.txt_' + key)
             text_type = type(eval('self.ui.txt_' + key))
-            if  text_type == QtWidgets.QPlainTextEdit:
+            if text_type == QtWidgets.QPlainTextEdit:
                 text_value = text_obj.toPlainText()
             elif text_type == QtWidgets.QComboBox:
                 text_value = text_obj.currentText()
@@ -170,13 +177,13 @@ class mywindow(QtWidgets.QMainWindow):
         if self.ui.rdo_analysis.isChecked():
             gear_builder['category'] = 'analysis'
         else:
-             gear_builder['category'] = 'converter'
-             
+            gear_builder['category'] = 'converter'
+
         gear_builder['image'] = custom['docker-image']
-        
+
         custom['gear-builder'] = gear_builder
         # if "suite"
-        if self.ui.chk_flywheel.isChecked():    
+        if self.ui.chk_flywheel.isChecked():
             flywheel = {}
             flywheel['suite'] = self.ui.txt_suite.text()
             custom['flywheel'] = flywheel
@@ -184,7 +191,7 @@ class mywindow(QtWidgets.QMainWindow):
         manifest['custom'] = custom
 
         # Build inputs section
-        # Each input item consists of the text (key) of a combo box and 
+        # Each input item consists of the text (key) of a combo box and
         # specifically constructed data (a dictionary).
         inputs = {}
         cbo_obj = self.ui.cmbo_inputs
@@ -194,8 +201,8 @@ class mywindow(QtWidgets.QMainWindow):
         manifest['inputs'] = inputs
 
         # Build config section
-        # Each config item consists of the text (key) of a combo box and 
-        # specifically constructed data (a dictionary).        
+        # Each config item consists of the text (key) of a combo box and
+        # specifically constructed data (a dictionary).
         config = {}
         cbo_obj = self.ui.cmbo_config
         for i in range(cbo_obj.count()):
@@ -207,40 +214,39 @@ class mywindow(QtWidgets.QMainWindow):
 
         json.dump(
             manifest,
-            open(op.join(directory,'manifest.json'),'w'),
+            open(op.join(directory, 'manifest.json'), 'w'),
             indent=2
         )
-    
-    def add_APT(self,obj):
+
+    def add_APT(self, obj):
         self.add_Row(self.ui.tblAPT)
 
-    def del_APT(self,obj):
+    def del_APT(self, obj):
         self.del_Row(self.ui.tblAPT)
-    
-    def add_PIP(self,obj):
+
+    def add_PIP(self, obj):
         self.add_Row(self.ui.tblPIP)
 
-    def del_PIP(self,obj):
+    def del_PIP(self, obj):
         self.del_Row(self.ui.tblPIP)
 
-    def add_ENV(self,obj):
+    def add_ENV(self, obj):
         self.add_Row(self.ui.tblENV)
 
-    def del_ENV(self,obj):
+    def del_ENV(self, obj):
         self.del_Row(self.ui.tblENV)
 
     def checkText(self):
         obj = self.ui.txt_description
-        if len(obj.toPlainText())>obj.maxLength:
+        if len(obj.toPlainText()) > obj.maxLength:
             obj.textCursor().deletePreviousChar()
 
-
     # add functionality to the add/del docker ENV variables buttons
-    def add_Row(self,obj):
+    def add_Row(self, obj):
         rowPosition = obj.rowCount()
         obj.insertRow(rowPosition)
 
-    def del_Row(self,obj):
+    def del_Row(self, obj):
         # get all selected indices
         selectedInds = obj.selectedIndexes()
         # parse through them for unique rows
@@ -253,12 +259,12 @@ class mywindow(QtWidgets.QMainWindow):
         rows.sort(reverse=True)
         for row in rows:
             obj.removeRow(row)
-    
+
     def save_dockerfile_to_dir(self, directory):
         dockerstrings = []
         dockerstrings.extend([
-            '# Dockerfile exported by GearBuilderGUI.' + \
-            'Stash edits before export again',''
+            '# Dockerfile exported by GearBuilderGUI.' +
+            'Stash edits before export again', ''
         ])
         # export FROM statement
         text_obj = self.ui.txt_docker_source
@@ -277,7 +283,7 @@ class mywindow(QtWidgets.QMainWindow):
         # What version of python... etc....
         ##########
 
-        ########################################################################
+        #######################################################################
         # Specify APT dependencies
         # TODO: I may want to parse a packages.list file
         APTs = ['# Install APT dependencies']
@@ -287,17 +293,17 @@ class mywindow(QtWidgets.QMainWindow):
         ])
         obj = self.ui.tblAPT
         for i in range(obj.rowCount()):
-            Package = obj.item(i,0).text()
-            Version = obj.item(i,1).text()
-            line = '    {}{} '.format(Package,Version)
-            if i==(obj.rowCount()-1):
+            Package = obj.item(i, 0).text()
+            Version = obj.item(i, 1).text()
+            line = '    {}{} '.format(Package, Version)
+            if i == (obj.rowCount() - 1):
                 line += '&&'
             line += ' \\ '
             APTs.append(line)
-        APTs.extend(['    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*',''])
+        APTs.extend(['    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*', ''])
         dockerstrings.extend(APTs)
 
-        ########################################################################
+        #######################################################################
         # Specify PIP dependencies
         # TODO: I may want to parse a 'requirements.txt' file
         PIPs = ['# Install PIP Dependencies']
@@ -307,18 +313,18 @@ class mywindow(QtWidgets.QMainWindow):
         ])
         obj = self.ui.tblPIP
         for i in range(obj.rowCount()):
-            Package = obj.item(i,0).text()
-            Version = obj.item(i,1).text()
-            line = '    {}{} '.format(Package,Version)
-            if i==(obj.rowCount()-1):
+            Package = obj.item(i, 0).text()
+            Version = obj.item(i, 1).text()
+            line = '    {}{} '.format(Package, Version)
+            if i == (obj.rowCount() - 1):
                 line += '&&'
             line += ' \\ '
             PIPs.append(line)
-        PIPs.extend(['    rm -rf /root/.cache/pip',''])
+        PIPs.extend(['    rm -rf /root/.cache/pip', ''])
 
         dockerstrings.extend(PIPs)
 
-        ########################################################################
+        #######################################################################
         # Specify ENV Variables
         # TODO: I may want to parse a 'gear_environ.json' file
         ENVs = ['# Specify ENV Variables']
@@ -327,15 +333,14 @@ class mywindow(QtWidgets.QMainWindow):
         ])
         obj = self.ui.tblENV
         for i in range(obj.rowCount()):
-            Variable = obj.item(i,0).text()
-            Value = obj.item(i,1).text()
-            env_var = '    {}={} '.format(Variable,Value)
-            if i < (obj.rowCount()-1):
+            Variable = obj.item(i, 0).text()
+            Value = obj.item(i, 1).text()
+            env_var = '    {}={} '.format(Variable, Value)
+            if i < (obj.rowCount() - 1):
                 env_var = env_var + ' \\ '
             ENVs.append(env_var)
         ENVs.extend([''])
         dockerstrings.extend(ENVs)
-
 
         # # Export Flywheel Spec
         dockerstrings.extend([
@@ -343,30 +348,30 @@ class mywindow(QtWidgets.QMainWindow):
             'ENV FLYWHEEL /flywheel/v0',
             'WORKDIR ${FLYWHEEL}'
         ])
-        
+
         # Gears will always have a 'run.py' and a 'manifest'
-        # 'run.py' can be a "simple script" or a driver script for 
+        # 'run.py' can be a "simple script" or a driver script for
         # the 'utils' package
         dockerstrings.extend([
             '# Copy executable/manifest to Gear',
             'COPY run.py ${FLYWHEEL}/run.py',
-            'COPY manifest.json ${FLYWHEEL}/manifest.json',''
+            'COPY manifest.json ${FLYWHEEL}/manifest.json', ''
         ])
-        
+
         # If not a simple script, include utils:
         if False:
             dockerstrings.extend([
-                'COPY utils ${FLYWHEEL}/utils',''
+                'COPY utils ${FLYWHEEL}/utils', ''
             ])
-        
+
         # Preserve environment variables for Flywheel engine
         dockerstrings.extend([
             '# ENV preservation for Flywheel Engine',
-            "RUN python -c 'import os, json; " + \
-            "f = open(\"/tmp/gear_environ.json\", \"w\");" + \
-            "json.dump(dict(os.environ), f)'",''
+            "RUN python -c 'import os, json; " +
+            "f = open(\"/tmp/gear_environ.json\", \"w\");" +
+            "json.dump(dict(os.environ), f)'", ''
         ])
-        
+
         # Endpoint
         dockerstrings.extend({
             '# Configure entrypoint',
@@ -374,28 +379,61 @@ class mywindow(QtWidgets.QMainWindow):
         })
 
         dockerfile = open(
-            op.join(directory,'Dockerfile'),'w'
+            op.join(directory, 'Dockerfile'),
+            'w'
         )
         dockerfile.write('\n'.join(dockerstrings))
         dockerfile.close()
 
-    def save_script_to_dir(self,directory):
+    def save_script_to_dir(self, directory):
         source_dir = os.path.dirname(os.path.realpath(__file__))
-        is_simple_script = self.ui.ck_simple_script.isChecked()
-        if is_simple_script:
+        cbo_script_data = self.ui.cbo_script_template.currentData()
+        for fl in cbo_script_data:
             script_str = open(
-                op.join(source_dir, 'script_library/simple_script/run.py'),
-                'r'
+                op.join(source_dir, fl)
             ).read()
-            script_str = script_str.replace('{name}', self.ui.txt_name.text())
             script_str = script_str.replace(
-                '{simple_script_name}', 
+                '{name}', self.ui.txt_name.text()
+            )
+            script_str = script_str.replace(
+                '{base_command}',
                 self.ui.txt_simple_script.text()
             )
+            dirs = op.dirname(fl).split('/')
+            basedir = op.join(dirs[0], dirs[1], '')
+            if len(dirs) > 2:
+                os.makedirs(
+                    op.join(
+                        directory,
+                        dirs[2]
+                    ),
+                    exist_ok=True
+                )
 
-            out_file = open(op.join(directory,'run.py'),'w')
-            out_file.write(script_str)
-            out_file.close()
+            open(
+                op.join(
+                    directory,
+                    fl.replace(basedir, '')
+                ),
+                'w'
+            ).write(script_str)
+
+        # is_simple_script = self.ui.ck_simple_script.isChecked()
+
+        # if is_simple_script:
+        #     script_str = open(
+        #         op.join(source_dir, 'script_library/simple_script/run.py'),
+        #         'r'
+        #     ).read()
+        #     script_str = script_str.replace('{name}', self.ui.txt_name.text())
+        #     script_str = script_str.replace(
+        #         '{base_command}',
+        #         self.ui.txt_simple_script.text()
+        #     )
+
+        #     out_file = open(op.join(directory,'run.py'),'w')
+        #     out_file.write(script_str)
+        #     out_file.close()
 
     def export_gear(self):
         directory = str(
@@ -403,10 +441,11 @@ class mywindow(QtWidgets.QMainWindow):
                 self, "Select Folder to export gear template"
             )
         )
-        
+
         self.save_manifest_to_dir(directory)
         self.save_dockerfile_to_dir(directory)
         self.save_script_to_dir(directory)
+
 
 app = QtWidgets.QApplication([])
 application = mywindow()

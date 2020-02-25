@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_dlg_inputs(object):
     def setupUi(self, dlg_inputs):
         dlg_inputs.setObjectName("dlg_inputs")
@@ -15,7 +16,8 @@ class Ui_dlg_inputs(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(dlg_inputs)
         self.buttonBox.setGeometry(QtCore.QRect(110, 230, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.txt_name = QtWidgets.QLineEdit(dlg_inputs)
         self.txt_name.setGeometry(QtCore.QRect(110, 10, 113, 21))
@@ -61,7 +63,10 @@ class Ui_dlg_inputs(object):
 
     def retranslateUi(self, dlg_inputs):
         _translate = QtCore.QCoreApplication.translate
-        dlg_inputs.setWindowTitle(_translate("dlg_inputs", "Add or Edit Inputs"))
+        dlg_inputs.setWindowTitle(
+            _translate(
+                "dlg_inputs",
+                "Add or Edit Inputs"))
         self.label.setText(_translate("dlg_inputs", "name:"))
         self.label_2.setText(_translate("dlg_inputs", "description:"))
         self.label_3.setText(_translate("dlg_inputs", "base:"))
@@ -74,4 +79,3 @@ class Ui_dlg_inputs(object):
         self.cbo_type.setItemText(1, _translate("dlg_inputs", "nifti"))
         self.cbo_type.setItemText(2, _translate("dlg_inputs", "dicom"))
         self.ck_optional.setText(_translate("dlg_inputs", "optional"))
-

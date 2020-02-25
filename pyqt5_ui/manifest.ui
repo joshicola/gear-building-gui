@@ -383,7 +383,7 @@
        <string>config:</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>168</x>
@@ -845,22 +845,6 @@ compress working directory to a file in output
 notify on pep8 violations(??)</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="ck_simple_script">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>111</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Simple Script</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="txt_simple_script">
       <property name="geometry">
        <rect>
@@ -884,7 +868,40 @@ notify on pep8 violations(??)</string>
        </rect>
       </property>
       <property name="text">
-       <string>Simple Script Name:</string>
+       <string>Command Name:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cbo_script_template">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>170</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string extracomment="Hi">Simple Script</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Build/Validate/Execute</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>131</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Script Template:</string>
       </property>
      </widget>
     </widget>
