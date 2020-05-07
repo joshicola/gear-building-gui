@@ -1,452 +1,302 @@
-# -*- coding: utf-8 -*-
+import json
+import os
+import os.path as op
+import urllib.request
 
-# Form implementation generated from reading ui file 'manifest.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
-
+import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from gear_builder_gui.config_dialog import config_dialog
+from gear_builder_gui.input_dialog import input_dialog
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(670, 647)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(30, 10, 621, 551))
-        self.tabWidget.setObjectName("tabWidget")
-        self.tb_manifest = QtWidgets.QWidget()
-        self.tb_manifest.setObjectName("tb_manifest")
-        self.btn_input_delete = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_input_delete.setGeometry(QtCore.QRect(230, 340, 61, 32))
-        self.btn_input_delete.setObjectName("btn_input_delete")
-        self.label_9 = QtWidgets.QLabel(self.tb_manifest)
-        self.label_9.setGeometry(QtCore.QRect(80, 320, 60, 16))
-        self.label_9.setObjectName("label_9")
-        self.btn_config_edit = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_config_edit.setGeometry(QtCore.QRect(180, 420, 51, 32))
-        self.btn_config_edit.setObjectName("btn_config_edit")
-        self.txt_label = QtWidgets.QLineEdit(self.tb_manifest)
-        self.txt_label.setGeometry(QtCore.QRect(70, 90, 113, 21))
-        self.txt_label.setMaxLength(100)
-        self.txt_label.setObjectName("txt_label")
-        self.txt_name = QtWidgets.QLineEdit(self.tb_manifest)
-        self.txt_name.setGeometry(QtCore.QRect(70, 50, 113, 21))
-        self.txt_name.setMaxLength(100)
-        self.txt_name.setObjectName("txt_name")
-        self.label = QtWidgets.QLabel(self.tb_manifest)
-        self.label.setGeometry(QtCore.QRect(220, 30, 81, 16))
-        self.label.setObjectName("label")
-        self.lblName = QtWidgets.QLabel(self.tb_manifest)
-        self.lblName.setGeometry(QtCore.QRect(70, 30, 60, 16))
-        self.lblName.setObjectName("lblName")
-        self.rdo_analysis = QtWidgets.QRadioButton(self.tb_manifest)
-        self.rdo_analysis.setGeometry(QtCore.QRect(320, 200, 100, 20))
-        self.rdo_analysis.setChecked(True)
-        self.rdo_analysis.setObjectName("rdo_analysis")
-        self.txt_description = QtWidgets.QPlainTextEdit(self.tb_manifest)
-        self.txt_description.setGeometry(QtCore.QRect(220, 50, 221, 61))
-        self.txt_description.setObjectName("txt_description")
-        self.txt_suite = QtWidgets.QLineEdit(self.tb_manifest)
-        self.txt_suite.setGeometry(QtCore.QRect(430, 130, 125, 21))
-        self.txt_suite.setMaxLength(100)
-        self.txt_suite.setObjectName("txt_suite")
-        self.layoutWidget = QtWidgets.QWidget(self.tb_manifest)
-        self.layoutWidget.setGeometry(QtCore.QRect(80, 130, 78, 174))
-        self.layoutWidget.setObjectName("layoutWidget")
-        self.formLayout = QtWidgets.QFormLayout(self.layoutWidget)
-        self.formLayout.setContentsMargins(0, 0, 0, 0)
-        self.formLayout.setObjectName("formLayout")
-        self.label_2 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_2.setObjectName("label_2")
-        self.formLayout.setWidget(
-            0, QtWidgets.QFormLayout.LabelRole, self.label_2)
-        self.label_3 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_3.setObjectName("label_3")
-        self.formLayout.setWidget(
-            1, QtWidgets.QFormLayout.LabelRole, self.label_3)
-        self.label_4 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_4.setObjectName("label_4")
-        self.formLayout.setWidget(
-            2, QtWidgets.QFormLayout.LabelRole, self.label_4)
-        self.label_5 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_5.setObjectName("label_5")
-        self.formLayout.setWidget(
-            3, QtWidgets.QFormLayout.LabelRole, self.label_5)
-        self.label_6 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_6.setObjectName("label_6")
-        self.formLayout.setWidget(
-            4, QtWidgets.QFormLayout.LabelRole, self.label_6)
-        self.label_7 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_7.setObjectName("label_7")
-        self.formLayout.setWidget(
-            5, QtWidgets.QFormLayout.LabelRole, self.label_7)
-        self.label_8 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_8.setObjectName("label_8")
-        self.formLayout.setWidget(
-            6, QtWidgets.QFormLayout.LabelRole, self.label_8)
-        self.btn_config_add = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_config_add.setGeometry(QtCore.QRect(130, 420, 51, 32))
-        self.btn_config_add.setObjectName("btn_config_add")
-        self.btn_config_delete = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_config_delete.setGeometry(QtCore.QRect(230, 420, 61, 32))
-        self.btn_config_delete.setObjectName("btn_config_delete")
-        self.btn_input_add = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_input_add.setGeometry(QtCore.QRect(130, 340, 51, 32))
-        self.btn_input_add.setObjectName("btn_input_add")
-        self.rdo_utility = QtWidgets.QRadioButton(self.tb_manifest)
-        self.rdo_utility.setGeometry(QtCore.QRect(320, 180, 100, 20))
-        self.rdo_utility.setObjectName("rdo_utility")
-        self.btn_load_manifest = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_load_manifest.setGeometry(QtCore.QRect(200, 490, 113, 32))
-        self.btn_load_manifest.setObjectName("btn_load_manifest")
-        self.btn_input_edit = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_input_edit.setGeometry(QtCore.QRect(180, 340, 51, 32))
-        self.btn_input_edit.setObjectName("btn_input_edit")
-        self.cmbo_inputs = QtWidgets.QComboBox(self.tb_manifest)
-        self.cmbo_inputs.setGeometry(QtCore.QRect(130, 320, 171, 26))
-        self.cmbo_inputs.setObjectName("cmbo_inputs")
-        self.chk_flywheel = QtWidgets.QCheckBox(self.tb_manifest)
-        self.chk_flywheel.setGeometry(QtCore.QRect(320, 130, 111, 20))
-        self.chk_flywheel.setObjectName("chk_flywheel")
-        self.btn_save_manifest = QtWidgets.QPushButton(self.tb_manifest)
-        self.btn_save_manifest.setGeometry(QtCore.QRect(90, 490, 113, 32))
-        self.btn_save_manifest.setObjectName("btn_save_manifest")
-        self.cmbo_config = QtWidgets.QComboBox(self.tb_manifest)
-        self.cmbo_config.setGeometry(QtCore.QRect(130, 400, 171, 26))
-        self.cmbo_config.setObjectName("cmbo_config")
-        self.lblLabel = QtWidgets.QLabel(self.tb_manifest)
-        self.lblLabel.setGeometry(QtCore.QRect(70, 70, 60, 16))
-        self.lblLabel.setObjectName("lblLabel")
-        self.label_10 = QtWidgets.QLabel(self.tb_manifest)
-        self.label_10.setGeometry(QtCore.QRect(80, 400, 60, 16))
-        self.label_10.setObjectName("label_10")
-        self.layoutWidget1 = QtWidgets.QWidget(self.tb_manifest)
-        self.layoutWidget1.setGeometry(QtCore.QRect(168, 131, 131, 171))
-        self.layoutWidget1.setObjectName("layoutWidget1")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget1)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.txt_author = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_author.setMaxLength(100)
-        self.txt_author.setObjectName("txt_author")
-        self.verticalLayout.addWidget(self.txt_author)
-        self.txt_maintainer = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_maintainer.setMaxLength(100)
-        self.txt_maintainer.setObjectName("txt_maintainer")
-        self.verticalLayout.addWidget(self.txt_maintainer)
-        self.txt_license = QtWidgets.QComboBox(self.layoutWidget1)
-        self.txt_license.setCurrentText("")
-        self.txt_license.setObjectName("txt_license")
-        self.verticalLayout.addWidget(self.txt_license)
-        self.txt_url = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_url.setObjectName("txt_url")
-        self.verticalLayout.addWidget(self.txt_url)
-        self.txt_source = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_source.setWhatsThis("")
-        self.txt_source.setObjectName("txt_source")
-        self.verticalLayout.addWidget(self.txt_source)
-        self.txt_cite = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_cite.setMaxLength(5000)
-        self.txt_cite.setObjectName("txt_cite")
-        self.verticalLayout.addWidget(self.txt_cite)
-        self.txt_version = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.txt_version.setMaxLength(100)
-        self.txt_version.setObjectName("txt_version")
-        self.verticalLayout.addWidget(self.txt_version)
-        self.tabWidget.addTab(self.tb_manifest, "")
-        self.tb_dockerfile = QtWidgets.QWidget()
-        self.tb_dockerfile.setObjectName("tb_dockerfile")
-        self.label_11 = QtWidgets.QLabel(self.tb_dockerfile)
-        self.label_11.setGeometry(QtCore.QRect(160, 20, 141, 16))
-        self.label_11.setObjectName("label_11")
-        self.label_12 = QtWidgets.QLabel(self.tb_dockerfile)
-        self.label_12.setGeometry(QtCore.QRect(150, 120, 201, 16))
-        self.label_12.setObjectName("label_12")
-        self.label_13 = QtWidgets.QLabel(self.tb_dockerfile)
-        self.label_13.setGeometry(QtCore.QRect(150, 240, 201, 16))
-        self.label_13.setObjectName("label_13")
-        self.txt_maintainer_2 = QtWidgets.QLineEdit(self.tb_dockerfile)
-        self.txt_maintainer_2.setGeometry(QtCore.QRect(280, 80, 211, 21))
-        self.txt_maintainer_2.setObjectName("txt_maintainer_2")
-        self.label_15 = QtWidgets.QLabel(self.tb_dockerfile)
-        self.label_15.setGeometry(QtCore.QRect(190, 80, 81, 16))
-        self.label_15.setObjectName("label_15")
-        self.txt_docker_source = QtWidgets.QLineEdit(self.tb_dockerfile)
-        self.txt_docker_source.setGeometry(QtCore.QRect(300, 20, 113, 21))
-        self.txt_docker_source.setObjectName("txt_docker_source")
-        self.label_17 = QtWidgets.QLabel(self.tb_dockerfile)
-        self.label_17.setGeometry(QtCore.QRect(150, 370, 201, 16))
-        self.label_17.setObjectName("label_17")
-        self.tblENV = QtWidgets.QTableWidget(self.tb_dockerfile)
-        self.tblENV.setGeometry(QtCore.QRect(150, 390, 331, 91))
-        self.tblENV.setRowCount(2)
-        self.tblENV.setObjectName("tblENV")
-        self.tblENV.setColumnCount(2)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setItem(0, 1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setItem(1, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblENV.setItem(1, 1, item)
-        self.tblENV.horizontalHeader().setDefaultSectionSize(150)
-        self.tblENV.horizontalHeader().setSortIndicatorShown(False)
-        self.tblENV.horizontalHeader().setStretchLastSection(True)
-        self.tblENV.verticalHeader().setSortIndicatorShown(False)
-        self.tblENV.verticalHeader().setStretchLastSection(False)
-        self.btn_ENV_del = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_ENV_del.setGeometry(QtCore.QRect(480, 420, 51, 32))
-        self.btn_ENV_del.setObjectName("btn_ENV_del")
-        self.btn_ENV_add = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_ENV_add.setGeometry(QtCore.QRect(480, 390, 51, 32))
-        self.btn_ENV_add.setObjectName("btn_ENV_add")
-        self.btn_PIP_del = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_PIP_del.setGeometry(QtCore.QRect(480, 290, 51, 32))
-        self.btn_PIP_del.setObjectName("btn_PIP_del")
-        self.btn_PIP_add = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_PIP_add.setGeometry(QtCore.QRect(480, 260, 51, 32))
-        self.btn_PIP_add.setObjectName("btn_PIP_add")
-        self.tblPIP = QtWidgets.QTableWidget(self.tb_dockerfile)
-        self.tblPIP.setGeometry(QtCore.QRect(150, 260, 331, 91))
-        self.tblPIP.setRowCount(2)
-        self.tblPIP.setObjectName("tblPIP")
-        self.tblPIP.setColumnCount(2)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setItem(0, 1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setItem(1, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblPIP.setItem(1, 1, item)
-        self.tblPIP.horizontalHeader().setDefaultSectionSize(150)
-        self.tblPIP.horizontalHeader().setSortIndicatorShown(False)
-        self.tblPIP.horizontalHeader().setStretchLastSection(True)
-        self.tblPIP.verticalHeader().setSortIndicatorShown(False)
-        self.tblPIP.verticalHeader().setStretchLastSection(False)
-        self.tblAPT = QtWidgets.QTableWidget(self.tb_dockerfile)
-        self.tblAPT.setGeometry(QtCore.QRect(150, 140, 331, 91))
-        self.tblAPT.setRowCount(2)
-        self.tblAPT.setObjectName("tblAPT")
-        self.tblAPT.setColumnCount(2)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setItem(0, 1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setItem(1, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblAPT.setItem(1, 1, item)
-        self.tblAPT.horizontalHeader().setDefaultSectionSize(150)
-        self.tblAPT.horizontalHeader().setSortIndicatorShown(False)
-        self.tblAPT.horizontalHeader().setStretchLastSection(True)
-        self.tblAPT.verticalHeader().setSortIndicatorShown(False)
-        self.tblAPT.verticalHeader().setStretchLastSection(False)
-        self.btn_APT_del = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_APT_del.setGeometry(QtCore.QRect(480, 170, 51, 32))
-        self.btn_APT_del.setObjectName("btn_APT_del")
-        self.btn_APT_add = QtWidgets.QPushButton(self.tb_dockerfile)
-        self.btn_APT_add.setGeometry(QtCore.QRect(480, 140, 51, 32))
-        self.btn_APT_add.setObjectName("btn_APT_add")
-        self.tabWidget.addTab(self.tb_dockerfile, "")
-        self.scripts = QtWidgets.QWidget()
-        self.scripts.setObjectName("scripts")
-        self.label_14 = QtWidgets.QLabel(self.scripts)
-        self.label_14.setGeometry(QtCore.QRect(80, 290, 451, 181))
-        self.label_14.setObjectName("label_14")
-        self.txt_simple_script = QtWidgets.QLineEdit(self.scripts)
-        self.txt_simple_script.setGeometry(QtCore.QRect(10, 70, 171, 21))
-        self.txt_simple_script.setObjectName("txt_simple_script")
-        self.label_16 = QtWidgets.QLabel(self.scripts)
-        self.label_16.setGeometry(QtCore.QRect(10, 50, 131, 16))
-        self.label_16.setObjectName("label_16")
-        self.cbo_script_template = QtWidgets.QComboBox(self.scripts)
-        self.cbo_script_template.setGeometry(QtCore.QRect(10, 20, 170, 26))
-        self.cbo_script_template.setObjectName("cbo_script_template")
-        self.cbo_script_template.addItem("")
-        self.cbo_script_template.addItem("")
-        self.label_18 = QtWidgets.QLabel(self.scripts)
-        self.label_18.setGeometry(QtCore.QRect(10, 0, 131, 16))
-        self.label_18.setObjectName("label_18")
-        self.tabWidget.addTab(self.scripts, "")
-        self.btn_export_gear = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_export_gear.setGeometry(QtCore.QRect(20, 570, 101, 32))
-        self.btn_export_gear.setObjectName("btn_export_gear")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 670, 22))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+class Manifest():
+    def __init__(self, main_window):
+        self.main_window = main_window
+        self.ui = main_window.ui
+        # Initialize "input" Section
+        self.ui.btn_input_add.clicked.connect(self.add_input)
+        self.ui.btn_input_edit.clicked.connect(self.edit_input)
+        self.ui.btn_input_delete.clicked.connect(self.delete_input)
+        # Initialize "config" Section
+        self.ui.btn_config_add.clicked.connect(self.add_config)
+        self.ui.btn_config_edit.clicked.connect(self.edit_config)
+        self.ui.btn_config_delete.clicked.connect(self.delete_config)
+        # Disable edit/delete buttons on default:
+        self.ui.btn_input_edit.setEnabled(False)
+        self.ui.btn_input_delete.setEnabled(False)
+        self.ui.btn_config_edit.setEnabled(False)
+        self.ui.btn_config_delete.setEnabled(False)
+        # Save/load functionality
+        self.ui.btn_load_manifest.clicked.connect(self.load_manifest)
+        self.ui.btn_save_manifest.clicked.connect(self.save_manifest)
+        # connect to docker "maintainer" and validators
+        self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
+        self.init_validators()
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Gear Builder"))
-        self.btn_input_delete.setText(_translate("MainWindow", "Delete"))
-        self.label_9.setText(_translate("MainWindow", "inputs:"))
-        self.btn_config_edit.setText(_translate("MainWindow", "Edit"))
-        self.txt_label.setText(_translate("MainWindow", "Test Gear"))
-        self.txt_name.setText(_translate("MainWindow", "test-gear"))
-        self.label.setText(_translate("MainWindow", "Description:"))
-        self.lblName.setText(_translate("MainWindow", "name:"))
-        self.rdo_analysis.setText(_translate("MainWindow", "Analysis"))
-        self.txt_description.setPlainText(
-            _translate(
-                "MainWindow",
-                "This is a Test Gear. Use with caution."))
-        self.txt_suite.setText(_translate("MainWindow", "One Suite World"))
-        self.label_2.setText(_translate("MainWindow", "Author:"))
-        self.label_3.setText(_translate("MainWindow", "maintainer:"))
-        self.label_4.setText(_translate("MainWindow", "License:"))
-        self.label_5.setText(_translate("MainWindow", "url:"))
-        self.label_6.setText(_translate("MainWindow", "source:"))
-        self.label_7.setText(_translate("MainWindow", "cite:"))
-        self.label_8.setText(_translate("MainWindow", "version:"))
-        self.btn_config_add.setText(_translate("MainWindow", "Add"))
-        self.btn_config_delete.setText(_translate("MainWindow", "Delete"))
-        self.btn_input_add.setText(_translate("MainWindow", "Add"))
-        self.rdo_utility.setText(_translate("MainWindow", "Utility"))
-        self.btn_load_manifest.setText(
-            _translate("MainWindow", "load manifest"))
-        self.btn_input_edit.setText(_translate("MainWindow", "Edit"))
-        self.chk_flywheel.setText(_translate("MainWindow", "flywheel suite"))
-        self.btn_save_manifest.setText(
-            _translate("MainWindow", "save manifest"))
-        self.lblLabel.setText(_translate("MainWindow", "label:"))
-        self.label_10.setText(_translate("MainWindow", "config:"))
-        self.txt_author.setText(_translate("MainWindow", "Flywheel"))
-        self.txt_maintainer.setText(
-            _translate(
-                "MainWindow",
-                "Flywheel <support@flywheel.io>"))
-        self.txt_url.setText(
-            _translate(
-                "MainWindow",
-                "https://github.com/flywheel-apps/test-gear"))
-        self.txt_version.setText(_translate("MainWindow", "0.0.1"))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(
-                self.tb_manifest), _translate(
-                "MainWindow", "Manifest"))
-        self.label_11.setText(_translate("MainWindow", "Select Source Image:"))
-        self.label_12.setText(
-            _translate(
-                "MainWindow",
-                "Indicate apt-get dependencies:"))
-        self.label_13.setText(
-            _translate(
-                "MainWindow",
-                "Indicate python dependencies:"))
-        self.txt_maintainer_2.setText(
-            _translate(
-                "MainWindow",
-                "Flywheel <support@flywheel.io>"))
-        self.label_15.setText(_translate("MainWindow", "maintainer:"))
-        self.txt_docker_source.setText(
-            _translate("MainWindow", "ubuntu:xenial"))
-        self.label_17.setText(_translate("MainWindow", "Set ENV variables:"))
-        item = self.tblENV.verticalHeaderItem(0)
-        item.setText(_translate("MainWindow", "1"))
-        item = self.tblENV.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Variable"))
-        item = self.tblENV.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Value"))
-        __sortingEnabled = self.tblENV.isSortingEnabled()
-        self.tblENV.setSortingEnabled(False)
-        item = self.tblENV.item(0, 0)
-        item.setText(_translate("MainWindow", "PATH"))
-        item = self.tblENV.item(0, 1)
-        item.setText(_translate("MainWindow", "$PATH"))
-        item = self.tblENV.item(1, 0)
-        item.setText(_translate("MainWindow", "LD_LIBRARY_PATH"))
-        item = self.tblENV.item(1, 1)
-        item.setText(_translate("MainWindow", "$LD_LIBRARY_PATH"))
-        self.tblENV.setSortingEnabled(__sortingEnabled)
-        self.btn_ENV_del.setText(_translate("MainWindow", "Del"))
-        self.btn_ENV_add.setText(_translate("MainWindow", "Add"))
-        self.btn_PIP_del.setText(_translate("MainWindow", "Del"))
-        self.btn_PIP_add.setText(_translate("MainWindow", "Add"))
-        item = self.tblPIP.verticalHeaderItem(0)
-        item.setText(_translate("MainWindow", "1"))
-        item = self.tblPIP.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Package"))
-        item = self.tblPIP.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Version (Optional)"))
-        __sortingEnabled = self.tblPIP.isSortingEnabled()
-        self.tblPIP.setSortingEnabled(False)
-        item = self.tblPIP.item(0, 0)
-        item.setText(_translate("MainWindow", "flywheel-sdk"))
-        item = self.tblPIP.item(1, 0)
-        item.setText(_translate("MainWindow", "nibabel"))
-        self.tblPIP.setSortingEnabled(__sortingEnabled)
-        item = self.tblAPT.verticalHeaderItem(0)
-        item.setText(_translate("MainWindow", "1"))
-        item = self.tblAPT.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Package"))
-        item = self.tblAPT.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Version (Optional)"))
-        __sortingEnabled = self.tblAPT.isSortingEnabled()
-        self.tblAPT.setSortingEnabled(False)
-        item = self.tblAPT.item(0, 0)
-        item.setText(_translate("MainWindow", "python3-pip"))
-        item = self.tblAPT.item(1, 0)
-        item.setText(_translate("MainWindow", "zip"))
-        self.tblAPT.setSortingEnabled(__sortingEnabled)
-        self.btn_APT_del.setText(_translate("MainWindow", "Del"))
-        self.btn_APT_add.setText(_translate("MainWindow", "Add"))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(
-                self.tb_dockerfile), _translate(
-                "MainWindow", "Dockerfile"))
-        self.label_14.setText(
-            _translate(
-                "MainWindow", "Provide the base run.py and utils package.\n"
-                "Creating build/validate/execute functional modules around specific command-line programs.\n"
-                "Add a command-line \"switch-detector\" to populate the manifest config with values to loop through.\n"
-                "Provide a library of code-blocks that facilitate certain functionality\n"
-                "module-based log reporting\n"
-                "bids functionality\n"
-                "verbose config validation against manifest\n"
-                "compress working directory to a file in output\n"
-                "notify on pep8 violations(??)"))
-        self.txt_simple_script.setText(_translate("MainWindow", "echo"))
-        self.label_16.setText(_translate("MainWindow", "Command Name:"))
-        self.cbo_script_template.setItemText(
-            0, _translate("MainWindow", "Simple Script"))
-        self.cbo_script_template.setItemText(
-            1, _translate("MainWindow", "Build/Validate/Execute"))
-        self.label_18.setText(_translate("MainWindow", "Script Template:"))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(
-                self.scripts), _translate(
-                "MainWindow", "Script Management"))
-        self.btn_export_gear.setText(_translate("MainWindow", "Export Gear"))
+    def update_maintainers(self):
+        if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
+            self.ui.txt_maintainer_2.setText(self.ui.txt_maintainer.text())
+
+    # Add functionality to the input add/edit/deleted buttons
+    def add_input(self):
+        dialog = input_dialog()
+        name, data = dialog.get_data()
+        if name is not None:
+            self.ui.cmbo_inputs.addItem(name, userData=data)
+
+    def edit_input(self):
+        obj = self.ui.cmbo_inputs
+        name = obj.currentText()
+        data = obj.currentData()
+        dialog = input_dialog()
+        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        if name_upd is not None:
+            i = obj.findText(name)
+            obj.setItemText(i, name_upd)
+            obj.setItemData(i, data)
+            self.ui.btn_input_edit.setEnabled(True)
+            self.ui.btn_input_delete.setEnabled(True)
+
+    def delete_input(self):
+        i = self.ui.cmbo_inputs.currentIndex()
+        self.ui.cmbo_inputs.removeItem(i)
+        if self.ui.cmbo_inputs.count() == 0:
+            self.ui.btn_input_edit.setEnabled(False)
+            self.ui.btn_input_delete.setEnabled(False)
+
+    def add_config(self):
+        dialog = config_dialog()
+        name, data = dialog.get_data()
+        if name is not None:
+            self.ui.cmbo_config.addItem(name, userData=data)
+            self.ui.btn_config_edit.setEnabled(True)
+            self.ui.btn_config_delete.setEnabled(True)
+
+    def edit_config(self):
+        obj = self.ui.cmbo_config
+        name = obj.currentText()
+        data = obj.currentData()
+        dialog = config_dialog()
+        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        if name_upd is not None:
+            i = obj.findText(name)
+            obj.setItemText(i, name_upd)
+            obj.setItemData(i, data)
+
+    def delete_config(self):
+        i = self.ui.cmbo_config.currentIndex()
+        self.ui.cmbo_config.removeItem(i)
+        if self.ui.cmbo_config.count() == 0:
+            self.ui.btn_config_edit.setEnabled(False)
+            self.ui.btn_config_delete.setEnabled(False)
+
+    def load_manifest(self):
+        manifest_file = QtWidgets.QFileDialog.getOpenFileName(
+            self.main_window,
+            "Select manifest.json to load.",
+            filter="manifest.json"
+        )
+
+        # TODO: Should I warn about replacement of all manifest values?
+        if len(manifest_file[0]) > 0:
+            self.load_manifest_file(manifest_file[0])
+
+    def load_manifest_file(self, manifest_file):
+        # NOTE: This would be a good place to warn if the loaded manifest was invalid
+        # Required manifest keys:
+        keys = [
+            'name',
+            'label',
+            'description',
+            'author',
+            'maintainer',
+            'license',
+            'url',
+            'source',
+            'cite',
+            'version'
+        ]
+        try:
+            manifest = json.load(open(manifest_file, 'r'))
+            for key in keys:
+                text_obj = eval('self.ui.txt_' + key)
+                text_type = type(eval('self.ui.txt_' + key))
+                text_value = manifest[key]
+                if text_type == QtWidgets.QPlainTextEdit:
+                    text_value = text_obj.setPlainText(text_value)
+                elif text_type == QtWidgets.QComboBox:
+                    index = text_obj.findText(text_value)
+                    if index:
+                        text_obj.setCurrentIndex(index)
+                else:
+                    text_obj.setText(text_value)
+            # load custom fields
+            custom = manifest['custom']
+            self.ui.rdo_analysis.setChecked(
+                custom['gear-builder']['category'] == 'analysis'
+            )
+            if custom.get("flywheel"):
+                self.ui.chk_flywheel.setChecked(True)
+                self.ui.txt_suite.setText(
+                    custom["flywheel"]["suite"]
+                )
+
+            # load inputs section
+            inputs = manifest['inputs']
+
+            cbo_obj = self.ui.cmbo_inputs
+            cbo_obj.clear()
+            for name, data in inputs.items():
+                cbo_obj.addItem(name, userData=data)
+
+            # load configs section
+            config = manifest['config']
+
+            cbo_obj = self.ui.cmbo_config
+            cbo_obj.clear()
+            for name, data in config.items():
+                cbo_obj.addItem(name, userData=data)
+
+        except Exception as e:
+            print(e)
+
+    def save_manifest(self):
+        directory = str(
+            QtWidgets.QFileDialog.getExistingDirectory(
+                self.main_window,
+                "Select Folder to save manifest.json."
+            )
+        )
+        if len(directory) > 0:
+            self.save(directory)
+
+    def save(self, directory):
+        manifest = {}
+        # Required keys all manifests have
+        keys = [
+            'name',
+            'label',
+            'description',
+            'author',
+            'maintainer',
+            'license',
+            'url',
+            'source',
+            'cite',
+            'version'
+        ]
+        for key in keys:
+            text_obj = eval('self.ui.txt_' + key)
+            text_type = type(eval('self.ui.txt_' + key))
+            if text_type == QtWidgets.QPlainTextEdit:
+                text_value = text_obj.toPlainText()
+            elif text_type == QtWidgets.QComboBox:
+                text_value = text_obj.currentText()
+            else:
+                text_value = text_obj.text()
+            manifest[key] = text_value
+
+        # Build Custom section
+        custom = {}
+        custom['docker-image'] = \
+            'flywheel/' + manifest['name'] + ':' + manifest['version']
+        gear_builder = {}
+        # gear category on radio button
+        if self.ui.rdo_analysis.isChecked():
+            gear_builder['category'] = 'analysis'
+        else:
+            gear_builder['category'] = 'converter'
+
+        gear_builder['image'] = custom['docker-image']
+
+        custom['gear-builder'] = gear_builder
+        # if "suite"
+        if self.ui.chk_flywheel.isChecked():
+            flywheel = {}
+            flywheel['suite'] = self.ui.txt_suite.text()
+            custom['flywheel'] = flywheel
+
+        manifest['custom'] = custom
+
+        # Build inputs section
+        # Each input item consists of the text (key) of a combo box and
+        # specifically constructed data (a dictionary).
+        inputs = {}
+        cbo_obj = self.ui.cmbo_inputs
+        for i in range(cbo_obj.count()):
+            inputs[cbo_obj.itemText(i)] = cbo_obj.itemData(i)
+
+        manifest['inputs'] = inputs
+
+        # Build config section
+        # Each config item consists of the text (key) of a combo box and
+        # specifically constructed data (a dictionary).
+        config = {}
+        cbo_obj = self.ui.cmbo_config
+        for i in range(cbo_obj.count()):
+            config[cbo_obj.itemText(i)] = cbo_obj.itemData(i)
+
+        manifest['config'] = config
+        # The command
+        manifest['command'] = '/flywheel/v0/run.py'
+
+        json.dump(
+            manifest,
+            open(op.join(directory, 'manifest.json'), 'w'),
+            indent=2
+        )
+
+    def checkText(self):
+        obj = self.ui.txt_description
+        if len(obj.toPlainText()) > obj.maxLength:
+            obj.textCursor().deletePreviousChar()
+
+    def init_validators(self):
+        spec_url = "https://gitlab.com/flywheel-io/public/gears/-/raw/master/spec/manifest.schema.json"
+        request = requests.get(spec_url)
+        # url = urllib.request.urlopen(spec_url)
+        gear_spec = json.loads(request.content)
+        keys = [
+            'name',
+            'label',
+            'description',
+            'author',
+            'maintainer',
+            'license',
+            'url',
+            'source',
+            'cite',
+            'version'
+        ]
+        for key in keys:
+            gear_spec_item = gear_spec['properties'][key]
+            if key == 'license':
+                text_obj = self.ui.txt_license
+                text_obj.addItems(gear_spec['properties']['license']['enum'])
+                text_obj.setCurrentIndex(text_obj.__len__() - 1)
+            else:
+                text_obj = eval('self.ui.txt_' + key)
+                text_type = type(eval('self.ui.txt_' + key))
+                if 'maxLength' in gear_spec_item.keys():
+                    text_obj.maxLength = gear_spec_item['maxLength']
+
+                if 'pattern' in gear_spec_item.keys():
+                    rx = QtCore.QRegExp(gear_spec_item['pattern'])
+                    val = QtGui.QRegExpValidator(rx, self.main_window)
+                    text_obj.setValidator(val)
+                elif key == 'version':
+                    rx = QtCore.QRegExp(
+                        '^((([0-9]+)\\.([0-9]+)\\.([0-9]+)'
+                        '(?:-_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)'
+                        '(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$'
+                    )
+                    val = QtGui.QRegExpValidator(rx, self.main_window)
+                    text_obj.setValidator(val)
+
+                if text_type == QtWidgets.QPlainTextEdit:
+                    text_obj.textChanged.connect(self.checkText)
+
+            if 'description' in gear_spec_item.keys():
+                text_obj.whatsThis = gear_spec_item['description']
+                text_obj.setToolTip(gear_spec_item['description'])

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-import os
 import logging
+import os
 
-from gear_toolkit import gear_toolkit_context
-from gear_toolkit import command_line
+from gear_toolkit import command_line, gear_toolkit_context
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +13,8 @@ def main(context):
         # build the command string
         command = ['{base_command}']
 
-        # this gathers the configuration values ONLY
+        # this gathers the configuration values ONLY and uses them as positional arguments
+        # to "{base_command}"
         # for including input values, see build_validate_execute
         for key in context.config.keys():
             command.append(context.config[key])
@@ -25,7 +25,7 @@ def main(context):
     except Exception as e:
         log.exception(e,)
         log.fatal(
-            'Error executing {name}.',
+            "Error executing {name}.",
         )
         return 1
 

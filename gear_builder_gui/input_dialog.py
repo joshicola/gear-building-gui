@@ -1,5 +1,5 @@
 from .inputs import Ui_dlg_inputs
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 class input_dialog(QtWidgets.QDialog):
@@ -7,6 +7,15 @@ class input_dialog(QtWidgets.QDialog):
         super(input_dialog, self).__init__(parent)
         self.ui = Ui_dlg_inputs()
         self.ui.setupUi(self)
+        self.ui.txt_name.textChanged.connect(self.changed_name)
+        # disable OK button on create.
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        btn.setEnabled(False)
+        # Create a validation protocol
+        self.ui.txt_name.maxLength = 30
+        rx = QtCore.QRegExp("^[a-z0-9\\-\\_]+$")
+        val = QtGui.QRegExpValidator(rx, self)
+        self.ui.txt_name.setValidator(val)
         if cbo_val is not None:
             name, editD = cbo_val
             self.ui.txt_name.setText(name)
@@ -37,6 +46,15 @@ class input_dialog(QtWidgets.QDialog):
 
         data['optional'] = self.ui.ck_optional.isChecked()
         return [name, data]
+
+    def changed_name(self):
+        # We will not allow for a config name to be less than 1 character
+        txt_name = self.ui.txt_name
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        if len(txt_name.text()) < 1:
+            btn.setEnabled(False)
+        else:
+            btn.setEnabled(True)
 
     @staticmethod
     def get_data(parent=None, cbo_val=None):

@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'config.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -16,26 +17,25 @@ class Ui_dlg_config(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(dlg_config)
         self.buttonBox.setGeometry(QtCore.QRect(110, 230, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.label = QtWidgets.QLabel(dlg_config)
-        self.label.setGeometry(QtCore.QRect(55, 22, 37, 16))
+        self.label.setGeometry(QtCore.QRect(50, 20, 37, 16))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(dlg_config)
         self.label_2.setGeometry(QtCore.QRect(20, 48, 72, 16))
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(dlg_config)
-        self.label_3.setGeometry(QtCore.QRect(61, 74, 31, 16))
+        self.label_3.setGeometry(QtCore.QRect(60, 70, 31, 31))
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(dlg_config)
         self.label_4.setGeometry(QtCore.QRect(54, 152, 38, 16))
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(dlg_config)
-        self.label_5.setGeometry(QtCore.QRect(45, 100, 47, 16))
+        self.label_5.setGeometry(QtCore.QRect(40, 100, 50, 16))
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(dlg_config)
-        self.label_6.setGeometry(QtCore.QRect(39, 126, 53, 16))
+        self.label_6.setGeometry(QtCore.QRect(40, 120, 53, 16))
         self.label_6.setObjectName("label_6")
         self.lst_enum = QtWidgets.QListWidget(dlg_config)
         self.lst_enum.setGeometry(QtCore.QRect(100, 150, 171, 81))
@@ -49,53 +49,54 @@ class Ui_dlg_config(object):
         self.btn_del = QtWidgets.QPushButton(dlg_config)
         self.btn_del.setGeometry(QtCore.QRect(270, 200, 51, 32))
         self.btn_del.setObjectName("btn_del")
-        self.widget = QtWidgets.QWidget(dlg_config)
-        self.widget.setGeometry(QtCore.QRect(100, 21, 171, 121))
-        self.widget.setObjectName("widget")
-        self.formLayout = QtWidgets.QFormLayout(self.widget)
-        self.formLayout.setLabelAlignment(
-            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.layoutWidget = QtWidgets.QWidget(dlg_config)
+        self.layoutWidget.setGeometry(QtCore.QRect(100, 20, 171, 131))
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.formLayout = QtWidgets.QFormLayout(self.layoutWidget)
+        self.formLayout.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.formLayout.setObjectName("formLayout")
-        self.ck_optional = QtWidgets.QCheckBox(self.widget)
-        self.ck_optional.setText("")
-        self.ck_optional.setObjectName("ck_optional")
-        self.formLayout.setWidget(
-            4, QtWidgets.QFormLayout.LabelRole, self.ck_optional)
-        self.cbo_type = QtWidgets.QComboBox(self.widget)
+        self.cbo_type = QtWidgets.QComboBox(self.layoutWidget)
         self.cbo_type.setObjectName("cbo_type")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
         self.cbo_type.addItem("")
-        self.formLayout.setWidget(
-            2, QtWidgets.QFormLayout.SpanningRole, self.cbo_type)
-        self.txt_default = QtWidgets.QLineEdit(self.widget)
-        self.txt_default.setObjectName("txt_default")
-        self.formLayout.setWidget(
-            3, QtWidgets.QFormLayout.SpanningRole, self.txt_default)
-        self.txt_description = QtWidgets.QLineEdit(self.widget)
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.cbo_type)
+        self.txt_description = QtWidgets.QLineEdit(self.layoutWidget)
         self.txt_description.setObjectName("txt_description")
-        self.formLayout.setWidget(
-            1,
-            QtWidgets.QFormLayout.SpanningRole,
-            self.txt_description)
-        self.txt_name = QtWidgets.QLineEdit(self.widget)
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.txt_description)
+        self.txt_name = QtWidgets.QLineEdit(self.layoutWidget)
         self.txt_name.setObjectName("txt_name")
-        self.formLayout.setWidget(
-            0, QtWidgets.QFormLayout.SpanningRole, self.txt_name)
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.SpanningRole, self.txt_name)
+        self.txt_default = QtWidgets.QLineEdit(self.layoutWidget)
+        self.txt_default.setObjectName("txt_default")
+        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.txt_default)
+        self.ck_default = QtWidgets.QCheckBox(self.layoutWidget)
+        self.ck_default.setText("")
+        self.ck_default.setChecked(False)
+        self.ck_default.setObjectName("ck_default")
+        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.ck_default)
+        self.ck_optional = QtWidgets.QCheckBox(self.layoutWidget)
+        self.ck_optional.setText("")
+        self.ck_optional.setObjectName("ck_optional")
+        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.ck_optional)
 
         self.retranslateUi(dlg_config)
         self.buttonBox.accepted.connect(dlg_config.accept)
         self.buttonBox.rejected.connect(dlg_config.reject)
         QtCore.QMetaObject.connectSlotsByName(dlg_config)
+        dlg_config.setTabOrder(self.txt_name, self.txt_description)
+        dlg_config.setTabOrder(self.txt_description, self.cbo_type)
+        dlg_config.setTabOrder(self.cbo_type, self.txt_default)
+        dlg_config.setTabOrder(self.txt_default, self.lst_enum)
+        dlg_config.setTabOrder(self.lst_enum, self.btn_add)
+        dlg_config.setTabOrder(self.btn_add, self.btn_edit)
+        dlg_config.setTabOrder(self.btn_edit, self.btn_del)
 
     def retranslateUi(self, dlg_config):
         _translate = QtCore.QCoreApplication.translate
-        dlg_config.setWindowTitle(
-            _translate(
-                "dlg_config",
-                "Add or Edit Configs"))
+        dlg_config.setWindowTitle(_translate("dlg_config", "Add or Edit Configs"))
         self.label.setText(_translate("dlg_config", "name:"))
         self.label_2.setText(_translate("dlg_config", "description:"))
         self.label_3.setText(_translate("dlg_config", "type:"))

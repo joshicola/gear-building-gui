@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'inputs.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -16,8 +17,7 @@ class Ui_dlg_inputs(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(dlg_inputs)
         self.buttonBox.setGeometry(QtCore.QRect(110, 230, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.txt_name = QtWidgets.QLineEdit(dlg_inputs)
         self.txt_name.setGeometry(QtCore.QRect(110, 10, 113, 21))
@@ -63,10 +63,7 @@ class Ui_dlg_inputs(object):
 
     def retranslateUi(self, dlg_inputs):
         _translate = QtCore.QCoreApplication.translate
-        dlg_inputs.setWindowTitle(
-            _translate(
-                "dlg_inputs",
-                "Add or Edit Inputs"))
+        dlg_inputs.setWindowTitle(_translate("dlg_inputs", "Add or Edit Inputs"))
         self.label.setText(_translate("dlg_inputs", "name:"))
         self.label_2.setText(_translate("dlg_inputs", "description:"))
         self.label_3.setText(_translate("dlg_inputs", "base:"))
