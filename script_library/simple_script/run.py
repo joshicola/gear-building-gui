@@ -11,7 +11,7 @@ def main(context):
     # build and execute Parameters for {name}
     try:
         # build the command string
-        command = ['{base_command}']
+        command = ["{{base_command}}"]
 
         # this gathers the configuration values ONLY and uses them as positional arguments
         # to "{base_command}"
@@ -24,19 +24,17 @@ def main(context):
 
     except Exception as e:
         log.exception(e,)
-        log.fatal(
-            "Error executing {name}.",
-        )
+        log.fatal("Error executing {{name}}.",)
         return 1
 
-    log.info("{name} completed Successfully!")
+    log.info("{{name}} completed Successfully!")
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with gear_toolkit_context.GearToolkitContext() as gear_context:
         gear_context.init_logging()
         exit_status = main(gear_context)
 
-    log.info('exit_status is %s', exit_status)
+    log.info("exit_status is %s", exit_status)
     os.sys.exit(exit_status)

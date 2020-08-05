@@ -10,7 +10,7 @@ from gear_builder_gui.config_dialog import config_dialog
 from gear_builder_gui.input_dialog import input_dialog
 
 
-class Manifest():
+class Manifest:
     def __init__(self, main_window):
         self.main_window = main_window
         self.ui = main_window.ui
@@ -44,6 +44,8 @@ class Manifest():
         name, data = dialog.get_data()
         if name is not None:
             self.ui.cmbo_inputs.addItem(name, userData=data)
+            self.ui.btn_input_edit.setEnabled(True)
+            self.ui.btn_input_delete.setEnabled(True)
 
     def edit_input(self):
         obj = self.ui.cmbo_inputs
@@ -55,8 +57,6 @@ class Manifest():
             i = obj.findText(name)
             obj.setItemText(i, name_upd)
             obj.setItemData(i, data)
-            self.ui.btn_input_edit.setEnabled(True)
-            self.ui.btn_input_delete.setEnabled(True)
 
     def delete_input(self):
         i = self.ui.cmbo_inputs.currentIndex()
@@ -93,9 +93,7 @@ class Manifest():
 
     def load_manifest(self):
         manifest_file = QtWidgets.QFileDialog.getOpenFileName(
-            self.main_window,
-            "Select manifest.json to load.",
-            filter="manifest.json"
+            self.main_window, "Select manifest.json to load.", filter="manifest.json"
         )
 
         # TODO: Should I warn about replacement of all manifest values?
@@ -106,22 +104,22 @@ class Manifest():
         # NOTE: This would be a good place to warn if the loaded manifest was invalid
         # Required manifest keys:
         keys = [
-            'name',
-            'label',
-            'description',
-            'author',
-            'maintainer',
-            'license',
-            'url',
-            'source',
-            'cite',
-            'version'
+            "name",
+            "label",
+            "description",
+            "author",
+            "maintainer",
+            "license",
+            "url",
+            "source",
+            "cite",
+            "version",
         ]
         try:
-            manifest = json.load(open(manifest_file, 'r'))
+            manifest = json.load(open(manifest_file, "r"))
             for key in keys:
-                text_obj = eval('self.ui.txt_' + key)
-                text_type = type(eval('self.ui.txt_' + key))
+                text_obj = eval("self.ui.txt_" + key)
+                text_type = type(eval("self.ui.txt_" + key))
                 text_value = manifest[key]
                 if text_type == QtWidgets.QPlainTextEdit:
                     text_value = text_obj.setPlainText(text_value)
@@ -132,18 +130,14 @@ class Manifest():
                 else:
                     text_obj.setText(text_value)
             # load custom fields
-            custom = manifest['custom']
-            self.ui.rdo_analysis.setChecked(
-                custom['gear-builder']['category'] == 'analysis'
-            )
+            custom = manifest["custom"]
+            self.ui.rdo_analysis.setChecked(custom["gear-builder"]["category"] == "analysis")
             if custom.get("flywheel"):
                 self.ui.chk_flywheel.setChecked(True)
-                self.ui.txt_suite.setText(
-                    custom["flywheel"]["suite"]
-                )
+                self.ui.txt_suite.setText(custom["flywheel"]["suite"])
 
             # load inputs section
-            inputs = manifest['inputs']
+            inputs = manifest["inputs"]
 
             cbo_obj = self.ui.cmbo_inputs
             cbo_obj.clear()
@@ -151,7 +145,7 @@ class Manifest():
                 cbo_obj.addItem(name, userData=data)
 
             # load configs section
-            config = manifest['config']
+            config = manifest["config"]
 
             cbo_obj = self.ui.cmbo_config
             cbo_obj.clear()
@@ -164,8 +158,7 @@ class Manifest():
     def save_manifest(self):
         directory = str(
             QtWidgets.QFileDialog.getExistingDirectory(
-                self.main_window,
-                "Select Folder to save manifest.json."
+                self.main_window, "Select Folder to save manifest.json."
             )
         )
         if len(directory) > 0:
@@ -175,20 +168,20 @@ class Manifest():
         manifest = {}
         # Required keys all manifests have
         keys = [
-            'name',
-            'label',
-            'description',
-            'author',
-            'maintainer',
-            'license',
-            'url',
-            'source',
-            'cite',
-            'version'
+            "name",
+            "label",
+            "description",
+            "author",
+            "maintainer",
+            "license",
+            "url",
+            "source",
+            "cite",
+            "version",
         ]
         for key in keys:
-            text_obj = eval('self.ui.txt_' + key)
-            text_type = type(eval('self.ui.txt_' + key))
+            text_obj = eval("self.ui.txt_" + key)
+            text_type = type(eval("self.ui.txt_" + key))
             if text_type == QtWidgets.QPlainTextEdit:
                 text_value = text_obj.toPlainText()
             elif text_type == QtWidgets.QComboBox:
@@ -199,25 +192,24 @@ class Manifest():
 
         # Build Custom section
         custom = {}
-        custom['docker-image'] = \
-            'flywheel/' + manifest['name'] + ':' + manifest['version']
+        custom["docker-image"] = "flywheel/" + manifest["name"] + ":" + manifest["version"]
         gear_builder = {}
         # gear category on radio button
         if self.ui.rdo_analysis.isChecked():
-            gear_builder['category'] = 'analysis'
+            gear_builder["category"] = "analysis"
         else:
-            gear_builder['category'] = 'converter'
+            gear_builder["category"] = "converter"
 
-        gear_builder['image'] = custom['docker-image']
+        gear_builder["image"] = custom["docker-image"]
 
-        custom['gear-builder'] = gear_builder
+        custom["gear-builder"] = gear_builder
         # if "suite"
         if self.ui.chk_flywheel.isChecked():
             flywheel = {}
-            flywheel['suite'] = self.ui.txt_suite.text()
-            custom['flywheel'] = flywheel
+            flywheel["suite"] = self.ui.txt_suite.text()
+            custom["flywheel"] = flywheel
 
-        manifest['custom'] = custom
+        manifest["custom"] = custom
 
         # Build inputs section
         # Each input item consists of the text (key) of a combo box and
@@ -227,7 +219,7 @@ class Manifest():
         for i in range(cbo_obj.count()):
             inputs[cbo_obj.itemText(i)] = cbo_obj.itemData(i)
 
-        manifest['inputs'] = inputs
+        manifest["inputs"] = inputs
 
         # Build config section
         # Each config item consists of the text (key) of a combo box and
@@ -237,15 +229,11 @@ class Manifest():
         for i in range(cbo_obj.count()):
             config[cbo_obj.itemText(i)] = cbo_obj.itemData(i)
 
-        manifest['config'] = config
+        manifest["config"] = config
         # The command
-        manifest['command'] = '/flywheel/v0/run.py'
+        manifest["command"] = "/flywheel/v0/run.py"
 
-        json.dump(
-            manifest,
-            open(op.join(directory, 'manifest.json'), 'w'),
-            indent=2
-        )
+        json.dump(manifest, open(op.join(directory, "manifest.json"), "w"), indent=2)
 
     def checkText(self):
         obj = self.ui.txt_description
@@ -253,43 +241,45 @@ class Manifest():
             obj.textCursor().deletePreviousChar()
 
     def init_validators(self):
-        spec_url = "https://gitlab.com/flywheel-io/public/gears/-/raw/master/spec/manifest.schema.json"
+        spec_url = (
+            "https://gitlab.com/flywheel-io/public/gears/-/raw/master/spec/manifest.schema.json"
+        )
         request = requests.get(spec_url)
         # url = urllib.request.urlopen(spec_url)
         gear_spec = json.loads(request.content)
         keys = [
-            'name',
-            'label',
-            'description',
-            'author',
-            'maintainer',
-            'license',
-            'url',
-            'source',
-            'cite',
-            'version'
+            "name",
+            "label",
+            "description",
+            "author",
+            "maintainer",
+            "license",
+            "url",
+            "source",
+            "cite",
+            "version",
         ]
         for key in keys:
-            gear_spec_item = gear_spec['properties'][key]
-            if key == 'license':
+            gear_spec_item = gear_spec["properties"][key]
+            if key == "license":
                 text_obj = self.ui.txt_license
-                text_obj.addItems(gear_spec['properties']['license']['enum'])
+                text_obj.addItems(gear_spec["properties"]["license"]["enum"])
                 text_obj.setCurrentIndex(text_obj.__len__() - 1)
             else:
-                text_obj = eval('self.ui.txt_' + key)
-                text_type = type(eval('self.ui.txt_' + key))
-                if 'maxLength' in gear_spec_item.keys():
-                    text_obj.maxLength = gear_spec_item['maxLength']
+                text_obj = eval("self.ui.txt_" + key)
+                text_type = type(eval("self.ui.txt_" + key))
+                if "maxLength" in gear_spec_item.keys():
+                    text_obj.maxLength = gear_spec_item["maxLength"]
 
-                if 'pattern' in gear_spec_item.keys():
-                    rx = QtCore.QRegExp(gear_spec_item['pattern'])
+                if "pattern" in gear_spec_item.keys():
+                    rx = QtCore.QRegExp(gear_spec_item["pattern"])
                     val = QtGui.QRegExpValidator(rx, self.main_window)
                     text_obj.setValidator(val)
-                elif key == 'version':
+                elif key == "version":
                     rx = QtCore.QRegExp(
-                        '^((([0-9]+)\\.([0-9]+)\\.([0-9]+)'
-                        '(?:-_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)'
-                        '(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$'
+                        "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)"
+                        "(?:-_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)"
+                        "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
                     )
                     val = QtGui.QRegExpValidator(rx, self.main_window)
                     text_obj.setValidator(val)
@@ -297,6 +287,7 @@ class Manifest():
                 if text_type == QtWidgets.QPlainTextEdit:
                     text_obj.textChanged.connect(self.checkText)
 
-            if 'description' in gear_spec_item.keys():
-                text_obj.whatsThis = gear_spec_item['description']
-                text_obj.setToolTip(gear_spec_item['description'])
+            if "description" in gear_spec_item.keys():
+                text_obj.whatsThis = gear_spec_item["description"]
+                text_obj.setToolTip(gear_spec_item["description"])
+

@@ -1,12 +1,12 @@
-import json
 import os
 import os.path as op
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+import pystache
 
 
-class Dockerfile():
+class Dockerfile:
     def __init__(self, main_window):
+        self.Dockerfile_def = {}
         self.ui = main_window.ui
         self.ui.btn_APT_add.clicked.connect(self.add_APT)
         self.ui.btn_APT_del.clicked.connect(self.del_APT)
@@ -24,6 +24,38 @@ class Dockerfile():
         # Set Docker maintainer label to match manifest
         self.ui.txt_maintainer_2.textChanged.connect(self.update_maintainers)
         self.ui.txt_maintainer_2.maxLength = self.ui.txt_maintainer.maxLength
+
+    def update_Dockerfile_def(self):
+        self.Dockerfile_def["FROM"] = self.ui.cbo_docker_source.currentText()
+        self.Dockerfile_def["Maintainer"] = self.ui.txt_maintainer.text()
+
+        self.Dockerfile_def["apt_get"] = []
+        tblAPT = self.ui.tblAPT
+        for i in range(tblAPT.rowCount()):
+            package = {}
+            package["name"] = tblAPT.item(i, 0).text()
+            version = tblAPT.item(i, 1).text()
+            if len(version) > 0:
+                package["version"] = version
+            self.Dockerfile_def["apt_get"].append(package)
+
+        self.Dockerfile_def["pip"] = []
+        tblPIP = self.ui.tblPIP
+        for i in range(tblPIP.rowCount()):
+            package = {}
+            package["name"] = tblPIP.item(i, 0).text()
+            version = tblPIP.item(i, 1).text()
+            if len(version) > 0:
+                package["version"] = version
+            self.Dockerfile_def["pip"].append(package)
+
+        self.Dockerfile_def["ENV"] = []
+        tblENV = self.ui.tblENV
+        for i in range(tblENV.rowCount()):
+            ENV = {}
+            ENV["name"] = tblENV.item(i, 0).text()
+            ENV["value"] = tblENV.item(i, 1).text()
+            self.Dockerfile_def["ENV"].append(ENV)
 
     def update_maintainers(self):
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
@@ -66,146 +98,45 @@ class Dockerfile():
         for row in rows:
             obj.removeRow(row)
 
-    def save(self, directory):
-        dockerstrings = []
-        dockerstrings.extend([
-            '# Dockerfile exported by GearBuilderGUI.' +
-            'Stash edits before export again', ''
-        ])
-        # export FROM statement
-        text_obj = self.ui.cbo_docker_source
-        dockerstrings.extend([
-            '# Inheriting from established docker image:',
-            'FROM ' + text_obj.currentText(),
-            ''
-        ])
-        # Export LABEL Maintainer
-        text_obj = self.ui.txt_maintainer
-        dockerstrings.extend([
-            '# Inheriting from established docker image:',
-            'LABEL maintainer="{}"'.format(text_obj.text()),
-            ''
-        ])
-        ##########
-        # Section for installing apt and pip dependencies
-        # What version of python... etc....
-        ##########
+    def save(self, directory, Dockerfile_template=None):
+        self.update_Dockerfile_def()
+        if not Dockerfile_template:
+            source_dir = op.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
+            )
+            Dockerfile_template = op.join(source_dir, "Dockerfile.mu")
+        renderer = pystache.Renderer()
+        dockerfile = self.Dockerfile_def.copy()
+        # Check for non-zero number of inputs
+        if len(dockerfile["apt_get"]) > 0:
+            dockerfile["has_apt"] = True
 
-        #######################################################################
-        # Specify APT dependencies
-        # TODO: I may want to parse a packages.list file
-        APTs = ['# Install APT dependencies']
-        APTs.extend([
-            'RUN apt-get update && \\',
-            '    apt-get install -y --no-install-recommends \\'
-        ])
-        obj = self.ui.tblAPT
-        for i in range(obj.rowCount()):
-            Package = obj.item(i, 0).text()
-            Version = obj.item(i, 1).text()
-            line = '    {}{} '.format(Package, Version)
-            if i == (obj.rowCount() - 1):
-                line += '&&'
-            line += ' \\ '
-            APTs.append(line)
-        APTs.extend(['    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*', ''])
-        dockerstrings.extend(APTs)
+        # Check for a non-zero number of configs
+        if len(dockerfile["pip"]) > 0:
+            dockerfile["has_pip"] = True
 
-        #######################################################################
-        # Specify PIP dependencies
-        # TODO: I may want to parse a 'requirements.txt' file
-        # TODO: I may want to have a dialog for this section... Not allowing to add a package without a specific
-        # version... that is formatted and validated according to semantic versioning.
-        obj = self.ui.tblPIP
-        if obj.rowCount() > 0:
-            PIPs = ['# Install PIP Dependencies']
-            PIPs.extend([
-                'COPY requirements.txt requirements.txt',
-                'RUN pip3 install --upgrade pip && \\ ',
-                '    pip install -r requirements.txt\\ ',
-                '    rm -rf /root/.cache/pip',
-                ''
-            ])
+        # Check for a non-zero number of configs
+        if len(dockerfile["ENV"]) > 0:
+            dockerfile["has_env"] = True
 
-            requirements_txt = open(
-                op.join(directory, 'requirements.txt'), 'w')
-            lines = []
-            for i in range(obj.rowCount()):
-                Package = obj.item(i, 0).text()
-                Version = obj.item(i, 1).text()
-                line = '{}=={}\n'.format(Package, Version)
-                lines.append(line)
-                # Gosh this is sloppy!!!!
-                # TODO: is there a validator for this?
-                # Yes, we can validate on semantic versioning...
-                if len(Version) < 1:
-                    print('Versioning is strictly enforced.')
-                    return -1
-            requirements_txt.writelines(lines)
+        if dockerfile["has_pip"]:
+            source_dir = op.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
+            )
+            requirements_template = op.join(source_dir, "requirements.txt.mu")
+            template_output = renderer.render_path(
+                requirements_template, {"dockerfile": dockerfile}
+            )
 
-            dockerstrings.extend(PIPs)
+            with open(op.join(directory, "requirements.txt"), "w") as fp:
+                fp.write(template_output)
 
-        #######################################################################
-        # Specify ENV Variables
-        # TODO: I may want to parse a 'gear_environ.json' file
-        # TODO: the ENV conversation with regards to how much they are included into the manifest (internal/external)
-        ENVs = ['# Specify ENV Variables']
-        ENVs.extend([
-            'ENV \\ '
-        ])
-        obj = self.ui.tblENV
-        for i in range(obj.rowCount()):
-            Variable = obj.item(i, 0).text()
-            Value = obj.item(i, 1).text()
-            env_var = '    {}={} '.format(Variable, Value)
-            if i < (obj.rowCount() - 1):
-                env_var = env_var + ' \\ '
-            ENVs.append(env_var)
-        ENVs.extend([''])
-        dockerstrings.extend(ENVs)
+        output = renderer.render_path(Dockerfile_template, {"dockerfile": dockerfile})
 
-        # # Export Flywheel Spec
-        dockerstrings.extend([
-            '# Make directory for flywheel spec (v0):',
-            'ENV FLYWHEEL /flywheel/v0',
-            'WORKDIR ${FLYWHEEL}'
-        ])
+        # This gets rid of the last line continuation character in iterated elements
+        output = output.replace(" \\\n*", "\n")
 
-        # Gears will always have a 'run.py' and a 'manifest'
-        # 'run.py' can be a "simple script" or a driver script for
-        # the 'utils' package
-        dockerstrings.extend([
-            '# Copy executable/manifest to Gear',
-            'COPY run.py ${FLYWHEEL}/run.py',
-            'COPY manifest.json ${FLYWHEEL}/manifest.json', ''
-        ])
+        with open(op.join(directory, "Dockerfile"), "w") as fp:
+            fp.write(output)
 
-        # If not a simple script, include utils:
-        # TODO: This may need to have tighter integration with the script_management module to
-        # determine which subdirectories to include
-        if False:
-            dockerstrings.extend([
-                'COPY utils ${FLYWHEEL}/utils', ''
-            ])
-
-        # Preserve environment variables for Flywheel engine
-        dockerstrings.extend([
-            '# ENV preservation for Flywheel Engine',
-            "RUN python -c 'import os, json; " +
-            "f = open(\"/tmp/gear_environ.json\", \"w\");" +
-            "json.dump(dict(os.environ), f)'", ''
-        ])
-
-        # Endpoint
-        dockerstrings.extend({
-            '# Configure entrypoint',
-            'ENTRYPOINT ["/flywheel/v0/run.py"]'
-        })
-
-        dockerfile = open(
-            op.join(directory, 'Dockerfile'),
-            'w'
-        )
-        dockerfile.write('\n'.join(dockerstrings))
-        dockerfile.close()
         return 0
