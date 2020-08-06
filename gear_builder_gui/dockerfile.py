@@ -5,7 +5,17 @@ import pystache
 
 
 class Dockerfile:
+    """
+     [summary]
+    """
+
     def __init__(self, main_window):
+        """
+        __init__ [summary]
+
+        Args:
+            main_window ([type]): [description]
+        """
         self.Dockerfile_def = {}
         self.ui = main_window.ui
         self.ui.btn_APT_add.clicked.connect(self.add_APT)
@@ -26,6 +36,9 @@ class Dockerfile:
         self.ui.txt_maintainer_2.maxLength = self.ui.txt_maintainer.maxLength
 
     def update_Dockerfile_def(self):
+        """
+        update_Dockerfile_def [summary]
+        """
         self.Dockerfile_def["FROM"] = self.ui.cbo_docker_source.currentText()
         self.Dockerfile_def["Maintainer"] = self.ui.txt_maintainer.text()
 
@@ -58,33 +71,84 @@ class Dockerfile:
             self.Dockerfile_def["ENV"].append(ENV)
 
     def update_maintainers(self):
+        """
+        update_maintainers [summary]
+        """
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
             self.ui.txt_maintainer.setText(self.ui.txt_maintainer_2.text())
 
     def add_APT(self, obj):
+        """
+        add_APT [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.add_Row(self.ui.tblAPT)
 
     def del_APT(self, obj):
+        """
+        del_APT [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.del_Row(self.ui.tblAPT)
 
     def add_PIP(self, obj):
+        """
+        add_PIP [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.add_Row(self.ui.tblPIP)
 
     def del_PIP(self, obj):
+        """
+        del_PIP [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.del_Row(self.ui.tblPIP)
 
     def add_ENV(self, obj):
+        """
+        add_ENV [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.add_Row(self.ui.tblENV)
 
     def del_ENV(self, obj):
+        """
+        del_ENV [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         self.del_Row(self.ui.tblENV)
 
     # add functionality to the add/del docker ENV variables buttons
     def add_Row(self, obj):
+        """
+        add_Row [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         rowPosition = obj.rowCount()
         obj.insertRow(rowPosition)
 
     def del_Row(self, obj):
+        """
+        del_Row [summary]
+
+        Args:
+            obj ([type]): [description]
+        """
         # get all selected indices
         selectedInds = obj.selectedIndexes()
         # parse through them for unique rows
@@ -99,6 +163,16 @@ class Dockerfile:
             obj.removeRow(row)
 
     def save(self, directory, Dockerfile_template=None):
+        """
+        save [summary]
+
+        Args:
+            directory ([type]): [description]
+            Dockerfile_template ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
         self.update_Dockerfile_def()
         if not Dockerfile_template:
             source_dir = op.join(

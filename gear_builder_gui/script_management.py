@@ -15,10 +15,22 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Script_Management:
+    """
+     [summary]
+    """
+
     def __init__(self, main_window):
+        """
+        __init__ [summary]
+
+        Args:
+            main_window ([type]): [description]
+        """
         self.ui = main_window.ui
         # Set the script template data
-        self.ui.cbo_script_template.setItemData(0, ["script_library/simple_script/run.py"])
+        self.ui.cbo_script_template.setItemData(
+            0, ["script_library/simple_script/run.py"]
+        )
         self.ui.cbo_script_template.setItemData(
             1,
             [
@@ -28,6 +40,12 @@ class Script_Management:
         )
 
     def save(self, directory):
+        """
+        save [summary]
+
+        Args:
+            directory ([type]): [description]
+        """
         # is_simple_script = self.ui.ck_simple_script.isChecked()
 
         # if is_simple_script:
@@ -50,7 +68,9 @@ class Script_Management:
         for fl in cbo_script_data:
             script_str = open(op.join(source_dir, fl)).read()
             script_str = script_str.replace("{{name}}", self.ui.txt_name.text())
-            script_str = script_str.replace("{{base_command}}", self.ui.txt_simple_script.text())
+            script_str = script_str.replace(
+                "{{base_command}}", self.ui.txt_simple_script.text()
+            )
             dirs = op.dirname(fl).split("/")
             basedir = op.join(dirs[0], dirs[1], "")
             if len(dirs) > 2:

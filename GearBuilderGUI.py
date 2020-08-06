@@ -15,10 +15,9 @@ class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(mywindow, self).__init__()
         script_dir = op.dirname(os.path.realpath(__file__))
-        icon_path = op.join(
-            script_dir, 'gear_builder_gui/resources/flywheel.png')
+        icon_path = op.join(script_dir, "gear_builder_gui/resources/flywheel.png")
         self.setWindowIcon(QtGui.QIcon(icon_path))
-        self.setWindowIconText('Flywheel Gear Builder')
+        self.setWindowIconText("Flywheel Gear Builder")
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # Separating out functionality of the three components to facilitate
@@ -40,6 +39,7 @@ class mywindow(QtWidgets.QMainWindow):
         )
         if op.exists(directory):
             self.manifest.save(directory)
+            self.manifest.save_draft_readme(directory)
             self.dockerfile.save(directory)
             self.scripts.save(directory)
 
