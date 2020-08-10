@@ -1,25 +1,29 @@
-import json
+#!/usr/bin/env python3
 import os
 import os.path as op
 import sys
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, uic
 
 from gear_builder_gui.dockerfile import Dockerfile
-from gear_builder_gui.gear_builder_gui import Ui_MainWindow
 from gear_builder_gui.manifest import Manifest
 from gear_builder_gui.script_management import Script_Management
 
 
-class mywindow(QtWidgets.QMainWindow):
+class GearBuilderGUI(QtWidgets.QMainWindow):
     def __init__(self):
-        super(mywindow, self).__init__()
+        super(GearBuilderGUI, self).__init__()
         script_dir = op.dirname(os.path.realpath(__file__))
         icon_path = op.join(script_dir, "gear_builder_gui/resources/flywheel.png")
         self.setWindowIcon(QtGui.QIcon(icon_path))
         self.setWindowIconText("Flywheel Gear Builder")
-        self.ui = Ui_MainWindow()
+
+        Form, _ = uic.loadUiType(
+            op.join(script_dir, "gear_builder_gui/pyqt5_ui/gear_builder_gui.ui")
+        )
+        self.ui = Form()
         self.ui.setupUi(self)
+
         # Separating out functionality of the three components to facilitate
         # individual development
         self.manifest = Manifest(self)
@@ -46,6 +50,6 @@ class mywindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    application = mywindow()
+    application = GearBuilderGUI()
     application.show()
     sys.exit(app.exec())

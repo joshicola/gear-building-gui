@@ -3,9 +3,11 @@
 This project provides a cross-platform graphical user interface to ease the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  This functional prototype delivers the following Minimum Viable Product to provide utility, ease of use, and adoption:
 
 * Write of a complete manifest.json file
+* Write a draft of the gear's README.md file
+    - With details filled in from the manifest.
 * Write a minimal, yet fully functional, Dockerfile
     - With appropriately asigned apt and pip packages
-    - Asigning environment variables
+    - Assigning environment variables
 * Write a minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
 
@@ -13,7 +15,7 @@ This project provides a cross-platform graphical user interface to ease the pain
 
 See notes below for current and proposed functionality.
 
-This project is build in PyQt5, a platform-independent gui framework. Build on any deploy on every. The PyQt5 framework is available through both both conda and pip installers.
+This project is build in PyQt5, a platform-independent gui framework. Build on any operating system, deploy on every operating system. The PyQt5 framework is available through both both conda and pip installers.
 
 ## Current Functionality
 
@@ -22,22 +24,23 @@ This project is build in PyQt5, a platform-independent gui framework. Build on a
 The manifest portion of the gear-building-gui is the most developed.
 It currently:
 
-* provides edit functionality for gear name, label, description, author, maintainer,
-source, url, cite, and version
-* automatically populates the "custom" section with the docker file names
+* provides edit functionality for gear name, label, description, author, maintainer, source, url, cite, and version.
+* automatically populates the "custom" section with the docker file names.
 * provides add, edit, delete functionality of input elements.
 * provides add, edit, delete functionality of config elements.
-* validates entries with respects to the gear specification
-* saves to a 'manifest.json' file
+* validates entries with respects to the gear specification.
+* loads existing `manifest.json` file to populate form.
+* saves to a `manifest.json` file.
+* saves a draft of a `README.md` file that is populated with values from the manifest.
 
 ### Dockerfile
 
 A fully functional Dockerfile is provided as a template to work from.  Knowledge of docker commands is assumed.
 
-* Provides interface to specify apt-get packages to install in Dockerfile
-* Provides interface to specify pip packages to install in Dockerfile
-* Provides interface to specify multiple environment values in Dockerfile
-* Cross-references values with Manifest section to ensure consistency
+* Provides interface to specify apt-get packages to install in Dockerfile.
+* Provides interface to specify pip packages to install in Dockerfile.
+* Provides interface to specify multiple environment values in Dockerfile.
+* Cross-references 'maintainer' value with Manifest section to ensure consistency.
 
 ### Gear script and modules
 
@@ -55,7 +58,6 @@ their own "tab" in the PyQt gui.
 Although the manifest portion is the most developed, it requires some additional functionality to make it truly useful:
 
 * Need to add max/min vals and array size
-* load and parse existing manifest.json file
 
 ### Dockerfile Editing
 
@@ -71,10 +73,10 @@ The main purpose of the "runscript prototyping" is to give the user a self-docum
 * Creating build/validate/execute functional modules around specific command-line programs.  
 * Add a command-line "switch-detector" to populate the manifest config with values to loop through.
 * Provide a library of code-blocks that facilitate certain functionality
-    - module-based log reporting
-    - bids functionality
-    - verbose config validation against manifest
-    - compress working directory to a file in output
+  * module-based log reporting
+  * bids functionality
+  * verbose config validation against manifest
+  * compress working directory to a file in output
 * notify on pep8 violations(??)
 * integration with gear-toolkit
 
@@ -84,6 +86,7 @@ Other "Nice to Haves":
 
 * create a pip-installable and conda-installable packages of the gear-builder-gui for ease of use and version management.
 * Save a "Project" file that can be used as a template to add or remove desired features.
-    - a json format having manifest, dockerfile, runscript sections (.gear???).
+  * a json format having manifest, dockerfile, runscript sections (.gear???).
 * Bundle all gear-essentials into a compressed file
-    - manifest/dockerfile/runscripts/gear_definition (.gear???)
+  * manifest/dockerfile/runscripts/gear_definition (.gear???)
+  

@@ -1,6 +1,7 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import os.path as op
 
-from .inputs import Ui_dlg_inputs
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 
 class input_dialog(QtWidgets.QDialog):
@@ -20,7 +21,12 @@ class input_dialog(QtWidgets.QDialog):
             cbo_val ([type], optional): [description]. Defaults to None.
         """
         super(input_dialog, self).__init__(parent)
-        self.ui = Ui_dlg_inputs()
+        dialog_ui_path = op.join(
+            op.dirname(os.path.realpath(__file__)), "pyqt5_ui/inputs.ui"
+        )
+        Form, _ = uic.loadUiType(dialog_ui_path)
+        # self.ui = Ui_dlg_config()
+        self.ui = Form()
         self.ui.setupUi(self)
         self.ui.txt_name.textChanged.connect(self.changed_name)
         # disable OK button on create.

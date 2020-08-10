@@ -6,15 +6,15 @@ import pystache
 
 class Dockerfile:
     """
-     [summary]
+    This class manages the definition and writing of a draft Dockerfile.
     """
 
     def __init__(self, main_window):
         """
-        __init__ [summary]
+        Initialize members, methods, and UI hooks
 
         Args:
-            main_window ([type]): [description]
+            main_window (GearBuilderGUI): The instantiated main window
         """
         self.Dockerfile_def = {}
         self.ui = main_window.ui
@@ -32,12 +32,15 @@ class Dockerfile:
         self.ui.tblENV.setSelectionBehavior(1)
 
         # Set Docker maintainer label to match manifest
-        self.ui.txt_maintainer_2.textChanged.connect(self.update_maintainers)
+        self.ui.txt_maintainer_2.textChanged.connect(self._update_maintainers)
         self.ui.txt_maintainer_2.maxLength = self.ui.txt_maintainer.maxLength
 
-    def update_Dockerfile_def(self):
+    def _update_Dockerfile_def_from_form(self):
         """
-        update_Dockerfile_def [summary]
+        Update the Dockerfile_def dictionary from the form fields.
+
+        TODO: Create update_form_from_Dockerfile_def procedure for loading the
+            Dockerfile_def from a gear configuration file (<gear_name>.config.json??)
         """
         self.Dockerfile_def["FROM"] = self.ui.cbo_docker_source.currentText()
         self.Dockerfile_def["Maintainer"] = self.ui.txt_maintainer.text()
@@ -70,9 +73,9 @@ class Dockerfile:
             ENV["value"] = tblENV.item(i, 1).text()
             self.Dockerfile_def["ENV"].append(ENV)
 
-    def update_maintainers(self):
+    def _update_maintainers(self):
         """
-        update_maintainers [summary]
+        _update_maintainers [summary]
         """
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
             self.ui.txt_maintainer.setText(self.ui.txt_maintainer_2.text())
@@ -173,7 +176,7 @@ class Dockerfile:
         Returns:
             [type]: [description]
         """
-        self.update_Dockerfile_def()
+        self._update_Dockerfile_def_from_form()
         if not Dockerfile_template:
             source_dir = op.join(
                 os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"

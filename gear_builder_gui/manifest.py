@@ -13,15 +13,17 @@ from gear_builder_gui.input_dialog import input_dialog
 
 class Manifest:
     """
-     [summary]
+    A class to manage the manifest of a gear
+
+    TODO: Include the flywheel gear toolkit manifest class
     """
 
     def __init__(self, main_window):
         """
-        __init__ [summary]
+        Initialize manifest 
 
         Args:
-            main_window ([type]): [description]
+            main_window (GearBuilderGUI): The instantiated main window
         """
         self.main_window = main_window
         self.ui = main_window.ui
@@ -49,7 +51,7 @@ class Manifest:
 
     def update_maintainers(self):
         """
-        update_maintainers [summary]
+        Coordinate the maintainer text across Dockerfile and manifest.
         """
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
             self.ui.txt_maintainer_2.setText(self.ui.txt_maintainer.text())
@@ -57,7 +59,7 @@ class Manifest:
     # Add functionality to the input add/edit/deleted buttons
     def add_input(self):
         """
-        add_input [summary]
+        Add input to the input combo box through input dialog
         """
         dialog = input_dialog()
         name, data = dialog.get_data()
@@ -68,7 +70,7 @@ class Manifest:
 
     def edit_input(self):
         """
-        edit_input [summary]
+        Edit input through input dialog
         """
         obj = self.ui.cmbo_inputs
         name = obj.currentText()
@@ -82,7 +84,7 @@ class Manifest:
 
     def delete_input(self):
         """
-        delete_input [summary]
+        Delete selected input object from the input combo
         """
         i = self.ui.cmbo_inputs.currentIndex()
         self.ui.cmbo_inputs.removeItem(i)
@@ -92,7 +94,7 @@ class Manifest:
 
     def add_config(self):
         """
-        add_config [summary]
+        Add a config object to the config combo box through the config dialog.
         """
         dialog = config_dialog()
         name, data = dialog.get_data()
@@ -103,7 +105,7 @@ class Manifest:
 
     def edit_config(self):
         """
-        edit_config [summary]
+        Edit selected config object through the config dialog.
         """
         obj = self.ui.cmbo_config
         name = obj.currentText()
@@ -117,7 +119,7 @@ class Manifest:
 
     def delete_config(self):
         """
-        delete_config [summary]
+        Delete selected config object from the config combo
         """
         i = self.ui.cmbo_config.currentIndex()
         self.ui.cmbo_config.removeItem(i)
@@ -127,7 +129,12 @@ class Manifest:
 
     def _update_manifest_from_form(self):
         """
-        _update_manifest_from_form [summary]
+        Update the manifest dictionary from the contents of the manifest tab.
+
+        This will perserve any items in the self.manifest dictionary not referenced by
+        the form.
+
+        TODO: I want to implement a _update_form_from_manifest function.
         """
         manifest = {}
         # Required keys all manifests have
@@ -199,11 +206,13 @@ class Manifest:
         # The command
         manifest["command"] = "/flywheel/v0/run.py"
 
+        # Using an "update" here instead of a total replace preserves items that may
+        # have been loaded.
         self.manifest.update(manifest)
 
     def load_manifest(self):
         """
-        load_manifest [summary]
+        Load manifest from file.
         """
         manifest_file = QtWidgets.QFileDialog.getOpenFileName(
             self.main_window, "Select manifest.json to load.", filter="manifest.json"
@@ -215,10 +224,12 @@ class Manifest:
 
     def load_manifest_file(self, manifest_file):
         """
-        load_manifest_file [summary]
+        Load manifest from indicated file.
+
+        Replaces self.manifest with contents of the file on success.
 
         Args:
-            manifest_file ([type]): [description]
+            manifest_file (str): Path to manifest file.
         """
         # NOTE: This would be a good place to warn if the loaded manifest was invalid
         # Required manifest keys:
@@ -278,7 +289,7 @@ class Manifest:
 
     def save_manifest(self):
         """
-        save_manifest [summary]
+        Select destination to save manifest.json file.
         """
         directory = str(
             QtWidgets.QFileDialog.getExistingDirectory(
@@ -290,10 +301,10 @@ class Manifest:
 
     def save(self, directory):
         """
-        save [summary]
+        Save self.manifest dictionary to manifest.json file in the indicated directory.
 
         Args:
-            directory ([type]): [description]
+            directory (str): Path to directory.
         """
         self._update_manifest_from_form()
 
@@ -303,14 +314,13 @@ class Manifest:
 
     def save_draft_readme(self, directory, readme_template=None):
         """
-        save_draft_readme [summary]
+        Saves draft of README.md to indicated directory.
 
         Args:
-            directory ([type]): [description]
-            readme_template ([type], optional): [description]. Defaults to None.
+            directory (str): Path to directory.
+            readme_template (str, optional): Path to the mustache template to use.
+                Defaults to None.
 
-        Returns:
-            [type]: [description]
         """
         if not readme_template:
             source_dir = op.join(
@@ -348,11 +358,12 @@ class Manifest:
         with open(op.join(directory, "README.md"), "w") as fp:
             fp.write(template_output)
 
-        return 0
-
-    def checkText(self):
+    def _check_description_text_length(self):
         """
-        checkText [summary]
+        Constrains the length of the QPlainTextEdit txt_description member.
+
+        The maxLength is initialized below from the manifest schema. The QPlainTextEdit
+        object does not have an automatic length constraint.
         """
         obj = self.ui.txt_description
         if len(obj.toPlainText()) > obj.maxLength:
@@ -360,7 +371,9 @@ class Manifest:
 
     def init_validators(self):
         """
-        init_validators [summary]
+        Initializes the field validators to the manifest schema.
+
+        TODO: Use a local copy of the manifest schema instead of downloading.
         """
         spec_url = (
             "https://gitlab.com/flywheel-io/public/"
@@ -407,7 +420,7 @@ class Manifest:
                     text_obj.setValidator(val)
 
                 if text_type == QtWidgets.QPlainTextEdit:
-                    text_obj.textChanged.connect(self.checkText)
+                    text_obj.textChanged.connect(self._check_description_text_length)
 
             if "description" in gear_spec_item.keys():
                 text_obj.whatsThis = gear_spec_item["description"]

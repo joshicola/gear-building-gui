@@ -1,6 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import os.path as op
 
-from .config import Ui_dlg_config
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
+
+# from .config import Ui_dlg_config
 
 
 class config_dialog(QtWidgets.QDialog):
@@ -24,10 +27,15 @@ class config_dialog(QtWidgets.QDialog):
         # The extra, non-standard tags will be preserved
         self.name = ""
         self.data = {}
-        self.ui = Ui_dlg_config()
+        dialog_ui_path = op.join(
+            op.dirname(os.path.realpath(__file__)), "pyqt5_ui/config.ui"
+        )
+        Form, _ = uic.loadUiType(dialog_ui_path)
+        # self.ui = Ui_dlg_config()
+        self.ui = Form()
         self.ui.setupUi(self)
         self.ui.ck_default.setVisible(False)
-        self.ui.cbo_type.currentIndexChanged.connect(self.type_changed)
+        self.ui.cbo_type.currentIndexChanged.connect(self.config_type_changed)
         self.ui.btn_add.clicked.connect(self.add_enum)
         self.ui.btn_edit.clicked.connect(self.edit_enum)
         self.ui.btn_del.clicked.connect(self.del_enum)
@@ -72,9 +80,9 @@ class config_dialog(QtWidgets.QDialog):
                     obj = self.ui.ck_optional
                     obj.setChecked(self.data[key])
 
-    def type_changed(self):
+    def config_type_changed(self):
         """
-        type_changed [summary]
+        Set visibility and type defaults on the type of config chosen
         """
         obj = self.ui.cbo_type
         if obj.currentText() == "boolean":
