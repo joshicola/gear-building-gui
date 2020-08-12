@@ -1,32 +1,45 @@
+"""
+TODO: Very rudimentary at the moment. Would like to introduce
+elements to both create and interpret mustache tags (e.g. {{keyword}}) with the
+    following
+intentions:
+tags: replace these with txt/keyword/config_value or nothing/comments
+      --this could be added to with a cbo_box that selects config key/value
+        specifications
+      --call it 'config_vals:'?
+snippets: replace these with specified chunks of code or nothing/comments
+run_code: replace these with the output of code run on manifest or nothing/comments
+
+The above is fleshing out to be:
+Stand-alone fill-in text is to be expressed as: {{script.<text_name>}}
+
+Whole blocks of text will be expressed as:
+{{#script.<block_name>}}
+    print("Hi, I am a block of code")
+{{/script.<block_name>}}
+"""
+
 import json
 import os
 import os.path as op
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-# TODO: Very rudimentary at the moment. Would like to introduce
-# elements to both create and interpret mustache tags (e.g. {{keyword}}) with the following
-# intentions:
-# tags: replace these with txt/keyword/config_value or nothing/comments
-#       --this could be added to with a cbo_box that selects config key/value specifications
-#       --call it 'config_vals:'?
-# snippets: replace these with specified chunks of code or nothing/comments
-# run_code: replace these with the output of code run on manifest or nothing/comments
+import pystache
 
 
 class Script_Management:
     """
-     [summary]
+    Class for script management.
     """
 
     def __init__(self, main_window):
         """
-        __init__ [summary]
+        Initialize script management tab form elements with defaults. 
 
         Args:
-            main_window ([type]): [description]
+            main_window (GearBuilderGUI):  The instantiated main window.
         """
         self.ui = main_window.ui
+        self.script_def = main_window.gear_config["script"]
         # Set the script template data
         self.ui.cbo_script_template.setItemData(
             0, ["script_library/simple_script/run.py"]
@@ -41,10 +54,10 @@ class Script_Management:
 
     def save(self, directory):
         """
-        save [summary]
+        Saves the script hierarchy to provided directory.
 
         Args:
-            directory ([type]): [description]
+            directory (str): Path to output directory.
         """
         # is_simple_script = self.ui.ck_simple_script.isChecked()
 

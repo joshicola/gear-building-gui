@@ -67,4 +67,4 @@ The `./script_library` subdirectory contains structural code templates for gears
 
 It is intended to recurse through the selected directories and replace the mustache templates with tags in the "script_management" sub-dictionary above.
 
-Likewise, it is indented to be able to parse through the subdirectories and discover certain types of allowed mustache tags and render them in an iterated subform of the script-management tab. Work in Progress!!!!
+Likewise, it is intended to be able to parse through the subdirectories and discover certain types of allowed mustache tags and render them in an iterated subform of the script-management tab. Work in Progress!!!!

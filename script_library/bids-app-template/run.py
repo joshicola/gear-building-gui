@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 """Run the gear: set up for and call command-line command."""
 
-import os
-import sys
-import shutil
-import psutil
 import json
+import os
+import shutil
+import sys
 from pathlib import Path
 
+import psutil
+
 import flywheel_gear_toolkit
+from flywheel_gear_toolkit.interfaces.command_line import build_command_list, exec_command
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
-from flywheel_gear_toolkit.interfaces.command_line import build_command_list
-from flywheel_gear_toolkit.interfaces.command_line import exec_command
 from flywheel_gear_toolkit.utils.zip_tools import zip_output
-
-from utils.bids.run_level import get_run_level_and_hierarchy
 from utils.bids.download_run_level import download_bids_for_runlevel
-from utils.fly.make_file_name_safe import make_file_name_safe
+from utils.bids.run_level import get_run_level_and_hierarchy
 from utils.dry_run import pretend_it_ran
+from utils.fly.make_file_name_safe import make_file_name_safe
 from utils.results.zip_htmls import zip_htmls
-from utils.results.zip_intermediate import zip_all_intermediate_output
-from utils.results.zip_intermediate import zip_intermediate_selected
-
+from utils.results.zip_intermediate import zip_all_intermediate_output, zip_intermediate_selected
 
 GEAR = "bids-app-template"
 REPO = "flywheel-apps"
@@ -54,7 +51,7 @@ def main(gtk_context):
     # can be returned.
     output_analysisid_dir = gtk_context.output_dir / gtk_context.destination["id"]
 
-    # editme: optional feature
+    {{#script.cpus}}
     # get # cpu's to set -openmp
     os_cpu_count = str(os.cpu_count())
     log.info("os.cpu_count() = %s", os_cpu_count)
@@ -68,10 +65,12 @@ def main(gtk_context):
             gtk_context.config["n_cpus"] = os_cpu_count
     else:  # Default is to use all cpus available
         gtk_context.config["n_cpus"] = os_cpu_count  # zoom zoom
+    {{/script.cpus}}
 
-    # editme: optional feature
+    {{#script.memory_available}}
     mem_gb = psutil.virtual_memory().available / (1024 ** 3)
     log.info("psutil.virtual_memory().available= {:4.1f} GiB".format(mem_gb))
+    {{/script.memory_available}}
 
     # grab environment for gear (saved in Dockerfile)
     with open("/tmp/gear_environ.json", "r") as f:
@@ -97,7 +96,7 @@ def main(gtk_context):
 
     # The main command line command to be run:
     # editme: Set the actual gear command:
-    command = ["./tests/test.sh"]
+    command = ["{{script.bids_command}}"]
 
     # This is also used as part of the name of output files
     command_name = make_file_name_safe(command[0])
@@ -108,29 +107,37 @@ def main(gtk_context):
     # These follow the BIDS Apps definition (https://github.com/BIDS-Apps)
     command.append(str(gtk_context.work_dir / "bids"))
     command.append(str(output_analysisid_dir))
-    command.append("participant")
+    command.append("{{script.participant}}")
 
     command = build_command_list(command, command_config)
     # print(command)
 
-    # editme: only for --verbose argparse argument
+    {{#script.verbose}}
     for ii, cmd in enumerate(command):
         if cmd.startswith("--verbose"):
             # handle a 'count' argparse argument where manifest gives
             # enumerated possibilities like v, vv, or vvv
             # e.g. replace "--verbose=vvv' with '-vvv'
             command[ii] = cmd.split("=")[1]
+    {{/script.verbose}}
 
-    # editme: if the command needs a freesurfer license keep this
+    {{#script.needs_freesurfer}} 
+    # if the command needs a freesurfer license keep this
     if Path(FREESURFER_FULLPATH).exists():
         log.debug("%s exists.", FREESURFER_FULLPATH)
     install_freesurfer_license(gtk_context, FREESURFER_FULLPATH)
+    {{/script.needs_freesurfer}}
 
     if len(errors) == 0:
 
-        # editme: optional feature
+        {{#script.bids_tree}}
         # Create HTML file that shows BIDS "Tree" like output?
         tree = True
+        {{/script.bids_tree}}
+        {{^script.bids_tree}}
+        # Create HTML file that shows BIDS "Tree" like output?
+        tree = False
+        {{/script.bids_tree}}
         tree_title = f"{command_name} BIDS Tree"
 
         # Whether or not to include src data (e.g. dicoms) when downloading BIDS
@@ -223,17 +230,19 @@ def main(gtk_context):
             exclude_files=None,
         )
 
-        # editme: optional feature
+        {{#script.zip_htmls}}
         # zip any .html files in output/<analysis_id>/
         zip_htmls(gtk_context, output_analysisid_dir)
+        {{/script.zip_htmls}}
 
-        # editme: optional feature
+        {{#script.save_intermediate_output}}
         # possibly save ALL intermediate output
         if gtk_context.config.get("gear-save-intermediate-output"):
             zip_all_intermediate_output(gtk_context, run_label)
 
         # possibly save intermediate files and folders
         zip_intermediate_selected(gtk_context, run_label)
+        {{/script.save_intermediate_output}}
 
         # clean up: remove output that was zipped
         if Path(output_analysisid_dir).exists():

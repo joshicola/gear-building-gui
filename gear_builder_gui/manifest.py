@@ -20,10 +20,10 @@ class Manifest:
 
     def __init__(self, main_window):
         """
-        Initialize manifest 
+        Initialize manifest.
 
         Args:
-            main_window (GearBuilderGUI): The instantiated main window
+            main_window (GearBuilderGUI): The instantiated main window.
         """
         self.main_window = main_window
         self.ui = main_window.ui
@@ -47,7 +47,7 @@ class Manifest:
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
         self.init_validators()
         # initialize a manifest object
-        self.manifest = {}
+        self.manifest = main_window.gear_config["manifest"]
 
     def update_maintainers(self):
         """
@@ -76,7 +76,7 @@ class Manifest:
         name = obj.currentText()
         data = obj.currentData()
         dialog = input_dialog()
-        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        name_upd, data = dialog.get_data(cbo_val=(name, data))
         if name_upd is not None:
             i = obj.findText(name)
             obj.setItemText(i, name_upd)
@@ -111,7 +111,7 @@ class Manifest:
         name = obj.currentText()
         data = obj.currentData()
         dialog = config_dialog()
-        name_upd, data = dialog.get_data(cbo_val=[name, data])
+        name_upd, data = dialog.get_data(cbo_val=(name, data))
         if name_upd is not None:
             i = obj.findText(name)
             obj.setItemText(i, name_upd)
@@ -328,8 +328,6 @@ class Manifest:
             )
             readme_template = op.join(source_dir, "README.md.mu")
         renderer = pystache.Renderer()
-
-        output = readme_template.replace(".mu", "")
 
         # Check for non-zero number of inputs
         if len(self.manifest["inputs"].keys()) > 0:

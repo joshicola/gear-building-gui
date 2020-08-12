@@ -13,6 +13,10 @@ from gear_builder_gui.script_management import Script_Management
 class GearBuilderGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(GearBuilderGUI, self).__init__()
+
+        # set gear configuration to default of empty
+        self.gear_config = {"manifest": {}, "dockerfile": {}, "script": {}}
+
         script_dir = op.dirname(os.path.realpath(__file__))
         icon_path = op.join(script_dir, "gear_builder_gui/resources/flywheel.png")
         self.setWindowIcon(QtGui.QIcon(icon_path))

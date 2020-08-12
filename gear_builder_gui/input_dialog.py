@@ -6,19 +6,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 class input_dialog(QtWidgets.QDialog):
     """
-    input_dialog [summary]
-
-    Args:
-        QtWidgets ([type]): [description]
+    Dialog box class representing common options for a gear file input.
     """
 
     def __init__(self, parent=None, cbo_val=None):
         """
-        __init__ [summary]
+        Dialog box representing common options for a gear file input.
 
         Args:
-            parent ([type], optional): [description]. Defaults to None.
-            cbo_val ([type], optional): [description]. Defaults to None.
+            parent (object, optional): Parent of dialog. Defaults to None.
+            cbo_val (tuple, optional): A name, data tuple to initialize the
+                confiuration dialog. Defaults to None.
         """
         super(input_dialog, self).__init__(parent)
         dialog_ui_path = op.join(
@@ -58,10 +56,10 @@ class input_dialog(QtWidgets.QDialog):
 
     def cbo_value(self):
         """
-        cbo_value [summary]
+        Returns a collated name/data tuple representing the input.
 
         Returns:
-            [type]: [description]
+            tuple: A name/data tuple describing the file input.
         """
         name = self.ui.txt_name.text()
         data = {}
@@ -75,7 +73,7 @@ class input_dialog(QtWidgets.QDialog):
 
     def changed_name(self):
         """
-        changed_name [summary]
+        Check the input name for length. Enable OK button if greater than zero.
         """
         # We will not allow for a config name to be less than 1 character
         txt_name = self.ui.txt_name
@@ -88,18 +86,19 @@ class input_dialog(QtWidgets.QDialog):
     @staticmethod
     def get_data(parent=None, cbo_val=None):
         """
-        get_data [summary]
+        Static method to initialize dialog box and retrieve the name/data pair.
 
         Args:
-            parent ([type], optional): [description]. Defaults to None.
-            cbo_val ([type], optional): [description]. Defaults to None.
+            parent (object, optional): Parent of dialog. Defaults to None.
+            cbo_val (tuple, optional): Name/data pair to initialize dialog.
+                Defaults to None.
 
         Returns:
-            [type]: [description]
+            tuple: Name/data pair
         """
         dialog = input_dialog(parent, cbo_val)
         ret_val = dialog.exec_()
         if ret_val:
             return dialog.cbo_value()
         else:
-            return [None, None]
+            return (None, None)

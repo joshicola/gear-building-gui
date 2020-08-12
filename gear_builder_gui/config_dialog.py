@@ -8,19 +8,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 class config_dialog(QtWidgets.QDialog):
     """
-    config_dialog [summary]
-
-    Args:
-        QtWidgets ([type]): [description]
+    Dialog box class representing common options for a gear configuration.
     """
 
     def __init__(self, parent=None, cbo_val=None):
         """
-        __init__ [summary]
+        Dialog box representing common options for a gear configuration.
 
         Args:
-            parent ([type], optional): [description]. Defaults to None.
-            cbo_val ([type], optional): [description]. Defaults to None.
+            parent (object, optional): Parent of dialog. Defaults to None.
+            cbo_val (tuple, optional): A name, data tuple to initialize the
+                confiuration dialog. Defaults to None.
         """
         super(config_dialog, self).__init__(parent)
         # "name" and "data" represent the name and data of a config item.
@@ -119,7 +117,7 @@ class config_dialog(QtWidgets.QDialog):
 
     def add_enum(self):
         """
-        add_enum [summary]
+        Add an enumerated value to the list.
         """
         text, ok = QtWidgets.QInputDialog.getText(self, "Enter Value", "Enter Value")
         if ok:
@@ -127,7 +125,7 @@ class config_dialog(QtWidgets.QDialog):
 
     def edit_enum(self):
         """
-        edit_enum [summary]
+        Edit the selected enumerated value in the list.
         """
         item = self.ui.lst_enum.currentItem()
         if item is not None:
@@ -140,7 +138,7 @@ class config_dialog(QtWidgets.QDialog):
 
     def del_enum(self):
         """
-        del_enum [summary]
+        Delete the selected enumerated value in the list.
         """
         obj = self.ui.lst_enum
         i = obj.currentIndex()
@@ -149,7 +147,7 @@ class config_dialog(QtWidgets.QDialog):
 
     def changed_name(self):
         """
-        changed_name [summary]
+        Check the config name for length. Enable OK button if greater than zero.
         """
         # We will not allow for a config name to be less than 1 character
         txt_name = self.ui.txt_name
@@ -161,10 +159,10 @@ class config_dialog(QtWidgets.QDialog):
 
     def cbo_value(self):
         """
-        cbo_value [summary]
+        Returns a collated name/data dictionary pair representing the config.
 
         Returns:
-            [type]: [description]
+            tuple: A name/data pairing describing the config option.
         """
         self.name = self.ui.txt_name.text()
 
@@ -193,23 +191,25 @@ class config_dialog(QtWidgets.QDialog):
                 items.append(obj.item(i).text())
             self.data["enum"] = items
 
-        return [self.name, self.data]
+        return (self.name, self.data)
 
     @staticmethod
     def get_data(parent=None, cbo_val=None):
         """
-        get_data [summary]
+        Static method to initialize dialog box and retrieve the name/data pair.
 
         Args:
-            parent ([type], optional): [description]. Defaults to None.
-            cbo_val ([type], optional): [description]. Defaults to None.
+            parent (object, optional): Parent of dialog. Defaults to None.
+            cbo_val (tuple, optional): Name/data pair to initialize dialog.
+                Defaults to None.
 
         Returns:
-            [type]: [description]
+            tuple: Name/data pair
         """
+
         dialog = config_dialog(parent, cbo_val)
         ret_val = dialog.exec_()
         if ret_val:
             return dialog.cbo_value()
         else:
-            return [None, None]
+            return (None, None)
