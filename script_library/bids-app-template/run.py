@@ -7,12 +7,12 @@ import shutil
 import sys
 from pathlib import Path
 
-import psutil
-
 import flywheel_gear_toolkit
 from flywheel_gear_toolkit.interfaces.command_line import build_command_list, exec_command
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 from flywheel_gear_toolkit.utils.zip_tools import zip_output
+
+import psutil
 from utils.bids.download_run_level import download_bids_for_runlevel
 from utils.bids.run_level import get_run_level_and_hierarchy
 from utils.dry_run import pretend_it_ran
@@ -121,12 +121,12 @@ def main(gtk_context):
             command[ii] = cmd.split("=")[1]
     {{/script.verbose}}
 
-    {{#script.needs_freesurfer}} 
+    {{#script.needs_freesurfer_license}} 
     # if the command needs a freesurfer license keep this
     if Path(FREESURFER_FULLPATH).exists():
         log.debug("%s exists.", FREESURFER_FULLPATH)
     install_freesurfer_license(gtk_context, FREESURFER_FULLPATH)
-    {{/script.needs_freesurfer}}
+    {{/script.needs_freesurfer_license}}
 
     if len(errors) == 0:
 

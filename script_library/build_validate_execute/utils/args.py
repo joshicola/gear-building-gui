@@ -2,8 +2,8 @@ import os.path as op
 import sys
 from collections import OrderedDict
 
-from gear_toolkit.command_line import build_command_list, exec_command
 import flywheel
+from gear_toolkit.command_line import build_command_list, exec_command
 
 
 def build(context):
@@ -49,9 +49,8 @@ def validate(params):
     pass
 
 
-def execute(context, params, dry_run=False, environ=None):
+def execute(command, params, dry_run=False, environ=None):
     # Get Params
-    command = ['{base_command}']
 
     # Build command-line parameters
     command = build_command_list(command, params)

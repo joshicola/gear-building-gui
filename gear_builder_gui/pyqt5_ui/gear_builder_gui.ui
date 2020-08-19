@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tb_manifest">
      <attribute name="title">
@@ -1017,6 +1017,29 @@ notify on pep8 violations(??)</string>
       <property name="text">
        <string>Script Template:</string>
       </property>
+     </widget>
+     <widget class="QScrollArea" name="scrOptions">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>501</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>499</width>
+         <height>109</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>

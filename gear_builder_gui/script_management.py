@@ -24,6 +24,64 @@ import os
 import os.path as op
 
 import pystache
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QPushButton,
+    QScrollArea,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
+
+test_dict = {
+    "command_name": "execute_all_code",
+    "code_block_x": True,
+    "code_block_y": False,
+    "code_block_z": False,
+    "code_block_a": False,
+    "code_block_b": False,
+    "code_block_c": False,
+}
+
+default_script_templates = {
+    "templates": [
+        {
+            "name": "Simple Script",
+            "base_dir": "script_library/simple_script/",
+            "tags": [{"base_command": "echo"}],
+            "templates": ["script_library/simple_script/run.py"],
+            "copy": [],
+        },
+        {
+            "name": "Bids App Template",
+            "base_dir": "script_library/bids-app-template/",
+            "tags": [
+                {"bids_command": "echo"},
+                {"cpus": False},
+                {"memory_available": False},
+                {"participant": "Subject 1"},
+                {"verbose": False},
+                {"needs_freesurfer_license": False},
+                {"bids_tree": False},
+                {"zip_htmls": False},
+                {"save_intermediate_output": False},
+            ],
+            "templates": ["script_library/bids-app-template/run.py"],
+            "copy": [
+                "script_library/bids-app-template/utils",
+                "script_library/bids-app-template/LICENSE",
+            ],
+        },
+    ]
+}
 
 
 class Script_Management:
@@ -40,6 +98,9 @@ class Script_Management:
         """
         self.ui = main_window.ui
         self.script_def = main_window.gear_config["script"]
+        # initialize script dictionary:
+        self.script = main_window.gear_config["script"]
+
         # Set the script template data
         self.ui.cbo_script_template.setItemData(
             0, ["script_library/simple_script/run.py"]
@@ -51,6 +112,30 @@ class Script_Management:
                 "script_library/build_validate_execute/utils/args.py",
             ],
         )
+        self.init_scroll_options()
+
+    def init_scroll_options(self):
+        self.widget = QWidget()
+
+        self.ui.fbox = QFormLayout()
+        for k, v in test_dict.items():
+            Label = QLabel(k)
+            if isinstance(v, bool):
+                object = QCheckBox()
+                object.setChecked(v)
+            else:
+                object = QLineEdit()
+                object.setText(v)
+            object.setObjectName = k
+            self.ui.fbox.addRow(Label, object)
+
+        self.widget.setLayout(self.ui.fbox)
+
+        # Scroll Area Properties
+        self.ui.scrOptions.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.ui.scrOptions.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.scrOptions.setWidgetResizable(True)
+        self.ui.scrOptions.setWidget(self.widget)
 
     def save(self, directory):
         """
