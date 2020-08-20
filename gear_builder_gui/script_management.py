@@ -30,6 +30,9 @@ import pystache
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QCheckBox, QFormLayout, QLabel, QLineEdit, QWidget
 
+# TODO: embed these templates within the sub-directories of "script_library"
+#       Render only if they are valid.
+
 default_script_templates = [
     {
         "template_name": "Simple Script",
@@ -93,6 +96,9 @@ class Script_Management:
         self._update_script_options()
 
     def init_script_options(self):
+        """
+        Initialize script options ScrollArea
+        """
         self.widget = QWidget()
 
         self.ui.fbox = QFormLayout()
@@ -105,6 +111,9 @@ class Script_Management:
         self.ui.scrOptions.setWidget(self.widget)
 
     def _update_script_options(self):
+        """
+        Update subform script options on update of named script-template
+        """
         # clear  QFormLayout()
         while self.ui.fbox.rowCount() > 0:
             self.ui.fbox.removeRow(0)
