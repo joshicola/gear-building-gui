@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tb_manifest">
      <attribute name="title">
@@ -959,32 +959,6 @@ compress working directory to a file in output
 notify on pep8 violations(??)</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="txt_simple_script">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>echo</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_16">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>151</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Command Name:</string>
-      </property>
-     </widget>
      <widget class="QComboBox" name="cbo_script_template">
       <property name="geometry">
        <rect>
@@ -994,16 +968,6 @@ notify on pep8 violations(??)</string>
         <height>26</height>
        </rect>
       </property>
-      <item>
-       <property name="text">
-        <string extracomment="Hi">Simple Script</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Build/Validate/Execute</string>
-       </property>
-      </item>
      </widget>
      <widget class="QLabel" name="label_18">
       <property name="geometry">
@@ -1147,7 +1111,6 @@ notify on pep8 violations(??)</string>
   <tabstop>btn_ENV_add</tabstop>
   <tabstop>btn_ENV_del</tabstop>
   <tabstop>cbo_script_template</tabstop>
-  <tabstop>txt_simple_script</tabstop>
   <tabstop>btn_export_gear</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>

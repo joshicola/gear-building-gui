@@ -22,66 +22,42 @@ Whole blocks of text will be expressed as:
 import json
 import os
 import os.path as op
+import shutil
+from collections import OrderedDict
+from pathlib import Path
 
 import pystache
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QFormLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QMainWindow,
-    QPushButton,
-    QScrollArea,
-    QSlider,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QCheckBox, QFormLayout, QLabel, QLineEdit, QWidget
 
-test_dict = {
-    "command_name": "execute_all_code",
-    "code_block_x": True,
-    "code_block_y": False,
-    "code_block_z": False,
-    "code_block_a": False,
-    "code_block_b": False,
-    "code_block_c": False,
-}
-
-default_script_templates = {
-    "templates": [
-        {
-            "name": "Simple Script",
-            "base_dir": "script_library/simple_script/",
-            "tags": [{"base_command": "echo"}],
-            "templates": ["script_library/simple_script/run.py"],
-            "copy": [],
-        },
-        {
-            "name": "Bids App Template",
-            "base_dir": "script_library/bids-app-template/",
-            "tags": [
-                {"bids_command": "echo"},
-                {"cpus": False},
-                {"memory_available": False},
-                {"participant": "Subject 1"},
-                {"verbose": False},
-                {"needs_freesurfer_license": False},
-                {"bids_tree": False},
-                {"zip_htmls": False},
-                {"save_intermediate_output": False},
-            ],
-            "templates": ["script_library/bids-app-template/run.py"],
-            "copy": [
-                "script_library/bids-app-template/utils",
-                "script_library/bids-app-template/LICENSE",
-            ],
-        },
-    ]
-}
+default_script_templates = [
+    {
+        "template_name": "Simple Script",
+        "base_dir": "script_library/simple_script/",
+        "tags": {"base_command": "echo"},
+        "templates": ["run.py"],
+        "copy": [],
+    },
+    {
+        "template_name": "Bids App Template",
+        "base_dir": "script_library/bids-app-template/",
+        "tags": OrderedDict(
+            {
+                "bids_command": "echo",
+                "participant": "Subject 1",
+                "cpus": False,
+                "memory_available": False,
+                "verbose": False,
+                "needs_freesurfer_license": False,
+                "bids_tree": False,
+                "zip_htmls": False,
+                "save_intermediate_output": False,
+            }
+        ),
+        "templates": ["run.py"],
+        "copy": ["utils", "LICENSE"],
+    },
+]
 
 
 class Script_Management:
@@ -96,39 +72,30 @@ class Script_Management:
         Args:
             main_window (GearBuilderGUI):  The instantiated main window.
         """
+        self.main_window = main_window
         self.ui = main_window.ui
-        self.script_def = main_window.gear_config["script"]
-        # initialize script dictionary:
-        self.script = main_window.gear_config["script"]
+
+        self.script_def = main_window.gear_def["script"]
+
+        self.init_script_options()
 
         # Set the script template data
-        self.ui.cbo_script_template.setItemData(
-            0, ["script_library/simple_script/run.py"]
-        )
-        self.ui.cbo_script_template.setItemData(
-            1,
-            [
-                "script_library/build_validate_execute/run.py",
-                "script_library/build_validate_execute/utils/args.py",
-            ],
-        )
-        self.init_scroll_options()
+        for template in default_script_templates:
+            self.ui.cbo_script_template.addItem(
+                template["template_name"], userData=template
+            )
 
-    def init_scroll_options(self):
+        self.ui.cbo_script_template.currentIndexChanged.connect(
+            self._update_script_options
+        )
+
+        self.ui.cbo_script_template.setCurrentIndex(0)
+        self._update_script_options()
+
+    def init_script_options(self):
         self.widget = QWidget()
 
         self.ui.fbox = QFormLayout()
-        for k, v in test_dict.items():
-            Label = QLabel(k)
-            if isinstance(v, bool):
-                object = QCheckBox()
-                object.setChecked(v)
-            else:
-                object = QLineEdit()
-                object.setText(v)
-            object.setObjectName = k
-            self.ui.fbox.addRow(Label, object)
-
         self.widget.setLayout(self.ui.fbox)
 
         # Scroll Area Properties
@@ -137,6 +104,52 @@ class Script_Management:
         self.ui.scrOptions.setWidgetResizable(True)
         self.ui.scrOptions.setWidget(self.widget)
 
+    def _update_script_options(self):
+        # clear  QFormLayout()
+        while self.ui.fbox.rowCount() > 0:
+            self.ui.fbox.removeRow(0)
+
+        # iterate through tags of current script_template
+        data = self.ui.cbo_script_template.currentData()
+
+        for k, v in data["tags"].items():
+            Label = QLabel(k + ":")
+            if isinstance(v, bool):
+                object = QCheckBox()
+                object.setChecked(v)
+            else:
+                object = QLineEdit()
+                object.setText(v)
+            object.setObjectName(k)
+            self.ui.fbox.addRow(Label, object)
+
+    def _script_def_to_form(self):
+        """
+        Select and populate the template-specific form values from the script_def.
+        """
+        pass
+
+    def _form_to_script_def(self):
+        """
+        Clear and repopulate script_def from template-specific form values.
+        """
+        # unlike the manifest and dockerfile definitions, we need to clear the script
+        # definition and repopulate.
+        self.script_def.clear()
+
+        script_def = {}
+
+        data = self.ui.cbo_script_template.currentData()
+        script_def["template_name"] = data["template_name"]
+        for i in range(self.ui.fbox.rowCount()):
+            item = self.ui.fbox.itemAt(i * 2 + 1).widget()
+            if isinstance(item, QLineEdit):
+                script_def[item.objectName()] = item.text()
+            elif isinstance(item, QCheckBox):
+                script_def[item.objectName()] = bool(item.checkState())
+
+        self.script_def.update(script_def)
+
     def save(self, directory):
         """
         Saves the script hierarchy to provided directory.
@@ -144,34 +157,48 @@ class Script_Management:
         Args:
             directory (str): Path to output directory.
         """
-        # is_simple_script = self.ui.ck_simple_script.isChecked()
 
-        # if is_simple_script:
-        #     script_str = open(
-        #         op.join(source_dir, 'script_library/simple_script/run.py'),
-        #         'r'
-        #     ).read()
-        #     script_str = script_str.replace('{name}', self.ui.txt_name.text())
-        #     script_str = script_str.replace(
-        #         '{base_command}',
-        #         self.ui.txt_simple_script.text()
-        #     )
+        self._form_to_script_def()
 
-        #     out_file = open(op.join(directory,'run.py'),'w')
-        #     out_file.write(script_str)
-        #     out_file.close()
-
-        source_dir = op.join(os.path.dirname(os.path.realpath(__file__)), "..")
+        source_dir = Path(op.join(os.path.dirname(os.path.realpath(__file__)), ".."))
         cbo_script_data = self.ui.cbo_script_template.currentData()
-        for fl in cbo_script_data:
-            script_str = open(op.join(source_dir, fl)).read()
-            script_str = script_str.replace("{{name}}", self.ui.txt_name.text())
-            script_str = script_str.replace(
-                "{{base_command}}", self.ui.txt_simple_script.text()
-            )
-            dirs = op.dirname(fl).split("/")
-            basedir = op.join(dirs[0], dirs[1], "")
-            if len(dirs) > 2:
-                os.makedirs(op.join(directory, dirs[2]), exist_ok=True)
 
-            open(op.join(directory, fl.replace(basedir, "")), "w").write(script_str)
+        for fl in cbo_script_data["templates"]:
+            # Mustache Render
+            script_template = source_dir / cbo_script_data["base_dir"] / fl
+            if script_template.exists():
+                output_filename = Path(directory) / fl
+
+                renderer = pystache.Renderer()
+
+                template_output = renderer.render_path(
+                    script_template, self.main_window.gear_def
+                )
+
+                # Ensure the path to write rendered template exists
+                if not output_filename.parent.exists():
+                    output_filename.parent.mkdir(parents=True)
+
+                with open(output_filename, "w") as fp:
+                    fp.write(template_output)
+            else:
+                # TODO: Alert user with PopUp
+                print("template does not exist.")
+
+        for fl in cbo_script_data["copy"]:
+            source_path = source_dir / cbo_script_data["base_dir"] / fl
+            destination_path = Path(directory) / fl
+            if source_path.exists():
+                if source_path.is_dir():
+                    # shutil.copytree must have an empty destination
+                    if destination_path.exists():
+                        shutil.rmtree(destination_path)
+                    shutil.copytree(source_path, destination_path)
+                elif source_path.is_file():
+                    shutil.copy(source_path, destination_path)
+                else:
+                    print("Unrecognized Path object.")
+
+            else:
+                # TODO: Alert user with PopUp... or cummulative errs in single popup
+                print("File or path does not exist.")

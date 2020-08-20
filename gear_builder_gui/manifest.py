@@ -47,7 +47,7 @@ class Manifest:
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
         self.init_validators()
         # initialize a manifest object
-        self.manifest = main_window.gear_config["manifest"]
+        self.manifest = main_window.gear_def["manifest"]
 
     def update_maintainers(self):
         """
