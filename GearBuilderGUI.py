@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+import json
 import os
 import os.path as op
 import sys
+from pathlib import Path
 
 from PyQt5 import QtGui, QtWidgets, uic
 
@@ -15,7 +17,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         super(GearBuilderGUI, self).__init__()
 
         # set gear configuration to default of empty
-        self.gear_config = {"manifest": {}, "dockerfile": {}, "script": {}}
+        self.gear_def = {"manifest": {}, "dockerfile": {}, "script": {}}
 
         script_dir = op.dirname(os.path.realpath(__file__))
         icon_path = op.join(script_dir, "gear_builder_gui/resources/flywheel.png")
@@ -35,10 +37,15 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         self.scripts = Script_Management(self)
         self.ui.btn_export_gear.clicked.connect(self.export_gear)
 
-    # NOTE: This export of manifest, dockerfile, scripts works.
-    # What else we might want is a means to save and load all of these settings.
-    # That is, have entirely configured gear-builder templates that represent
-    # exportible settings.  For now. Keep it simple.
+    def load_gear_def(self):
+        pass
+
+    def save_gear_def(self, directory):
+        gear_name = self.gear_def["manifest"]["name"]
+        output_file = Path(directory) / (gear_name + ".gear.json")
+        with open(output_file, "w") as fp:
+            json.dump(self.gear_def, fp)
+
     def export_gear(self):
         directory = str(
             QtWidgets.QFileDialog.getExistingDirectory(
@@ -50,6 +57,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
             self.manifest.save_draft_readme(directory)
             self.dockerfile.save(directory)
             self.scripts.save(directory)
+            self.save_gear_def(directory)
 
 
 if __name__ == "__main__":

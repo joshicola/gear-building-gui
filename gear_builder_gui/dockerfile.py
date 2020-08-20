@@ -16,7 +16,7 @@ class Dockerfile:
         Args:
             main_window (GearBuilderGUI): The instantiated main window
         """
-        self.dockerfile_def = main_window.gear_config["dockerfile"]
+        self.dockerfile_def = main_window.gear_def["dockerfile"]
         self.main_window = main_window
         self.ui = main_window.ui
         self.ui.btn_APT_add.clicked.connect(self.add_row)
