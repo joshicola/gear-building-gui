@@ -246,11 +246,15 @@ class Manifest:
             "version",
         ]
         try:
-            self.manifest = json.load(open(manifest_file, "r"))
+            tmp_manifest = json.load(open(manifest_file, "r"))
+
             for key in keys:
                 text_obj = eval("self.ui.txt_" + key)
                 text_type = type(eval("self.ui.txt_" + key))
-                text_value = self.manifest[key]
+                if tmp_manifest.get(key):
+                    text_value = tmp_manifest[key]
+                else:
+                    text_value = ""
                 if text_type == QtWidgets.QPlainTextEdit:
                     text_value = text_obj.setPlainText(text_value)
                 elif text_type == QtWidgets.QComboBox:
@@ -260,7 +264,7 @@ class Manifest:
                 else:
                     text_obj.setText(text_value)
             # load custom fields
-            custom = self.manifest["custom"]
+            custom = tmp_manifest["custom"]
             self.ui.rdo_analysis.setChecked(
                 custom["gear-builder"]["category"] == "analysis"
             )
@@ -269,7 +273,7 @@ class Manifest:
                 self.ui.txt_suite.setText(custom["flywheel"]["suite"])
 
             # load inputs section
-            inputs = self.manifest["inputs"]
+            inputs = tmp_manifest["inputs"]
 
             cbo_obj = self.ui.cmbo_inputs
             cbo_obj.clear()
@@ -277,13 +281,15 @@ class Manifest:
                 cbo_obj.addItem(name, userData=data)
 
             # load configs section
-            config = self.manifest["config"]
+            config = tmp_manifest["config"]
 
             cbo_obj = self.ui.cmbo_config
             cbo_obj.clear()
             for name, data in config.items():
                 cbo_obj.addItem(name, userData=data)
-
+            # clear and update manifest reference
+            self.manifest.clear()
+            self.manifest.update(tmp_manifest)
         except Exception as e:
             print(e)
 
