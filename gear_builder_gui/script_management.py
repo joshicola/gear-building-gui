@@ -132,13 +132,26 @@ class Script_Management:
             object.setObjectName(k)
             self.ui.fbox.addRow(Label, object)
 
-    def _script_def_to_form(self):
+    def _update_form_from_script_def(self):
         """
         Select and populate the template-specific form values from the script_def.
         """
-        pass
+        template_name = self.script_def["template_name"]
+        index = self.ui.cbo_script_template.findText(template_name, Qt.MatchFixedString)
+        if index >= 0:
+            self.ui.cbo_script_template.setCurrentIndex(index)
+            self._update_script_options()
 
-    def _form_to_script_def(self):
+        for i in range(self.ui.fbox.rowCount()):
+            item = self.ui.fbox.itemAt(i * 2 + 1).widget()
+            if isinstance(item, QLineEdit):
+                if self.script_def.get(item.objectName()):
+                    item.setText(self.script_def[item.objectName()])
+            elif isinstance(item, QCheckBox):
+                if self.script_def.get(item.objectName()):
+                    item.setChecked(self.script_def[item.objectName()])
+
+    def _update_script_def_from_form(self):
         """
         Clear and repopulate script_def from template-specific form values.
         """
@@ -155,7 +168,7 @@ class Script_Management:
             if isinstance(item, QLineEdit):
                 script_def[item.objectName()] = item.text()
             elif isinstance(item, QCheckBox):
-                script_def[item.objectName()] = bool(item.checkState())
+                script_def[item.objectName()] = item.isChecked()
 
         self.script_def.update(script_def)
 
@@ -167,7 +180,7 @@ class Script_Management:
             directory (str): Path to output directory.
         """
 
-        self._form_to_script_def()
+        self._update_script_def_from_form()
 
         source_dir = Path(op.join(os.path.dirname(os.path.realpath(__file__)), ".."))
         cbo_script_data = self.ui.cbo_script_template.currentData()

@@ -9,6 +9,7 @@ from PyQt5 import QtGui, QtWidgets, uic
 
 from gear_builder_gui.dockerfile import Dockerfile
 from gear_builder_gui.manifest import Manifest
+from gear_builder_gui.menus import Gear_Builder_Menus
 from gear_builder_gui.script_management import Script_Management
 
 
@@ -16,7 +17,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(GearBuilderGUI, self).__init__()
 
-        # set gear configuration to default of empty
+        # set gear definition to an empty default
         self.gear_def = {"manifest": {}, "dockerfile": {}, "script": {}}
 
         script_dir = op.dirname(os.path.realpath(__file__))
@@ -35,10 +36,10 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         self.manifest = Manifest(self)
         self.dockerfile = Dockerfile(self)
         self.scripts = Script_Management(self)
-        self.ui.btn_export_gear.clicked.connect(self.export_gear)
 
-    def load_gear_def(self):
-        pass
+        self.menus = Gear_Builder_Menus(self)
+
+        self.ui.btn_export_gear.clicked.connect(self.export_gear)
 
     def save_gear_def(self, directory):
         gear_name = self.gear_def["manifest"]["name"]

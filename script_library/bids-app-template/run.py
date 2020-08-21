@@ -52,6 +52,7 @@ def main(gtk_context):
     output_analysisid_dir = gtk_context.output_dir / gtk_context.destination["id"]
 
     {{#script.cpus}}
+    # ==============================os_cpu_count========================================
     # get # cpu's to set -openmp
     os_cpu_count = str(os.cpu_count())
     log.info("os.cpu_count() = %s", os_cpu_count)
@@ -65,11 +66,14 @@ def main(gtk_context):
             gtk_context.config["n_cpus"] = os_cpu_count
     else:  # Default is to use all cpus available
         gtk_context.config["n_cpus"] = os_cpu_count  # zoom zoom
+    # ==================================================================================
     {{/script.cpus}}
 
     {{#script.memory_available}}
+    # ========================memory_available==========================================
     mem_gb = psutil.virtual_memory().available / (1024 ** 3)
     log.info("psutil.virtual_memory().available= {:4.1f} GiB".format(mem_gb))
+    # ==================================================================================
     {{/script.memory_available}}
 
     # grab environment for gear (saved in Dockerfile)
@@ -113,30 +117,36 @@ def main(gtk_context):
     # print(command)
 
     {{#script.verbose}}
+    # =============================verbose==============================================
     for ii, cmd in enumerate(command):
         if cmd.startswith("--verbose"):
             # handle a 'count' argparse argument where manifest gives
             # enumerated possibilities like v, vv, or vvv
             # e.g. replace "--verbose=vvv' with '-vvv'
             command[ii] = cmd.split("=")[1]
+    # ==================================================================================
     {{/script.verbose}}
 
-    {{#script.needs_freesurfer_license}} 
+    {{#script.needs_freesurfer_license}}
+    # ========================needs_freesurfer_license================================== 
     # if the command needs a freesurfer license keep this
     if Path(FREESURFER_FULLPATH).exists():
         log.debug("%s exists.", FREESURFER_FULLPATH)
     install_freesurfer_license(gtk_context, FREESURFER_FULLPATH)
+    # ==================================================================================
     {{/script.needs_freesurfer_license}}
 
     if len(errors) == 0:
 
         {{#script.bids_tree}}
+        # ============================bids_tree=========================================
         # Create HTML file that shows BIDS "Tree" like output?
         tree = True
         {{/script.bids_tree}}
         {{^script.bids_tree}}
         # Create HTML file that shows BIDS "Tree" like output?
         tree = False
+        # ==============================================================================
         {{/script.bids_tree}}
         tree_title = f"{command_name} BIDS Tree"
 
@@ -231,17 +241,21 @@ def main(gtk_context):
         )
 
         {{#script.zip_htmls}}
+        # ===============================zip_htmls======================================
         # zip any .html files in output/<analysis_id>/
         zip_htmls(gtk_context, output_analysisid_dir)
+        # ==============================================================================
         {{/script.zip_htmls}}
 
         {{#script.save_intermediate_output}}
+        # ========================save_intermediate_output==============================
         # possibly save ALL intermediate output
         if gtk_context.config.get("gear-save-intermediate-output"):
             zip_all_intermediate_output(gtk_context, run_label)
 
         # possibly save intermediate files and folders
         zip_intermediate_selected(gtk_context, run_label)
+        # ==============================================================================
         {{/script.save_intermediate_output}}
 
         # clean up: remove output that was zipped
