@@ -1,7 +1,10 @@
+import json
 import os
 import os.path as op
+from pathlib import Path
 
 import pystache
+from PyQt5 import QtGui, QtWidgets
 
 
 class Dockerfile:
@@ -74,6 +77,67 @@ class Dockerfile:
             ENV["value"] = tblENV.item(i, 1).text()
             self.dockerfile_def["ENV"].append(ENV)
 
+    def load_dockerfile_from_file(self):
+        """
+        Load Dockerfile from file.
+        """
+        dockerfile_file = QtWidgets.QFileDialog.getOpenFileName(
+            self.main_window, "Select Dockerfile to load.", filter="Dockerfile"
+        )
+
+        # TODO: Should I warn about replacement of all Dockerfile values?
+        if len(dockerfile_file[0]) > 0:
+            with open(dockerfile_file[0], "r") as dockerfile_raw:
+                dockerfile = json.load(dockerfile_raw)
+            self._update_form_from_dockerfile()
+
+    def _update_form_from_dockerfile(self):
+        """
+        Update form values from loaded dockerfile_def dictionary.
+        """
+        try:
+            # Set combo box to value specified if exists, otherwise add a new value.
+            from_index = self.ui.cbo_docker_source.findText(self.dockerfile_def["FROM"])
+            if from_index != -1:
+                self.ui.cbo_docker_source.setCurrentIndex(from_index)
+            else:
+                self.ui.cbo_docker_source.addItem(self.dockerfile_def["FROM"])
+                self.ui.cbo_docker_source.setCurrentText(self.dockerfile_def["FROM"])
+            self.ui.txt_maintainer.setText(self.dockerfile_def["Maintainer"])
+
+            self.ui.tblAPT.setRowCount(0)
+            for i, package in enumerate(self.dockerfile_def["apt_get"]):
+                self.ui.tblAPT.insertRow(i)
+                self.ui.tblAPT.setItem(
+                    i, 0, QtWidgets.QTableWidgetItem(package.get("name", ""))
+                )
+                self.ui.tblAPT.setItem(
+                    i, 1, QtWidgets.QTableWidgetItem(package.get("version", ""))
+                )
+
+            self.ui.tblPIP.setRowCount(0)
+            for i, package in enumerate(self.dockerfile_def["pip"]):
+                self.ui.tblPIP.insertRow(i)
+                self.ui.tblPIP.setItem(
+                    i, 0, QtWidgets.QTableWidgetItem(package.get("name", ""))
+                )
+                self.ui.tblPIP.setItem(
+                    i, 1, QtWidgets.QTableWidgetItem(package.get("version", ""))
+                )
+
+            self.ui.tblENV.setRowCount(0)
+            for i, package in enumerate(self.dockerfile_def["ENV"]):
+                self.ui.tblENV.insertRow(i)
+                self.ui.tblENV.setItem(
+                    i, 0, QtWidgets.QTableWidgetItem(package.get("name", ""))
+                )
+                self.ui.tblENV.setItem(
+                    i, 1, QtWidgets.QTableWidgetItem(package.get("value", ""))
+                )
+
+        except Exception as e:
+            print(e)
+
     def _update_maintainers(self):
         """
         An event-driven method to ensure that the manifest.maintainer and the
@@ -139,17 +203,14 @@ class Dockerfile:
                 Defaults to None.
         """
         self._update_dockerfile_def_from_form()
+        source_dir = Path(os.path.dirname(os.path.realpath(__file__))) / ".."
 
         # if provided, use default dockerfile_template
         if dockerfile_template:
             self.dockerfile_def["dockerfile_template"] = dockerfile_template
         # else if not already loaded, use the default template
         elif not self.dockerfile_def.get("dockerfile_template"):
-            source_dir = op.join(
-                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
-            )
-            dockerfile_template = op.join(source_dir, "Dockerfile.mu")
-
+            dockerfile_template = "default_templates/Dockerfile.mu"
             self.dockerfile_def["dockerfile_template"] = dockerfile_template
 
         renderer = pystache.Renderer()
@@ -169,18 +230,20 @@ class Dockerfile:
             dockerfile["has_env"] = True
 
         if dockerfile["has_pip"]:
-            source_dir = op.join(
-                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
-            )
-            requirements_template = op.join(source_dir, "requirements.txt.mu")
+
+            requirements_template = "default_templates/requirements.txt.mu"
+
             template_output = renderer.render_path(
-                requirements_template, {"dockerfile": dockerfile}
+                source_dir / requirements_template, {"dockerfile": dockerfile}
             )
 
             with open(op.join(directory, "requirements.txt"), "w") as fp:
                 fp.write(template_output)
 
-        output = renderer.render_path(dockerfile_template, {"dockerfile": dockerfile})
+        output = renderer.render_path(
+            source_dir / self.dockerfile_def["dockerfile_template"],
+            {"dockerfile": dockerfile},
+        )
 
         # This gets rid of the last line continuation character in iterated elements
         output = output.replace(" \\\n*", "\n")

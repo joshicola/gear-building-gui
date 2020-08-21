@@ -41,7 +41,7 @@ class Manifest:
         self.ui.btn_config_edit.setEnabled(False)
         self.ui.btn_config_delete.setEnabled(False)
         # Save/load functionality
-        self.ui.btn_load_manifest.clicked.connect(self.load_manifest)
+        self.ui.btn_load_manifest.clicked.connect(self.load_manifest_from_file)
         self.ui.btn_save_manifest.clicked.connect(self.save_manifest)
         # connect to docker "maintainer" and validators
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
@@ -210,7 +210,7 @@ class Manifest:
         # have been loaded.
         self.manifest.update(manifest)
 
-    def load_manifest(self):
+    def load_manifest_from_file(self):
         """
         Load manifest from file.
         """
@@ -220,16 +220,17 @@ class Manifest:
 
         # TODO: Should I warn about replacement of all manifest values?
         if len(manifest_file[0]) > 0:
-            self.load_manifest_file(manifest_file[0])
+            with open(manifest_file[0], "r") as manifest_raw:
+                manifest = json.load(manifest_raw)
 
-    def load_manifest_file(self, manifest_file):
+            self.manifest.clear()
+            self.manifest.update(manifest)
+
+            self._update_form_from_manifest()
+
+    def _update_form_from_manifest(self):
         """
-        Load manifest from indicated file.
-
-        Replaces self.manifest with contents of the file on success.
-
-        Args:
-            manifest_file (str): Path to manifest file.
+        Update form values from stored manifest.
         """
         # NOTE: This would be a good place to warn if the loaded manifest was invalid
         # Required manifest keys:
@@ -246,13 +247,11 @@ class Manifest:
             "version",
         ]
         try:
-            tmp_manifest = json.load(open(manifest_file, "r"))
-
             for key in keys:
                 text_obj = eval("self.ui.txt_" + key)
                 text_type = type(eval("self.ui.txt_" + key))
-                if tmp_manifest.get(key):
-                    text_value = tmp_manifest[key]
+                if self.manifest.get(key):
+                    text_value = self.manifest[key]
                 else:
                     text_value = ""
                 if text_type == QtWidgets.QPlainTextEdit:
@@ -264,7 +263,7 @@ class Manifest:
                 else:
                     text_obj.setText(text_value)
             # load custom fields
-            custom = tmp_manifest["custom"]
+            custom = self.manifest["custom"]
             self.ui.rdo_analysis.setChecked(
                 custom["gear-builder"]["category"] == "analysis"
             )
@@ -273,7 +272,7 @@ class Manifest:
                 self.ui.txt_suite.setText(custom["flywheel"]["suite"])
 
             # load inputs section
-            inputs = tmp_manifest["inputs"]
+            inputs = self.manifest["inputs"]
 
             cbo_obj = self.ui.cmbo_inputs
             cbo_obj.clear()
@@ -281,15 +280,13 @@ class Manifest:
                 cbo_obj.addItem(name, userData=data)
 
             # load configs section
-            config = tmp_manifest["config"]
+            config = self.manifest["config"]
 
             cbo_obj = self.ui.cmbo_config
             cbo_obj.clear()
             for name, data in config.items():
                 cbo_obj.addItem(name, userData=data)
-            # clear and update manifest reference
-            self.manifest.clear()
-            self.manifest.update(tmp_manifest)
+
         except Exception as e:
             print(e)
 

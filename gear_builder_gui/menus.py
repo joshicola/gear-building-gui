@@ -30,8 +30,8 @@ class Gear_Builder_Menus:
         self.main_window.dockerfile.dockerfile_def = gear_def["dockerfile"]
         self.main_window.scripts.script_def = gear_def["script"]
 
-        # self.main_window.manifest._update_form_from_manifest
-        # self.main_window.dockerfile._update_form_from_dockerfile
+        self.main_window.manifest._update_form_from_manifest()
+        self.main_window.dockerfile._update_form_from_dockerfile()
         self.main_window.scripts._update_form_from_script_def()
 
     def save_gear_definition(self):

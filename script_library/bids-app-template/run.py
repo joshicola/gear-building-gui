@@ -8,11 +8,11 @@ import sys
 from pathlib import Path
 
 import flywheel_gear_toolkit
+import psutil
 from flywheel_gear_toolkit.interfaces.command_line import build_command_list, exec_command
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 from flywheel_gear_toolkit.utils.zip_tools import zip_output
 
-import psutil
 from utils.bids.download_run_level import download_bids_for_runlevel
 from utils.bids.run_level import get_run_level_and_hierarchy
 from utils.dry_run import pretend_it_ran
@@ -142,8 +142,10 @@ def main(gtk_context):
         # ============================bids_tree=========================================
         # Create HTML file that shows BIDS "Tree" like output?
         tree = True
+        # ==============================================================================
         {{/script.bids_tree}}
         {{^script.bids_tree}}
+        # ============================bids_tree=========================================
         # Create HTML file that shows BIDS "Tree" like output?
         tree = False
         # ==============================================================================
