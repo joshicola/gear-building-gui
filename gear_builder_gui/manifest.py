@@ -1,10 +1,9 @@
 import json
 import os
 import os.path as op
-import urllib.request
+from pathlib import Path
 
 import pystache
-import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from gear_builder_gui.config_dialog import config_dialog
@@ -27,11 +26,16 @@ class Manifest:
         """
         self.main_window = main_window
         self.ui = main_window.ui
+        # TODO: put root_dir at the main_window application level and cascade reference
+        self.root_dir = Path(op.dirname(__file__)) / ".."
+
         # Initialize "input" Section
+        self.ui.cmbo_inputs.currentIndexChanged.connect(self.update_tooltip)
         self.ui.btn_input_add.clicked.connect(self.add_input)
         self.ui.btn_input_edit.clicked.connect(self.edit_input)
         self.ui.btn_input_delete.clicked.connect(self.delete_input)
         # Initialize "config" Section
+        self.ui.cmbo_config.currentIndexChanged.connect(self.update_tooltip)
         self.ui.btn_config_add.clicked.connect(self.add_config)
         self.ui.btn_config_edit.clicked.connect(self.edit_config)
         self.ui.btn_config_delete.clicked.connect(self.delete_config)
@@ -55,6 +59,14 @@ class Manifest:
         """
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
             self.ui.txt_maintainer_2.setText(self.ui.txt_maintainer.text())
+
+    def update_input(self):
+        """
+        Update display of currently selected input.
+
+        This will have tool tips and others
+        """
+        pass
 
     # Add functionality to the input add/edit/deleted buttons
     def add_input(self):
@@ -91,6 +103,26 @@ class Manifest:
         if self.ui.cmbo_inputs.count() == 0:
             self.ui.btn_input_edit.setEnabled(False)
             self.ui.btn_input_delete.setEnabled(False)
+
+    def update_tooltip(self):
+        """
+        Update tooltip of config/input combo box item.
+        """
+        sender = self.main_window.sender()
+        if "inputs" in sender.objectName():
+            cbo_obj = self.ui.cmbo_inputs
+        elif "config" in sender.objectName():
+            cbo_obj = self.ui.cmbo_config
+        else:
+            cbo_obj = None
+
+        if cbo_obj:
+            cbo_name = cbo_obj.currentText()
+            cbo_data = cbo_obj.currentData()
+            tool_tip_text = cbo_name + ":\n"
+            for k, v in cbo_data.items():
+                tool_tip_text += "\t" + k + ": " + str(v) + "\n"
+            cbo_obj.setToolTip(tool_tip_text)
 
     def add_config(self):
         """
@@ -279,6 +311,10 @@ class Manifest:
             for name, data in inputs.items():
                 cbo_obj.addItem(name, userData=data)
 
+            if cbo_obj.count() > 0:
+                self.ui.btn_input_edit.setEnabled(True)
+                self.ui.btn_input_delete.setEnabled(True)
+
             # load configs section
             config = self.manifest["config"]
 
@@ -286,6 +322,10 @@ class Manifest:
             cbo_obj.clear()
             for name, data in config.items():
                 cbo_obj.addItem(name, userData=data)
+
+            if cbo_obj.count() > 0:
+                self.ui.btn_config_edit.setEnabled(True)
+                self.ui.btn_config_delete.setEnabled(True)
 
         except Exception as e:
             print(e)
@@ -376,13 +416,17 @@ class Manifest:
 
         TODO: Use a local copy of the manifest schema instead of downloading.
         """
-        spec_url = (
-            "https://gitlab.com/flywheel-io/public/"
-            "gears/-/raw/master/spec/manifest.schema.json"
-        )
-        request = requests.get(spec_url)
+        # spec_url = (
+        #    "https://gitlab.com/flywheel-io/public/"
+        #    "gears/-/raw/master/spec/manifest.schema.json"
+        # )
+        # request = requests.get(spec_url)
         # url = urllib.request.urlopen(spec_url)
-        gear_spec = json.loads(request.content)
+        with open(
+            self.root_dir / "gear_builder_gui/resources/manifest.schema.json", "r"
+        ) as fp:
+            gear_spec = json.load(fp)
+
         keys = [
             "name",
             "label",

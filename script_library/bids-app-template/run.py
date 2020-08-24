@@ -51,7 +51,7 @@ def main(gtk_context):
     # can be returned.
     output_analysisid_dir = gtk_context.output_dir / gtk_context.destination["id"]
 
-    {{#script.cpus}}
+    #{{#script.cpus}}
     # ==============================os_cpu_count========================================
     # get # cpu's to set -openmp
     os_cpu_count = str(os.cpu_count())
@@ -67,7 +67,7 @@ def main(gtk_context):
     else:  # Default is to use all cpus available
         gtk_context.config["n_cpus"] = os_cpu_count  # zoom zoom
     # ==================================================================================
-    {{/script.cpus}}
+    #{{/script.cpus}}
 
     {{#script.memory_available}}
     # ========================memory_available==========================================

@@ -9,6 +9,9 @@ class Gear_Builder_Menus:
         self.main_window = main_window
         self.ui = main_window.ui
 
+        self.menubar = self.main_window.menuBar()
+        self.menubar.setNativeMenuBar(False)
+
         self.ui.actionExport_Gear.triggered.connect(main_window.export_gear)
         self.ui.actionLoad_Gear_Project.triggered.connect(self.load_gear_definition)
         self.ui.actionSave_Gear_Project.triggered.connect(self.save_gear_definition)

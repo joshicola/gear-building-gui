@@ -62,6 +62,20 @@ default_script_templates = [
     },
 ]
 
+"""
+Provide the base run.py and utils package.
+Creating build/validate/execute functional modules around specific command-line
+programs.
+Add a command-line "switch-detector" to populate the manifest config with values
+to loop through.
+Provide a library of code-blocks that facilitate certain functionality
+module-based log reporting
+bids functionality
+verbose config validation against manifest
+compress working directory to a file in output
+notify on pep8 violations(??)
+"""
+
 
 class Script_Management:
     """
