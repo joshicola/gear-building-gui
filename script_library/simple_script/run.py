@@ -13,7 +13,10 @@ def main(context):
     try:
         # build the command string
         command = ["{{script.base_command}}"]
-
+        # This block of code is active when not rendered by pystache
+        # {{#if_not_mustache_rendered}}
+        command = ["echo"]
+        # {{/if_not_mustache_rendered}}
         # this gathers the configuration values ONLY and uses them as positional
         # arguments to "{base_command}"
         # for including input values, see build_validate_execute
