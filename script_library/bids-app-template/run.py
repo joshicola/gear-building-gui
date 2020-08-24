@@ -8,17 +8,23 @@ import sys
 from pathlib import Path
 
 import flywheel_gear_toolkit
-from flywheel_gear_toolkit.interfaces.command_line import build_command_list, exec_command
+import psutil
+from flywheel_gear_toolkit.interfaces.command_line import (
+    build_command_list,
+    exec_command,
+)
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 from flywheel_gear_toolkit.utils.zip_tools import zip_output
 
-import psutil
 from utils.bids.download_run_level import download_bids_for_runlevel
 from utils.bids.run_level import get_run_level_and_hierarchy
 from utils.dry_run import pretend_it_ran
 from utils.fly.make_file_name_safe import make_file_name_safe
 from utils.results.zip_htmls import zip_htmls
-from utils.results.zip_intermediate import zip_all_intermediate_output, zip_intermediate_selected
+from utils.results.zip_intermediate import (
+    zip_all_intermediate_output,
+    zip_intermediate_selected,
+)
 
 GEAR = "bids-app-template"
 REPO = "flywheel-apps"
@@ -51,26 +57,30 @@ def main(gtk_context):
     # can be returned.
     output_analysisid_dir = gtk_context.output_dir / gtk_context.destination["id"]
 
-    {{#script.cpus}}
+    # {{#script.cpus}}
+    # ==============================os_cpu_count========================================
     # get # cpu's to set -openmp
     os_cpu_count = str(os.cpu_count())
     log.info("os.cpu_count() = %s", os_cpu_count)
     n_cpus = gtk_context.config.get("n_cpus")
     if n_cpus:
         if n_cpus > os_cpu_count:
-            log.warning('n_cpus > number available, using %d', os_cpu_count)
+            log.warning("n_cpus > number available, using %d", os_cpu_count)
             gtk_context.config["n_cpus"] = os_cpu_count
         elif n_cpus == 0:
-            log.info('n_cpus == 0, using %d (maximum available)', os_cpu_count)
+            log.info("n_cpus == 0, using %d (maximum available)", os_cpu_count)
             gtk_context.config["n_cpus"] = os_cpu_count
     else:  # Default is to use all cpus available
         gtk_context.config["n_cpus"] = os_cpu_count  # zoom zoom
-    {{/script.cpus}}
+    # ==================================================================================
+    # {{/script.cpus}}
 
-    {{#script.memory_available}}
+    # {{#script.memory_available}}
+    # ========================memory_available==========================================
     mem_gb = psutil.virtual_memory().available / (1024 ** 3)
     log.info("psutil.virtual_memory().available= {:4.1f} GiB".format(mem_gb))
-    {{/script.memory_available}}
+    # ==================================================================================
+    # {{/script.memory_available}}
 
     # grab environment for gear (saved in Dockerfile)
     with open("/tmp/gear_environ.json", "r") as f:
@@ -97,6 +107,10 @@ def main(gtk_context):
     # The main command line command to be run:
     # editme: Set the actual gear command:
     command = ["{{script.bids_command}}"]
+    # This block of code is active when not rendered by pystache
+    # {{#if_not_mustache_rendered}}
+    command = ["echo"]
+    # {{/if_not_mustache_rendered}}
 
     # This is also used as part of the name of output files
     command_name = make_file_name_safe(command[0])
@@ -108,36 +122,48 @@ def main(gtk_context):
     command.append(str(gtk_context.work_dir / "bids"))
     command.append(str(output_analysisid_dir))
     command.append("{{script.participant}}")
+    # This block of code is active when not rendered by pystache
+    # {{#if_not_mustache_rendered}}
+    command.append("Subject_1")
+    # {{/if_not_mustache_rendered}}
 
     command = build_command_list(command, command_config)
     # print(command)
 
-    {{#script.verbose}}
+    # {{#script.verbose}}
+    # =============================verbose==============================================
     for ii, cmd in enumerate(command):
         if cmd.startswith("--verbose"):
             # handle a 'count' argparse argument where manifest gives
             # enumerated possibilities like v, vv, or vvv
             # e.g. replace "--verbose=vvv' with '-vvv'
             command[ii] = cmd.split("=")[1]
-    {{/script.verbose}}
+    # ==================================================================================
+    # {{/script.verbose}}
 
-    {{#script.needs_freesurfer_license}} 
+    # {{#script.needs_freesurfer_license}}
+    # ========================needs_freesurfer_license==================================
     # if the command needs a freesurfer license keep this
     if Path(FREESURFER_FULLPATH).exists():
         log.debug("%s exists.", FREESURFER_FULLPATH)
     install_freesurfer_license(gtk_context, FREESURFER_FULLPATH)
-    {{/script.needs_freesurfer_license}}
+    # ==================================================================================
+    # {{/script.needs_freesurfer_license}}
 
     if len(errors) == 0:
 
-        {{#script.bids_tree}}
+        # {{#script.bids_tree}}
+        # ============================bids_tree=========================================
         # Create HTML file that shows BIDS "Tree" like output?
         tree = True
-        {{/script.bids_tree}}
-        {{^script.bids_tree}}
+        # ==============================================================================
+        # {{/script.bids_tree}}
+        # {{^script.bids_tree}}
+        # ============================bids_tree=========================================
         # Create HTML file that shows BIDS "Tree" like output?
         tree = False
-        {{/script.bids_tree}}
+        # ==============================================================================
+        # {{/script.bids_tree}}
         tree_title = f"{command_name} BIDS Tree"
 
         # Whether or not to include src data (e.g. dicoms) when downloading BIDS
@@ -230,19 +256,23 @@ def main(gtk_context):
             exclude_files=None,
         )
 
-        {{#script.zip_htmls}}
+        # {{#script.zip_htmls}}
+        # ===============================zip_htmls======================================
         # zip any .html files in output/<analysis_id>/
         zip_htmls(gtk_context, output_analysisid_dir)
-        {{/script.zip_htmls}}
+        # ==============================================================================
+        # {{/script.zip_htmls}}
 
-        {{#script.save_intermediate_output}}
+        # {{#script.save_intermediate_output}}
+        # ========================save_intermediate_output==============================
         # possibly save ALL intermediate output
         if gtk_context.config.get("gear-save-intermediate-output"):
             zip_all_intermediate_output(gtk_context, run_label)
 
         # possibly save intermediate files and folders
         zip_intermediate_selected(gtk_context, run_label)
-        {{/script.save_intermediate_output}}
+        # ==============================================================================
+        # {{/script.save_intermediate_output}}
 
         # clean up: remove output that was zipped
         if Path(output_analysisid_dir).exists():
@@ -291,7 +321,7 @@ if __name__ == "__main__":
     gtk_context = flywheel_gear_toolkit.GearToolkitContext()
 
     # Setup basic logging and log the configuration for this job
-    if gtk_context["gear-log-level"] == 'INFO':
+    if gtk_context["gear-log-level"] == "INFO":
         gtk_context.init_logging("info")
     else:
         gtk_context.init_logging("debug")

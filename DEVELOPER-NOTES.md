@@ -55,7 +55,7 @@ Each of these templates (as with the script library, below) depends on elements 
     "dockerfile": {
         ...
     },
-    "script_management": {
+    "script": {
         ...
     }
 }
@@ -63,8 +63,41 @@ Each of these templates (as with the script library, below) depends on elements 
 
 ### script_library
 
-The `./script_library` subdirectory contains structural code templates for gears.  This is currently the least developed functionality.
+The `./script_library` subdirectory contains structural code templates for gears.  
 
-It is intended to recurse through the selected directories and replace the mustache templates with tags in the "script_management" sub-dictionary above.
+Each library is named for its template (e.g. `bids-app-template`). The files within the script library fall into three categories:
 
-Likewise, it is intended to be able to parse through the subdirectories and discover certain types of allowed mustache tags and render them in an iterated subform of the script-management tab. Work in Progress!!!!
+1. Mustache Templates to be rendered.
+2. Files or directories to be copied.
+3. Configuration files defining the script-template or the whole gear.
+
+The current script-template definition is embedded within the script_management.py file. These are intended to be exported to the script-template library's directory. The script-library can have templated files that override the default templates (e.g. Dockerfile.mu, README.md.mu).
+
+Current script-template definition looks like:
+```
+{
+    "template_name": "Bids App Template",
+    "base_dir": "script_library/bids-app-template/",
+    "tags": {
+        "bids_command": "echo",
+        ...
+    },
+    "templates": [
+        "run.py"
+    ],
+    "copy": [
+        "utils",
+        "LICENSE"
+    ]
+}
+```
+
+### TODO:
+
+* Place script-template definition into script-template directory. Display as available only if valid.
+* Create schema validators for
+  * script-template definition json
+  * whole-gear definition json
+
+* Create tag-discovery for a new script-template.
+* Enforce versions on pip requirements.txt interface

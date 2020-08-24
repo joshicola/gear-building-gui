@@ -1,27 +1,3 @@
-"""
-TODO: Very rudimentary at the moment. Would like to introduce
-elements to both create and interpret mustache tags (e.g. {{keyword}}) with the
-    following
-intentions:
-tags: replace these with txt/keyword/config_value or nothing/comments
-      --this could be added to with a cbo_box that selects config key/value
-        specifications
-      --call it 'config_vals:'?
-snippets: replace these with specified chunks of code or nothing/comments
-run_code: replace these with the output of code run on manifest or nothing/comments
-
-The above is fleshing out to be:
-Stand-alone fill-in text is to be expressed as: {{script.<text_name>}}
-
-Whole blocks of text will be expressed as:
-{{#script.<block_name>}}
-    print("Hi, I am a block of code")
-{{/script.<block_name>}}
-"""
-
-import json
-import os
-import os.path as op
 import shutil
 from collections import OrderedDict
 from pathlib import Path
@@ -61,6 +37,20 @@ default_script_templates = [
         "copy": ["utils", "LICENSE"],
     },
 ]
+
+"""
+Provide the base run.py and utils package.
+Creating build/validate/execute functional modules around specific command-line
+programs.
+Add a command-line "switch-detector" to populate the manifest config with values
+to loop through.
+Provide a library of code-blocks that facilitate certain functionality
+module-based log reporting
+bids functionality
+verbose config validation against manifest
+compress working directory to a file in output
+notify on pep8 violations(??)
+"""
 
 
 class Script_Management:
@@ -132,13 +122,26 @@ class Script_Management:
             object.setObjectName(k)
             self.ui.fbox.addRow(Label, object)
 
-    def _script_def_to_form(self):
+    def _update_form_from_script_def(self):
         """
         Select and populate the template-specific form values from the script_def.
         """
-        pass
+        template_name = self.script_def["template_name"]
+        index = self.ui.cbo_script_template.findText(template_name, Qt.MatchFixedString)
+        if index >= 0:
+            self.ui.cbo_script_template.setCurrentIndex(index)
+            self._update_script_options()
 
-    def _form_to_script_def(self):
+        for i in range(self.ui.fbox.rowCount()):
+            item = self.ui.fbox.itemAt(i * 2 + 1).widget()
+            if isinstance(item, QLineEdit):
+                if self.script_def.get(item.objectName()):
+                    item.setText(self.script_def[item.objectName()])
+            elif isinstance(item, QCheckBox):
+                if self.script_def.get(item.objectName()):
+                    item.setChecked(self.script_def[item.objectName()])
+
+    def _update_script_def_from_form(self):
         """
         Clear and repopulate script_def from template-specific form values.
         """
@@ -155,7 +158,7 @@ class Script_Management:
             if isinstance(item, QLineEdit):
                 script_def[item.objectName()] = item.text()
             elif isinstance(item, QCheckBox):
-                script_def[item.objectName()] = bool(item.checkState())
+                script_def[item.objectName()] = item.isChecked()
 
         self.script_def.update(script_def)
 
@@ -167,14 +170,15 @@ class Script_Management:
             directory (str): Path to output directory.
         """
 
-        self._form_to_script_def()
+        self._update_script_def_from_form()
 
-        source_dir = Path(op.join(os.path.dirname(os.path.realpath(__file__)), ".."))
         cbo_script_data = self.ui.cbo_script_template.currentData()
 
         for fl in cbo_script_data["templates"]:
             # Mustache Render
-            script_template = source_dir / cbo_script_data["base_dir"] / fl
+            script_template = (
+                self.main_window.root_dir / cbo_script_data["base_dir"] / fl
+            )
             if script_template.exists():
                 output_filename = Path(directory) / fl
 
@@ -192,10 +196,11 @@ class Script_Management:
                     fp.write(template_output)
             else:
                 # TODO: Alert user with PopUp
+                # TODO: This should be considered an invalid script-template.
                 print("template does not exist.")
 
         for fl in cbo_script_data["copy"]:
-            source_path = source_dir / cbo_script_data["base_dir"] / fl
+            source_path = self.main_window.root_dir / cbo_script_data["base_dir"] / fl
             destination_path = Path(directory) / fl
             if source_path.exists():
                 if source_path.is_dir():

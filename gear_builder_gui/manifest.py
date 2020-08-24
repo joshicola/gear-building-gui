@@ -1,10 +1,8 @@
 import json
 import os
-import os.path as op
-import urllib.request
+from pathlib import Path
 
 import pystache
-import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from gear_builder_gui.config_dialog import config_dialog
@@ -27,11 +25,14 @@ class Manifest:
         """
         self.main_window = main_window
         self.ui = main_window.ui
+
         # Initialize "input" Section
+        self.ui.cmbo_inputs.currentIndexChanged.connect(self.update_tooltip)
         self.ui.btn_input_add.clicked.connect(self.add_input)
         self.ui.btn_input_edit.clicked.connect(self.edit_input)
         self.ui.btn_input_delete.clicked.connect(self.delete_input)
         # Initialize "config" Section
+        self.ui.cmbo_config.currentIndexChanged.connect(self.update_tooltip)
         self.ui.btn_config_add.clicked.connect(self.add_config)
         self.ui.btn_config_edit.clicked.connect(self.edit_config)
         self.ui.btn_config_delete.clicked.connect(self.delete_config)
@@ -41,7 +42,7 @@ class Manifest:
         self.ui.btn_config_edit.setEnabled(False)
         self.ui.btn_config_delete.setEnabled(False)
         # Save/load functionality
-        self.ui.btn_load_manifest.clicked.connect(self.load_manifest)
+        self.ui.btn_load_manifest.clicked.connect(self.load_manifest_from_file)
         self.ui.btn_save_manifest.clicked.connect(self.save_manifest)
         # connect to docker "maintainer" and validators
         self.ui.txt_maintainer.textChanged.connect(self.update_maintainers)
@@ -91,6 +92,26 @@ class Manifest:
         if self.ui.cmbo_inputs.count() == 0:
             self.ui.btn_input_edit.setEnabled(False)
             self.ui.btn_input_delete.setEnabled(False)
+
+    def update_tooltip(self):
+        """
+        Update tooltip of config/input combo box item.
+        """
+        sender = self.main_window.sender()
+        if "inputs" in sender.objectName():
+            cbo_obj = self.ui.cmbo_inputs
+        elif "config" in sender.objectName():
+            cbo_obj = self.ui.cmbo_config
+        else:
+            cbo_obj = None
+
+        if cbo_obj:
+            cbo_name = cbo_obj.currentText()
+            cbo_data = cbo_obj.currentData()
+            tool_tip_text = ""
+            for k, v in cbo_data.items():
+                tool_tip_text += k + ": " + str(v) + "\n"
+            cbo_obj.setToolTip(tool_tip_text)
 
     def add_config(self):
         """
@@ -210,7 +231,7 @@ class Manifest:
         # have been loaded.
         self.manifest.update(manifest)
 
-    def load_manifest(self):
+    def load_manifest_from_file(self):
         """
         Load manifest from file.
         """
@@ -220,16 +241,17 @@ class Manifest:
 
         # TODO: Should I warn about replacement of all manifest values?
         if len(manifest_file[0]) > 0:
-            self.load_manifest_file(manifest_file[0])
+            with open(manifest_file[0], "r") as manifest_raw:
+                manifest = json.load(manifest_raw)
 
-    def load_manifest_file(self, manifest_file):
+            self.manifest.clear()
+            self.manifest.update(manifest)
+
+            self._update_form_from_manifest()
+
+    def _update_form_from_manifest(self):
         """
-        Load manifest from indicated file.
-
-        Replaces self.manifest with contents of the file on success.
-
-        Args:
-            manifest_file (str): Path to manifest file.
+        Update form values from stored manifest.
         """
         # NOTE: This would be a good place to warn if the loaded manifest was invalid
         # Required manifest keys:
@@ -246,13 +268,11 @@ class Manifest:
             "version",
         ]
         try:
-            tmp_manifest = json.load(open(manifest_file, "r"))
-
             for key in keys:
                 text_obj = eval("self.ui.txt_" + key)
                 text_type = type(eval("self.ui.txt_" + key))
-                if tmp_manifest.get(key):
-                    text_value = tmp_manifest[key]
+                if self.manifest.get(key):
+                    text_value = self.manifest[key]
                 else:
                     text_value = ""
                 if text_type == QtWidgets.QPlainTextEdit:
@@ -264,7 +284,7 @@ class Manifest:
                 else:
                     text_obj.setText(text_value)
             # load custom fields
-            custom = tmp_manifest["custom"]
+            custom = self.manifest["custom"]
             self.ui.rdo_analysis.setChecked(
                 custom["gear-builder"]["category"] == "analysis"
             )
@@ -273,23 +293,29 @@ class Manifest:
                 self.ui.txt_suite.setText(custom["flywheel"]["suite"])
 
             # load inputs section
-            inputs = tmp_manifest["inputs"]
+            inputs = self.manifest["inputs"]
 
             cbo_obj = self.ui.cmbo_inputs
             cbo_obj.clear()
             for name, data in inputs.items():
                 cbo_obj.addItem(name, userData=data)
 
+            if cbo_obj.count() > 0:
+                self.ui.btn_input_edit.setEnabled(True)
+                self.ui.btn_input_delete.setEnabled(True)
+
             # load configs section
-            config = tmp_manifest["config"]
+            config = self.manifest["config"]
 
             cbo_obj = self.ui.cmbo_config
             cbo_obj.clear()
             for name, data in config.items():
                 cbo_obj.addItem(name, userData=data)
-            # clear and update manifest reference
-            self.manifest.clear()
-            self.manifest.update(tmp_manifest)
+
+            if cbo_obj.count() > 0:
+                self.ui.btn_config_edit.setEnabled(True)
+                self.ui.btn_config_delete.setEnabled(True)
+
         except Exception as e:
             print(e)
 
@@ -312,11 +338,10 @@ class Manifest:
         Args:
             directory (str): Path to directory.
         """
+        directory = Path(directory)
         self._update_manifest_from_form()
 
-        json.dump(
-            self.manifest, open(op.join(directory, "manifest.json"), "w"), indent=2
-        )
+        json.dump(self.manifest, open(directory / "manifest.json", "w"), indent=2)
 
     def save_draft_readme(self, directory, readme_template=None):
         """
@@ -328,11 +353,10 @@ class Manifest:
                 Defaults to None.
 
         """
+        directory = Path(directory)
         if not readme_template:
-            source_dir = op.join(
-                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
-            )
-            readme_template = op.join(source_dir, "README.md.mu")
+            source_dir = self.main_window.root_dir / "default_templates"
+            readme_template = source_dir / "README.md.mu"
         renderer = pystache.Renderer()
 
         # Check for non-zero number of inputs
@@ -359,7 +383,7 @@ class Manifest:
             readme_template, {"manifest": self.manifest}
         )
 
-        with open(op.join(directory, "README.md"), "w") as fp:
+        with open(directory / "README.md", "w") as fp:
             fp.write(template_output)
 
     def _check_description_text_length(self):
@@ -379,13 +403,19 @@ class Manifest:
 
         TODO: Use a local copy of the manifest schema instead of downloading.
         """
-        spec_url = (
-            "https://gitlab.com/flywheel-io/public/"
-            "gears/-/raw/master/spec/manifest.schema.json"
-        )
-        request = requests.get(spec_url)
+        # spec_url = (
+        #    "https://gitlab.com/flywheel-io/public/"
+        #    "gears/-/raw/master/spec/manifest.schema.json"
+        # )
+        # request = requests.get(spec_url)
         # url = urllib.request.urlopen(spec_url)
-        gear_spec = json.loads(request.content)
+        with open(
+            self.main_window.root_dir
+            / "gear_builder_gui/resources/manifest.schema.json",
+            "r",
+        ) as fp:
+            gear_spec = json.load(fp)
+
         keys = [
             "name",
             "label",

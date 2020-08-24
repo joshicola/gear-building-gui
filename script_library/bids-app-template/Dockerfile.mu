@@ -1,33 +1,45 @@
-FROM python:3.8-buster as base
+FROM {{dockerfile.FROM}} as base
 
-LABEL maintainer="support@flywheel.io"
-
+# Inheriting from established docker image:
+LABEL maintainer="{{{dockerfile.Maintainer}}}"
+{{#dockerfile.has_apt}}
+# Install APT dependencies
 RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y \
-    zip \
-    nodejs \
-    tree \
+    apt-get install -y --no-install-recommends \
+{{/dockerfile.has_apt}}
 {{#dockerfile.apt_get}}
     {{name}}{{#version}}={{/version}}{{version}} \
 {{/dockerfile.apt_get}}
+{{#dockerfile.has_apt}}
     && \
-    rm -rf /var/lib/apt/lists/* 
-
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+{{/dockerfile.has_apt}}
 # The last line above is to help keep the docker image smaller
 
 RUN npm install -g bids-validator@1.5.4
 
-COPY requirements.txt /tmp
-RUN pip install -r /tmp/requirements.txt && \
+{{#dockerfile.has_pip}}
+# Install PIP Dependencies
+RUN pip3 install --upgrade pip && \ 
+    pip install -r requirements.txt && \
     rm -rf /root/.cache/pip
+{{/dockerfile.has_pip}}
+
+{{#dockerfile.has_env}}
+# Specify ENV Variables
+ENV \ 
+{{/dockerfile.has_env}}
+{{#dockerfile.ENV}}
+    {{name}}={{value}} \
+{{/dockerfile.ENV}}
+*
 
 # Make directory for flywheel spec (v0)
 ENV FLYWHEEL /flywheel/v0
 WORKDIR ${FLYWHEEL}
 
 # Save docker environ
-ENV PYTHONUNBUFFERED 1
 RUN python -c 'import os, json; f = open("/tmp/gear_environ.json", "w"); json.dump(dict(os.environ), f)' 
 
 # Copy executable/manifest to Gear

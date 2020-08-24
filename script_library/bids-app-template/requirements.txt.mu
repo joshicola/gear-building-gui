@@ -1,7 +1,0 @@
-flywheel-sdk~=12.1.1
-psutil~=5.6.3
-pybids~=0.10.2
-flywheel-gear-toolkit~=0.1.0rc4
-{{#dockerfile.pip}}
-    {{name}}{{#version}}=={{/version}}{{version}}
-{{/dockerfile.pip}}

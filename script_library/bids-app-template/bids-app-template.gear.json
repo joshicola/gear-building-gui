@@ -12,27 +12,6 @@
             },
             "flywheel": {
                 "suite": "BIDS Apps"
-            },
-            "license": {
-                "non-commercial-use-only": false,
-                "main": {
-                    "name": "BSD-3-Clause",
-                    "url": "https://github.com/poldracklab/mriqc/blob/0.15.1/LICENSE.txt"
-                },
-                "dependencies": [
-                    {
-                        "name": "Other",
-                        "url": "https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence"
-                    },
-                    {
-                        "name": "Other",
-                        "url": "https://github.com/ANTsX/ANTs/blob/v2.2.0/COPYING.txt"
-                    },
-                    {
-                        "name": "Other",
-                        "url": "https://afni.nimh.nih.gov/pub/dist/doc/program_help/README.copyright.html"
-                    }
-                ]
             }
         },
         "inputs": {
@@ -41,13 +20,13 @@
                 "read-only": true
             },
             "freesurfer_license": {
-                "description": "FreeSurfer license file, provided during registration with FreeSurfer. This file will by copied to the $FSHOME directory and used during execution of the Gear.",
                 "base": "file",
+                "description": "FreeSurfer license file, provided during registration with FreeSurfer. This file will by copied to the $FSHOME directory and used during execution of the Gear.",
                 "optional": true
             },
             "bidsignore": {
-                "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
                 "base": "file",
+                "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
                 "optional": true
             }
         },
@@ -127,13 +106,13 @@
             "gear-log-level": {
                 "default": "INFO",
                 "description": "Gear Log verbosity level (ERROR|WARNING|INFO|DEBUG)",
-                "type": "string",
                 "enum": [
                     "ERROR",
                     "WARNING",
                     "INFO",
                     "DEBUG"
-                ]
+                ],
+                "type": "string"
             },
             "gear-run-bids-validation": {
                 "default": true,
@@ -146,13 +125,13 @@
                 "type": "boolean"
             },
             "gear-intermediate-files": {
-                "description": "Space separated list of FILES to retain from the intermediate work directory.",
                 "default": "",
+                "description": "Space separated list of FILES to retain from the intermediate work directory.",
                 "type": "string"
             },
             "gear-intermediate-folders": {
-                "description": "Space separated list of FOLDERS to retain from the intermediate work directory.",
                 "default": "",
+                "description": "Space separated list of FOLDERS to retain from the intermediate work directory.",
                 "type": "string"
             },
             "gear-dry-run": {
@@ -167,14 +146,14 @@
             },
             "gear-FREESURFER_LICENSE": {
                 "description": "Text from license file generated during FreeSurfer registration. *Entries should be space separated*",
-                "type": "string",
-                "optional": true
+                "optional": true,
+                "type": "string"
             }
         },
         "environment": {
             "PYTHONUNBUFFERED": "1"
         },
-        "command": "python run.py",
+        "command": "/flywheel/v0/run.py",
         "author": "Dr. Smartypants, Whatsamatter U",
         "maintainer": "Flywheel <support@flywheel.io>",
         "cite": "Dewy, Cheetum, and How; The templatest BIDS app you will ever see; PLOS ONE 12(9):e0184661; doi:10.1371/journal.pone.0184661.",
@@ -182,6 +161,62 @@
         "source": "https://github.com/flywheel-apps/bids-app-template",
         "url": "https://github.com/flywheel-apps/bids-app-template"
     },
-    "dockerfile": {},
-    "script": {}
+    "dockerfile": {
+        "FROM": "ubuntu:xenial",
+        "Maintainer": "Flywheel <support@flywheel.io>",
+        "apt_get": [
+            {
+                "name": "python3-pip"
+            },
+            {
+                "name": "zip"
+            },
+            {
+                "name": "nodejs"
+            },
+            {
+                "name": "tree"
+            }
+        ],
+        "pip": [
+            {
+                "name": "flywheel-sdk",
+                "version": "12.1.1"
+            },
+            {
+                "name": "psutil",
+                "version": "5.6.3"
+            },
+            {
+                "name": "pybids",
+                "version": "0.10.2"
+            },
+            {
+                "name": "flywheel-gear-toolkit",
+                "version": "0.1.0rc4"
+            }
+        ],
+        "ENV": [
+            {
+                "name": "PATH",
+                "value": "$PATH"
+            },
+            {
+                "name": "LD_LIBRARY_PATH",
+                "value": "$LD_LIBRARY_PATH"
+            }
+        ]
+    },
+    "script": {
+        "template_name": "Bids App Template",
+        "bids_command": "echo",
+        "participant": "Subject 1",
+        "cpus": true,
+        "memory_available": false,
+        "verbose": true,
+        "needs_freesurfer_license": false,
+        "bids_tree": false,
+        "zip_htmls": false,
+        "save_intermediate_output": false
+    }
 }

@@ -1,0 +1,11 @@
+{
+    "template_name": "Simple Script",
+    "base_dir": "script_library/simple_script/",
+    "tags": {
+        "base_command": "echo"
+    },
+    "templates": [
+        "run.py"
+    ],
+    "copy": []
+}

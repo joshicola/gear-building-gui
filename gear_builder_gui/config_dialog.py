@@ -56,10 +56,14 @@ class config_dialog(QtWidgets.QDialog):
                     obj.setCurrentIndex(i)
                     if self.data[key] == "boolean":
                         self.ui.ck_default.setVisible(True)
+                        self.ui.lblDefault_bool.setVisible(True)
                         self.ui.txt_default.setVisible(False)
+                        self.ui.lblDefault_txt.setVisible(False)
                     else:
                         self.ui.ck_default.setVisible(False)
+                        self.ui.lblDefault_bool.setVisible(False)
                         self.ui.txt_default.setVisible(True)
+                        self.ui.lblDefault_txt.setVisible(True)
                 elif key == "enum":
                     obj = eval("self.ui.lst_" + key)
                     obj.clear()
@@ -85,7 +89,9 @@ class config_dialog(QtWidgets.QDialog):
         obj = self.ui.cbo_type
         if obj.currentText() == "boolean":
             self.ui.ck_default.setVisible(True)
+            self.ui.lblDefault_bool.setVisible(True)
             self.ui.txt_default.setVisible(False)
+            self.ui.lblDefault_txt.setVisible(False)
             # validate contents as boolean or set a default value
             if self.ui.txt_default.text() in ["True", "true"]:
                 self.ui.ck_default.setChecked(True)
@@ -93,7 +99,9 @@ class config_dialog(QtWidgets.QDialog):
                 self.ui.ck_default.setChecked(False)
         else:
             self.ui.ck_default.setVisible(False)
+            self.ui.lblDefault_bool.setVisible(False)
             self.ui.txt_default.setVisible(True)
+            self.ui.lblDefault_txt.setVisible(True)
             text_obj = self.ui.txt_default
             # check for valid type and set validator accordingly
             if obj.currentText() == "integer":
