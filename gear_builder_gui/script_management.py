@@ -219,6 +219,7 @@ class Script_Management:
                     fp.write(template_output)
             else:
                 # TODO: Alert user with PopUp
+                # TODO: This should be considered an invalid script-template.
                 print("template does not exist.")
 
         for fl in cbo_script_data["copy"]:
