@@ -1,10 +1,8 @@
 import json
-import os
-import os.path as op
 from pathlib import Path
 
 import pystache
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtWidgets
 
 
 class Dockerfile:
@@ -202,8 +200,8 @@ class Dockerfile:
             dockerfile_template (str, optional): Path to Dockerfile mustache template.
                 Defaults to None.
         """
+        directory = Path(directory)
         self._update_dockerfile_def_from_form()
-        source_dir = Path(os.path.dirname(os.path.realpath(__file__))) / ".."
 
         # if provided, use default dockerfile_template
         if dockerfile_template:
@@ -234,19 +232,20 @@ class Dockerfile:
             requirements_template = "default_templates/requirements.txt.mu"
 
             template_output = renderer.render_path(
-                source_dir / requirements_template, {"dockerfile": dockerfile}
+                self.main_window.root_dir / requirements_template,
+                {"dockerfile": dockerfile},
             )
 
-            with open(op.join(directory, "requirements.txt"), "w") as fp:
+            with open(directory / "requirements.txt", "w") as fp:
                 fp.write(template_output)
 
         output = renderer.render_path(
-            source_dir / self.dockerfile_def["dockerfile_template"],
+            self.main_window.root_dir / self.dockerfile_def["dockerfile_template"],
             {"dockerfile": dockerfile},
         )
 
         # This gets rid of the last line continuation character in iterated elements
         output = output.replace(" \\\n*", "\n")
 
-        with open(op.join(directory, "Dockerfile"), "w") as fp:
+        with open(directory / "Dockerfile", "w") as fp:
             fp.write(output)

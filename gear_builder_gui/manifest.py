@@ -1,6 +1,5 @@
 import json
 import os
-import os.path as op
 from pathlib import Path
 
 import pystache
@@ -26,8 +25,6 @@ class Manifest:
         """
         self.main_window = main_window
         self.ui = main_window.ui
-        # TODO: put root_dir at the main_window application level and cascade reference
-        self.root_dir = Path(op.dirname(__file__)) / ".."
 
         # Initialize "input" Section
         self.ui.cmbo_inputs.currentIndexChanged.connect(self.update_tooltip)
@@ -59,14 +56,6 @@ class Manifest:
         """
         if self.ui.txt_maintainer.text() is not self.ui.txt_maintainer_2.text():
             self.ui.txt_maintainer_2.setText(self.ui.txt_maintainer.text())
-
-    def update_input(self):
-        """
-        Update display of currently selected input.
-
-        This will have tool tips and others
-        """
-        pass
 
     # Add functionality to the input add/edit/deleted buttons
     def add_input(self):
@@ -119,9 +108,9 @@ class Manifest:
         if cbo_obj:
             cbo_name = cbo_obj.currentText()
             cbo_data = cbo_obj.currentData()
-            tool_tip_text = cbo_name + ":\n"
+            tool_tip_text = ""
             for k, v in cbo_data.items():
-                tool_tip_text += "\t" + k + ": " + str(v) + "\n"
+                tool_tip_text += k + ": " + str(v) + "\n"
             cbo_obj.setToolTip(tool_tip_text)
 
     def add_config(self):
@@ -349,11 +338,10 @@ class Manifest:
         Args:
             directory (str): Path to directory.
         """
+        directory = Path(directory)
         self._update_manifest_from_form()
 
-        json.dump(
-            self.manifest, open(op.join(directory, "manifest.json"), "w"), indent=2
-        )
+        json.dump(self.manifest, open(directory / "manifest.json", "w"), indent=2)
 
     def save_draft_readme(self, directory, readme_template=None):
         """
@@ -365,11 +353,10 @@ class Manifest:
                 Defaults to None.
 
         """
+        directory = Path(directory)
         if not readme_template:
-            source_dir = op.join(
-                os.path.dirname(os.path.realpath(__file__)), "..", "default_templates"
-            )
-            readme_template = op.join(source_dir, "README.md.mu")
+            source_dir = self.main_window.root_dir / "default_templates"
+            readme_template = source_dir / "README.md.mu"
         renderer = pystache.Renderer()
 
         # Check for non-zero number of inputs
@@ -396,7 +383,7 @@ class Manifest:
             readme_template, {"manifest": self.manifest}
         )
 
-        with open(op.join(directory, "README.md"), "w") as fp:
+        with open(directory / "README.md", "w") as fp:
             fp.write(template_output)
 
     def _check_description_text_length(self):
@@ -423,7 +410,9 @@ class Manifest:
         # request = requests.get(spec_url)
         # url = urllib.request.urlopen(spec_url)
         with open(
-            self.root_dir / "gear_builder_gui/resources/manifest.schema.json", "r"
+            self.main_window.root_dir
+            / "gear_builder_gui/resources/manifest.schema.json",
+            "r",
         ) as fp:
             gear_spec = json.load(fp)
 

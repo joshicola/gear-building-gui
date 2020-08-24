@@ -17,7 +17,7 @@ from gear_builder_gui.script_management import Script_Management
 class GearBuilderGUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(GearBuilderGUI, self).__init__()
-
+        self.root_dir = Path(op.dirname(__file__))
         # set gear definition to an empty default
         self.gear_def = {"manifest": {}, "dockerfile": {}, "script": {}}
 

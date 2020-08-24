@@ -1,27 +1,3 @@
-"""
-TODO: Very rudimentary at the moment. Would like to introduce
-elements to both create and interpret mustache tags (e.g. {{keyword}}) with the
-    following
-intentions:
-tags: replace these with txt/keyword/config_value or nothing/comments
-      --this could be added to with a cbo_box that selects config key/value
-        specifications
-      --call it 'config_vals:'?
-snippets: replace these with specified chunks of code or nothing/comments
-run_code: replace these with the output of code run on manifest or nothing/comments
-
-The above is fleshing out to be:
-Stand-alone fill-in text is to be expressed as: {{script.<text_name>}}
-
-Whole blocks of text will be expressed as:
-{{#script.<block_name>}}
-    print("Hi, I am a block of code")
-{{/script.<block_name>}}
-"""
-
-import json
-import os
-import os.path as op
 import shutil
 from collections import OrderedDict
 from pathlib import Path
@@ -196,12 +172,13 @@ class Script_Management:
 
         self._update_script_def_from_form()
 
-        source_dir = Path(op.join(os.path.dirname(os.path.realpath(__file__)), ".."))
         cbo_script_data = self.ui.cbo_script_template.currentData()
 
         for fl in cbo_script_data["templates"]:
             # Mustache Render
-            script_template = source_dir / cbo_script_data["base_dir"] / fl
+            script_template = (
+                self.main_window.root_dir / cbo_script_data["base_dir"] / fl
+            )
             if script_template.exists():
                 output_filename = Path(directory) / fl
 
@@ -223,7 +200,7 @@ class Script_Management:
                 print("template does not exist.")
 
         for fl in cbo_script_data["copy"]:
-            source_path = source_dir / cbo_script_data["base_dir"] / fl
+            source_path = self.main_window.root_dir / cbo_script_data["base_dir"] / fl
             destination_path = Path(directory) / fl
             if source_path.exists():
                 if source_path.is_dir():

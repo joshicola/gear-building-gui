@@ -100,3 +100,4 @@ Current script-template definition looks like:
   * whole-gear definition json
 
 * Create tag-discovery for a new script-template.
+* Enforce versions on pip requirements.txt interface
