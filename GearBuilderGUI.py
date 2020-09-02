@@ -10,7 +10,6 @@ from PyQt5 import QtGui, QtWidgets, uic
 from gear_builder_gui.dockerfile import Dockerfile
 from gear_builder_gui.manifest import Manifest
 from gear_builder_gui.menus import Gear_Builder_Menus
-from gear_builder_gui.pyqt5_ui.gear_builder_gui import Ui_MainWindow
 from gear_builder_gui.script_management import Script_Management
 
 

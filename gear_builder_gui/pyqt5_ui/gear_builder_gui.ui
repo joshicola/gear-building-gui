@@ -17,7 +17,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>20</y>
       <width>621</width>
       <height>551</height>
@@ -493,7 +493,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>Yo Muther Fucker</string>
+       <string></string>
       </property>
      </widget>
      <widget class="QCheckBox" name="chk_flywheel">

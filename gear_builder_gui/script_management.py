@@ -1,3 +1,5 @@
+import glob
+import json
 import shutil
 from collections import OrderedDict
 from pathlib import Path
@@ -6,37 +8,6 @@ import pystache
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QCheckBox, QFormLayout, QLabel, QLineEdit, QWidget
 
-# TODO: embed these templates within the sub-directories of "script_library"
-#       Render only if they are valid.
-
-default_script_templates = [
-    {
-        "template_name": "Simple Script",
-        "base_dir": "script_library/simple_script/",
-        "tags": {"base_command": "echo"},
-        "templates": ["run.py"],
-        "copy": [],
-    },
-    {
-        "template_name": "Bids App Template",
-        "base_dir": "script_library/bids-app-template/",
-        "tags": OrderedDict(
-            {
-                "bids_command": "echo",
-                "participant": "Subject 1",
-                "cpus": False,
-                "memory_available": False,
-                "verbose": False,
-                "needs_freesurfer_license": False,
-                "bids_tree": False,
-                "zip_htmls": False,
-                "save_intermediate_output": False,
-            }
-        ),
-        "templates": ["run.py"],
-        "copy": ["utils", "LICENSE"],
-    },
-]
 
 """
 Provide the base run.py and utils package.
@@ -72,11 +43,8 @@ class Script_Management:
 
         self.init_script_options()
 
-        # Set the script template data
-        for template in default_script_templates:
-            self.ui.cbo_script_template.addItem(
-                template["template_name"], userData=template
-            )
+        # Initialize script-template combo with available/valid script-templates
+        self.init_script_templates()
 
         self.ui.cbo_script_template.currentIndexChanged.connect(
             self._update_script_options
@@ -84,6 +52,31 @@ class Script_Management:
 
         self.ui.cbo_script_template.setCurrentIndex(0)
         self._update_script_options()
+
+    def init_script_templates(self):
+        """
+        Initialize script template combo from script_library sub-directories.
+
+        Only valid templates are shown.
+        """
+        default_script_templates = []
+        script_dirs = glob.glob(str(self.main_window.root_dir / "script_library/*"))
+        for script_dir in script_dirs:
+            script_dir = Path(script_dir)
+            if script_dir.is_dir():
+                manifest_path = script_dir / "script_manifest.json"
+                if manifest_path.exists():
+                    script_manifest = json.load(
+                        open(manifest_path, "r"), object_pairs_hook=OrderedDict,
+                    )
+                    # TODO: Add script-manifest validator....
+                    default_script_templates.append(script_manifest)
+
+        # Set the script template data
+        for template in default_script_templates:
+            self.ui.cbo_script_template.addItem(
+                template["template_name"], userData=template
+            )
 
     def init_script_options(self):
         """
@@ -179,8 +172,11 @@ class Script_Management:
             script_template = (
                 self.main_window.root_dir / cbo_script_data["base_dir"] / fl
             )
+
             if script_template.exists():
-                output_filename = Path(directory) / fl
+                output_filename = Path(directory) / fl.replace(".mu", "").replace(
+                    ".mustache", ""
+                )
 
                 renderer = pystache.Renderer()
 
