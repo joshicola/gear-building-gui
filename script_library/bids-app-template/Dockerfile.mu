@@ -19,7 +19,13 @@ RUN apt-get update && \
 
 RUN npm install -g bids-validator@1.5.4
 
+# Make directory for flywheel spec (v0)
+ENV FLYWHEEL /flywheel/v0
+WORKDIR ${FLYWHEEL}
+
 {{#dockerfile.has_pip}}
+COPY requirements.txt ${FLYWHEEL}/
+
 # Install PIP Dependencies
 RUN pip3 install --upgrade pip && \ 
     pip install -r requirements.txt && \
@@ -34,10 +40,6 @@ ENV \
     {{name}}={{value}} \
 {{/dockerfile.ENV}}
 *
-
-# Make directory for flywheel spec (v0)
-ENV FLYWHEEL /flywheel/v0
-WORKDIR ${FLYWHEEL}
 
 # Save docker environ
 RUN python -c 'import os, json; f = open("/tmp/gear_environ.json", "w"); json.dump(dict(os.environ), f)' 

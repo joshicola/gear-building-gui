@@ -19,7 +19,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 {{/dockerfile.has_apt}}
 
+# Make directory for flywheel spec (v0)
+ENV FLYWHEEL /flywheel/v0
+WORKDIR ${FLYWHEEL}
+
 {{#dockerfile.has_pip}}
+COPY requirements.txt ${FLYWHEEL}/
+
 # Install PIP Dependencies
 RUN pip3 install --upgrade pip && \ 
     pip install -r requirements.txt && \
