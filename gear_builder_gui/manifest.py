@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 from pathlib import Path
@@ -353,6 +354,8 @@ class Manifest:
                 Defaults to None.
 
         """
+        # make a copy to modify for formatting README.md
+        local_manifest = copy.deepcopy(self.manifest)
         directory = Path(directory)
         if not readme_template:
             source_dir = self.main_window.root_dir / "default_templates"
@@ -360,27 +363,27 @@ class Manifest:
         renderer = pystache.Renderer()
 
         # Check for non-zero number of inputs
-        if len(self.manifest["inputs"].keys()) > 0:
-            self.manifest["has_inputs"] = True
+        if len(local_manifest["inputs"].keys()) > 0:
+            local_manifest["has_inputs"] = True
 
-        self.manifest["inputs_list"] = []
-        for inp, val in self.manifest["inputs"].items():
+        local_manifest["inputs_list"] = []
+        for inp, val in local_manifest["inputs"].items():
             val["name"] = inp
-            self.manifest["inputs_list"].append(val)
+            local_manifest["inputs_list"].append(val)
 
         # Check for a non-zero number of configs
-        if len(self.manifest["config"].keys()) > 0:
-            self.manifest["has_configs"] = True
+        if len(local_manifest["config"].keys()) > 0:
+            local_manifest["has_configs"] = True
 
-        self.manifest["config_list"] = []
-        for conf, val in self.manifest["config"].items():
+        local_manifest["config_list"] = []
+        for conf, val in local_manifest["config"].items():
             val["name"] = conf
             if "default" in val.keys():
                 val["default_val"] = {"val": val["default"]}
-            self.manifest["config_list"].append(val)
+            local_manifest["config_list"].append(val)
 
         template_output = renderer.render_path(
-            readme_template, {"manifest": self.manifest}
+            readme_template, {"manifest": local_manifest}
         )
 
         with open(directory / "README.md", "w") as fp:

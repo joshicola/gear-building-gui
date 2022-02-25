@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def main(context):
-    # build and execute Parameters for {name}
+    # build and execute Parameters for {{manifest.name}}
     try:
         # build the command string
         command = ["{{script.base_command}}"]
@@ -18,7 +18,7 @@ def main(context):
         command = ["echo"]
         # {{/if_not_mustache_rendered}}
         # this gathers the configuration values ONLY and uses them as positional
-        # arguments to "{base_command}"
+        # arguments to "{{script.base_command}}"
         # for including input values, see build_validate_execute
         for key in context.config.keys():
             command.append(context.config[key])
