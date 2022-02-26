@@ -87,7 +87,7 @@
         <x>70</x>
         <y>90</y>
         <width>131</width>
-        <height>20</height>
+        <height>22</height>
        </rect>
       </property>
       <property name="text">
@@ -103,7 +103,7 @@
         <x>70</x>
         <y>50</y>
         <width>131</width>
-        <height>20</height>
+        <height>22</height>
        </rect>
       </property>
       <property name="text">
@@ -566,9 +566,9 @@
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>100</x>
         <y>10</y>
-        <width>141</width>
+        <width>191</width>
         <height>31</height>
        </rect>
       </property>
@@ -581,7 +581,7 @@
        <rect>
         <x>150</x>
         <y>120</y>
-        <width>201</width>
+        <width>271</width>
         <height>16</height>
        </rect>
       </property>
@@ -594,7 +594,7 @@
        <rect>
         <x>150</x>
         <y>240</y>
-        <width>201</width>
+        <width>271</width>
         <height>16</height>
        </rect>
       </property>
@@ -606,9 +606,9 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>80</y>
+        <y>77</y>
         <width>211</width>
-        <height>21</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="text">
@@ -618,10 +618,10 @@
      <widget class="QLabel" name="label_15">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>170</x>
         <y>80</y>
-        <width>81</width>
-        <height>16</height>
+        <width>101</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -915,7 +915,7 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>10</y>
+        <y>12</y>
         <width>161</width>
         <height>30</height>
        </rect>
@@ -958,9 +958,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>0</y>
-        <width>131</width>
-        <height>16</height>
+        <y>-2</y>
+        <width>151</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
@@ -971,7 +971,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>180</y>
         <width>501</width>
         <height>321</height>
        </rect>
@@ -996,13 +996,15 @@
         <x>10</x>
         <y>50</y>
         <width>501</width>
-        <height>51</height>
+        <height>101</height>
        </rect>
       </property>
       <property name="text">
-       <string>The text boxes below will substitute for designated text in the specifically 
- templated code. 
+       <string>The text boxes below will substitute for designated text in the specifically templated code. 
  The check boxes will include or exclude specifically designated blocks of code.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -1011,9 +1013,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>590</y>
-      <width>101</width>
-      <height>32</height>
+      <y>580</y>
+      <width>110</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
@@ -1027,7 +1029,7 @@
      <x>0</x>
      <y>0</y>
      <width>635</width>
-     <height>22</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuhello">

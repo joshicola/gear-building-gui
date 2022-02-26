@@ -1,16 +1,16 @@
 # fw-gear-building-gui
 
-This is a graphical user interface (GUI) for building the essential components for flywheel ([*](#disclosure)) "gears" (dockerized algorithms for processing life-science data). 
+This is a graphical user interface (GUI) for building the essential components for [flywheel "gears"](https://flywheel.io/gear-exchange/) ([*](#disclosure)) (dockerized algorithms for processing life-science data). 
 
 Written in PyQt, this cross-platform graphical user interface eases the pain and complexity of the gear-building experience.  It delivers a completely functional set of essential gear components for the user to customize.  This functional prototype delivers the following:
 
-* Write of a complete manifest.json file
-* Write a draft of the gear's README.md file
+* A complete manifest.json file
+* A draft of the gear's README.md file
     - With details filled in from the manifest.
-* Write a minimal, yet fully functional, Dockerfile
+* A minimal, yet fully functional, Dockerfile
     - With appropriately asigned apt and pip packages
     - Assigning environment variables
-* Write a minimal, yet fully functional, script/package/module structure
+* A minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
 
 ![Crude Ugly Prototype](Screenshot.png "Crude and Ugly Prototype of gear-builder-gui")
@@ -18,8 +18,6 @@ Written in PyQt, this cross-platform graphical user interface eases the pain and
 See notes below for current and proposed functionality.
 
 This project is build in PyQt5, a platform-independent gui framework. Build on any operating system, deploy on every operating system. The PyQt5 framework is available through both both conda and pip installers.
-
-
 
 ## Current Functionality
 
