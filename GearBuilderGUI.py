@@ -10,7 +10,7 @@ from PyQt5 import QtGui, QtWidgets, uic
 from gear_builder_gui.dockerfile import Dockerfile
 from gear_builder_gui.manifest import Manifest
 from gear_builder_gui.menus import Gear_Builder_Menus
-from gear_builder_gui.script_management import Script_Management
+from gear_builder_gui.template_management import Template_Management
 
 
 class GearBuilderGUI(QtWidgets.QMainWindow):
@@ -18,7 +18,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         super(GearBuilderGUI, self).__init__()
         self.root_dir = Path(op.dirname(__file__))
         # set gear definition to an empty default
-        self.gear_def = {"manifest": {}, "dockerfile": {}, "script": {}}
+        self.gear_def = {"manifest": {}, "dockerfile": {}, "template": {}}
 
         script_dir = op.dirname(os.path.realpath(__file__))
         icon_path = op.join(script_dir, "gear_builder_gui/resources/flywheel.png")
@@ -38,7 +38,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         # individual development
         self.manifest = Manifest(self)
         self.dockerfile = Dockerfile(self)
-        self.scripts = Script_Management(self)
+        self.templates = Template_Management(self)
 
         self.menus = Gear_Builder_Menus(self)
 
@@ -62,7 +62,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
             gear_path.mkdir(parents=True, exist_ok=True)
             self.manifest.save(gear_path)
 
-            self.scripts.render_and_copy_templates(gear_path)
+            self.templates.render_and_copy_templates(gear_path)
             self.save_gear_def(gear_path)
 
 

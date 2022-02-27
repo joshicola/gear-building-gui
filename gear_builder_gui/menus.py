@@ -21,7 +21,7 @@ class Gear_Builder_Menus:
             self.main_window, "Load Gear Definition to file.", filter="*.gear.json"
         )
         if len(gear_def_filepath[0]) > 0:
-            for key in ["manifest", "dockerfile", "script"]:
+            for key in ["manifest", "dockerfile", "template"]:
                 self.main_window.gear_def[key].clear()
             with open(gear_def_filepath[0], "r") as fp:
                 self.main_window.gear_def.update(json.load(fp))
@@ -31,16 +31,16 @@ class Gear_Builder_Menus:
         gear_def = self.main_window.gear_def
         self.main_window.manifest.manifest = gear_def["manifest"]
         self.main_window.dockerfile.dockerfile_def = gear_def["dockerfile"]
-        self.main_window.scripts.script_def = gear_def["script"]
+        self.main_window.templates.template_def = gear_def["template"]
 
         self.main_window.manifest._update_form_from_manifest()
         self.main_window.dockerfile._update_form_from_dockerfile()
-        self.main_window.scripts._update_form_from_script_def()
+        self.main_window.templates._update_form_from_template_def()
 
     def save_gear_definition(self):
         self.main_window.manifest._update_manifest_from_form()
         self.main_window.dockerfile._update_dockerfile_def_from_form()
-        self.main_window.scripts._update_form_from_script_def()
+        self.main_window.templates._update_form_from_template_def()
         default_name = self.main_window.gear_def["manifest"]["name"] + ".gear.json"
         directory = str(
             QtWidgets.QFileDialog.getExistingDirectory(

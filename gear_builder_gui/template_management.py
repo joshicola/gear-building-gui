@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
     QFormLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QWidget,
 )
 
@@ -33,14 +34,14 @@ notify on pep8 violations(??)
 """
 
 
-class Script_Management:
+class Template_Management:
     """
-    Class for script management.
+    Class for template management.
     """
 
     def __init__(self, main_window):
         """
-        Initialize script management tab form elements with defaults. 
+        Initialize templates management tab form elements with defaults. 
 
         Args:
             main_window (GearBuilderGUI):  The instantiated main window.
@@ -48,25 +49,26 @@ class Script_Management:
         self.main_window = main_window
         self.ui = main_window.ui
 
-        self.script_def = main_window.gear_def["script"]
+        self.template_def = main_window.gear_def["template"]
+        self.reload_template = True
 
-        self.init_script_options()
+        self.init_template_options()
 
-        # Initialize script-template combo with available/valid script-templates
-        self.init_script_templates()
+        # Initialize gear-template combo with available/valid gear-templates
+        self.init_gear_templates()
 
-        self.ui.cbo_script_template.currentIndexChanged.connect(
-            self._update_script_options
+        self.ui.cbo_gear_template.currentIndexChanged.connect(
+            self._update_template_options
         )
 
-        self.ui.cbo_script_template.setCurrentIndex(0)
-        self._update_script_options()
+        self.ui.cbo_gear_template.setCurrentIndex(0)
+        self._update_template_options()
 
-        self.ui.btn_Imp_Temp.clicked.connect(self.import_script_template)
+        self.ui.btn_Imp_Temp.clicked.connect(self.import_gear_template)
 
-    def import_script_template(self):
+    def import_gear_template(self):
         """
-        Import a script template from a local directory.
+        Import a gear template from a local directory.
         """
         directory = str(
             QFileDialog.getExistingDirectory(
@@ -98,43 +100,34 @@ class Script_Management:
         gear_library_template_dir.mkdir(parents=True, exist_ok=True)
         gear_library_template_dir /= "gear_template_directives.json"
         gear_library_template_dir.write_text(json.dumps(template_directives))
-        self.init_script_templates()
+        self.init_gear_templates()
 
-    def init_script_templates(self):
+    def init_gear_templates(self):
         """
-        Initialize script template combo from script_library sub-directories.
+        Initialize gear template combo from gear_library sub-directories.
 
         Only valid templates are shown.
         """
-        # TODO: Add directory to look in.  There should be a "user"-based configuration
-        # directory to store the "full" path to a downloaded/cloned template.
-        # This would allow refreshing the template from a source without having to dig
-        # into the guts of the gearbuilder.
-
-        # TODO: Load ~/.gearbuilder/gear_library/<template_name>/gear_template_directives.json
-        #       get script directory from there.
-        #       update from the <template_dir>/gear_template_directives.json in case
-        #       the template has been updated.
-        #       If the <template_dir>...cannot be found we must find or remove the template.
-        default_script_templates = []
-        script_dirs = glob.glob(str(self.main_window.root_dir / "script_library/*"))
+        self.ui.cbo_gear_template.clear()
+        default_gear_templates = []
+        template_dirs = glob.glob(str(self.main_window.root_dir / "gear_library/*"))
 
         # check for imported gear templates
         gear_library = Path(os.path.expanduser("~") + "/.gearbuilder/gear_library/")
         if gear_library.exists():
-            gear_library_script_dirs = glob.glob(str(gear_library / "*"))
-            script_dirs.extend(gear_library_script_dirs)
+            gear_library_template_dirs = glob.glob(str(gear_library / "*"))
+            template_dirs.extend(gear_library_template_dirs)
 
-        for script_dir in script_dirs:
-            script_dir = Path(script_dir)
-            if script_dir.is_dir():
-                directive_path = script_dir / "gear_template_directives.json"
+        for template_dir in template_dirs:
+            template_dir = Path(template_dir)
+            if template_dir.is_dir():
+                directive_path = template_dir / "gear_template_directives.json"
                 if directive_path.exists():
                     template_directive = json.load(
                         open(directive_path, "r"), object_pairs_hook=OrderedDict,
                     )
                     # if this template is in the user gear library
-                    if gear_library in script_dir.parents:
+                    if gear_library in template_dir.parents:
                         base_dir = Path(template_directive["base_dir"])
                         # if the origin of template exists
                         if base_dir.exists():
@@ -152,20 +145,20 @@ class Script_Management:
                                 )
                         else:
                             # if the origin of the template does not exist, remove it
-                            shutil.rmtree(script_dir)
+                            shutil.rmtree(template_dir)
                             continue
 
-                    # TODO: Add script-manifest validator....
-                    default_script_templates.append(template_directive)
+                    # TODO: Add template-manifest validator....
+                    default_gear_templates.append(template_directive)
 
-        self.ui.cbo_script_template.clear()
-        # Set the script template data
-        for template in default_script_templates:
-            self.ui.cbo_script_template.addItem(
+        self.ui.cbo_gear_template.clear()
+        # Set the gear template data
+        for template in default_gear_templates:
+            self.ui.cbo_gear_template.addItem(
                 template["template_description"], userData=template
             )
 
-    def init_script_options(self):
+    def init_template_options(self):
         """
         Initialize script options ScrollArea
         """
@@ -180,7 +173,7 @@ class Script_Management:
         self.ui.scrOptions.setWidgetResizable(True)
         self.ui.scrOptions.setWidget(self.widget)
 
-    def _update_script_options(self):
+    def _update_template_options(self):
         """
         Update subform script options on update of named script-template
         """
@@ -188,15 +181,25 @@ class Script_Management:
         while self.ui.fbox.rowCount() > 0:
             self.ui.fbox.removeRow(0)
 
-        # iterate through tags of current script_template
-        data = self.ui.cbo_script_template.currentData()
+        # iterate through tags of current gear_template
+        data = self.ui.cbo_gear_template.currentData()
 
         self.base_dir = Path(data["base_dir"])
-        if (self.base_dir / ".template.gear.json").exists():
-            self.main_window.gear_def.clear()
-            with open(self.base_dir / ".template.gear.json", "r") as fp:
-                self.main_window.gear_def.update(json.load(fp))
-            self.main_window.menus.update_forms_from_gear_def()
+        if (self.base_dir / ".template.gear.json").exists() and self.reload_template:
+            qm = QMessageBox()
+
+            ret = qm.question(
+                self.main_window,
+                "",
+                "Would you like to load default values for this template?",
+                qm.Yes | qm.No,
+            )
+
+            if ret == qm.Yes:
+                self.main_window.gear_def.clear()
+                with open(self.base_dir / ".template.gear.json", "r") as fp:
+                    self.main_window.gear_def.update(json.load(fp))
+                self.main_window.menus.update_forms_from_gear_def()
 
         for k, v in data["tags"].items():
             Label = QLabel(k + ":")
@@ -209,49 +212,51 @@ class Script_Management:
             object.setObjectName(k)
             self.ui.fbox.addRow(Label, object)
 
-    def _update_form_from_script_def(self):
+    def _update_form_from_template_def(self):
         """
-        Select and populate the template-specific form values from the script_def.
+        Select and populate the template-specific form values from the template_def.
         """
-        for index in range(self.ui.cbo_script_template.count()):
+        for index in range(self.ui.cbo_gear_template.count()):
             if (
-                self.ui.cbo_script_template.itemData(index)["template_name"]
-                == self.script_def["template_name"]
-                and index != self.ui.cbo_script_template.currentIndex()
+                self.ui.cbo_gear_template.itemData(index)["template_name"]
+                == self.template_def["template_name"]
+                and index != self.ui.cbo_gear_template.currentIndex()
             ):
-                self.ui.cbo_script_template.setCurrentIndex(index)
-                self._update_script_options()
+                self.reload_template = False
+                self.ui.cbo_gear_template.setCurrentIndex(index)
+                self.reload_template = True
+                # self._update_template_options(reload_template)
                 break
 
         for i in range(self.ui.fbox.rowCount()):
             item = self.ui.fbox.itemAt(i * 2 + 1).widget()
             if isinstance(item, QLineEdit):
-                if self.script_def.get(item.objectName()):
-                    item.setText(self.script_def[item.objectName()])
+                if self.template_def.get(item.objectName()):
+                    item.setText(self.template_def[item.objectName()])
             elif isinstance(item, QCheckBox):
-                if self.script_def.get(item.objectName()):
-                    item.setChecked(self.script_def[item.objectName()])
+                if self.template_def.get(item.objectName()):
+                    item.setChecked(self.template_def[item.objectName()])
 
-    def _update_script_def_from_form(self):
+    def _update_template_def_from_form(self):
         """
-        Clear and repopulate script_def from template-specific form values.
+        Clear and repopulate template_def from template-specific form values.
         """
         # unlike the manifest and dockerfile definitions, we need to clear the script
         # definition and repopulate.
-        self.script_def.clear()
+        self.template_def.clear()
 
-        script_def = {}
+        template_def = {}
 
-        data = self.ui.cbo_script_template.currentData()
-        script_def["template_name"] = data["template_name"]
+        data = self.ui.cbo_gear_template.currentData()
+        template_def["template_name"] = data["template_name"]
         for i in range(self.ui.fbox.rowCount()):
             item = self.ui.fbox.itemAt(i * 2 + 1).widget()
             if isinstance(item, QLineEdit):
-                script_def[item.objectName()] = item.text()
+                template_def[item.objectName()] = item.text()
             elif isinstance(item, QCheckBox):
-                script_def[item.objectName()] = item.isChecked()
+                template_def[item.objectName()] = item.isChecked()
 
-        self.script_def.update(script_def)
+        self.template_def.update(template_def)
 
     def save(self, directory):
         """
@@ -261,17 +266,17 @@ class Script_Management:
             directory (str): Path to output directory.
         """
 
-        self._update_script_def_from_form()
+        self._update_template_def_from_form()
 
-        cbo_script_data = self.ui.cbo_script_template.currentData()
+        cbo_template_data = self.ui.cbo_gear_template.currentData()
 
-        for fl in cbo_script_data["templates"]:
+        for fl in cbo_template_data["templates"]:
             # Mustache Render
-            script_template = (
-                self.main_window.root_dir / cbo_script_data["base_dir"] / fl
+            gear_template = (
+                self.main_window.root_dir / cbo_template_data["base_dir"] / fl
             )
 
-            if script_template.exists():
+            if gear_template.exists():
                 output_filename = Path(directory) / fl.replace(".mu", "").replace(
                     ".mustache", ""
                 )
@@ -279,7 +284,7 @@ class Script_Management:
                 renderer = pystache.Renderer()
 
                 template_output = renderer.render_path(
-                    script_template, self.main_window.gear_def
+                    gear_template, self.main_window.gear_def
                 )
 
                 # Ensure the path to write rendered template exists
@@ -293,8 +298,8 @@ class Script_Management:
                 # TODO: This should be considered an invalid script-template.
                 print("template does not exist.")
 
-        for fl in cbo_script_data["copy"]:
-            source_path = self.main_window.root_dir / cbo_script_data["base_dir"] / fl
+        for fl in cbo_template_data["copy"]:
+            source_path = self.main_window.root_dir / cbo_template_data["base_dir"] / fl
             destination_path = Path(directory) / fl
             if source_path.exists():
                 if source_path.is_dir():
@@ -434,19 +439,19 @@ class Script_Management:
             directory (str): Path to output directory.
         """
         self.main_window.dockerfile._update_dockerfile_def_from_form()
-        self._update_script_def_from_form()
+        self._update_template_def_from_form()
 
-        cbo_script_data = self.ui.cbo_script_template.currentData()
-        if cbo_script_data["base_dir"].startswith("/"):
-            self.base_dir = Path(cbo_script_data["base_dir"])
+        cbo_template_data = self.ui.cbo_gear_template.currentData()
+        if cbo_template_data["base_dir"].startswith("/"):
+            self.base_dir = Path(cbo_template_data["base_dir"])
         else:
-            self.base_dir = self.main_window.root_dir / cbo_script_data["base_dir"]
+            self.base_dir = self.main_window.root_dir / cbo_template_data["base_dir"]
         gear_def = copy.deepcopy(self.main_window.gear_def)
         self._prep_gear_def(gear_def)
-        self._render_templates(gear_def, cbo_script_data, Path(directory))
-        self._copy_files(cbo_script_data, Path(directory))
-        if "README.md.mu" not in cbo_script_data["templates"]:
+        self._render_templates(gear_def, cbo_template_data, Path(directory))
+        self._copy_files(cbo_template_data, Path(directory))
+        if "README.md.mu" not in cbo_template_data["templates"]:
             self.main_window.manifest.save_draft_readme(Path(directory))
-        if "Dockerfile.mu" not in cbo_script_data["templates"]:
+        if "Dockerfile.mu" not in cbo_template_data["templates"]:
             self.main_window.dockerfile.save(Path(directory))
 

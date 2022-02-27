@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tb_manifest">
      <attribute name="title">
@@ -944,7 +944,7 @@
      <attribute name="title">
       <string>Template Management</string>
      </attribute>
-     <widget class="QComboBox" name="cbo_script_template">
+     <widget class="QComboBox" name="cbo_gear_template">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1132,7 +1132,7 @@
   <tabstop>tblENV</tabstop>
   <tabstop>btn_ENV_add</tabstop>
   <tabstop>btn_ENV_del</tabstop>
-  <tabstop>cbo_script_template</tabstop>
+  <tabstop>cbo_gear_template</tabstop>
   <tabstop>btn_export_gear</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
