@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tb_manifest">
      <attribute name="title">
@@ -942,14 +942,14 @@
     </widget>
     <widget class="QWidget" name="tb_scripts">
      <attribute name="title">
-      <string>Script Management</string>
+      <string>Template Management</string>
      </attribute>
-     <widget class="QComboBox" name="cbo_script_template">
+     <widget class="QComboBox" name="cbo_gear_template">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>170</width>
+        <width>281</width>
         <height>26</height>
        </rect>
       </property>
@@ -964,7 +964,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Script Template:</string>
+       <string>Gear Template:</string>
       </property>
      </widget>
      <widget class="QScrollArea" name="scrOptions">
@@ -1000,11 +1000,31 @@
        </rect>
       </property>
       <property name="text">
-       <string>The text boxes below will substitute for designated text in the specifically templated code. 
- The check boxes will include or exclude specifically designated blocks of code.</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt; Text will be substituted into named template fields
+&lt;li&gt; Checks will enable/disable blocks of code
+&lt;/ul&gt;
+&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_Imp_Temp">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>17</y>
+        <width>221</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="whatsThis">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import a gear template with an unrendered .template directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Import Gear Template</string>
       </property>
      </widget>
     </widget>
@@ -1112,7 +1132,7 @@
   <tabstop>tblENV</tabstop>
   <tabstop>btn_ENV_add</tabstop>
   <tabstop>btn_ENV_del</tabstop>
-  <tabstop>cbo_script_template</tabstop>
+  <tabstop>cbo_gear_template</tabstop>
   <tabstop>btn_export_gear</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>

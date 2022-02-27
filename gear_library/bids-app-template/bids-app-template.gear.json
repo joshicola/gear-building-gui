@@ -207,7 +207,7 @@
             }
         ]
     },
-    "script": {
+    "template": {
         "template_name": "Bids App Template",
         "bids_command": "echo",
         "participant": "Subject 1",
