@@ -44,9 +44,19 @@ A fully functional Dockerfile is provided as a template to work from.  Knowledge
 * Provides interface to specify multiple environment values in Dockerfile.
 * Cross-references 'maintainer' value with Manifest section to ensure consistency.
 
-### Gear script and modules
+### Gear Templates
 
 A fully functional "Hello World" Python gear script and utils package is provided as a template to work from. Familiarity with flywheel Python SDK is assumed.
+
+This has an "Import Gear Template" button that allows referencing custom templates outside of the default gear templates listed. These custom templates are assumed to have:
+
+- A top-level directory structure representing a template rendered with the default settings.
+- A `.template` directory with the following:
+    - `gear_template_directives.json`: a file containing the template name and files to be rendered or copied.
+        - this file is copied to `~/.gearbuilder/gear_library/<template_name>/` with the addition of the location `.template` directory. The contents are updated from `.template` whenever it is loaded. This ensures changes to the original template (say from a repository) are maintained in the working copy.
+    - the various files to be rendered or copied.
+    - an optional `.template.gear.json` file with the default values for manifest and docker settings.
+- For a completely functional template see the [skeleton](https://gitlab.com/joshicola/skeleton/-/tree/templating) gear template.
 
 ## Disclosure
 This is a project that has been established and published by me, Joshua Jacobs, independent of Flywheel and its associates. This code is a contribution to the open source community on an "as-is" basis. Any questions about preferred "gear building" strategies should be directed at the representatives of Flywheel.
