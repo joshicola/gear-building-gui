@@ -1,0 +1,24 @@
+{
+    "template_name": "bids-app-template",
+    "template_version": "1.0",
+    "template_description": "Bids App Template",
+    "base_dir": "script_library/bids-app-template/",
+    "tags": {
+        "bids_command": "echo",
+        "participant": "Subject 1",
+        "cpus": false,
+        "memory_available": false,
+        "verbose": false,
+        "needs_freesurfer_license": false,
+        "bids_tree": false,
+        "zip_htmls": false,
+        "save_intermediate_output": false
+    },
+    "templates": [
+        "run.py"
+    ],
+    "copy": [
+        "utils",
+        "LICENSE"
+    ]
+}
