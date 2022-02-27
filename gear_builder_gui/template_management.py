@@ -79,28 +79,37 @@ class Template_Management:
                 ),
             )
         )
+        try:
+            # Look for necessary directory and files
+            template_dir = Path(directory) / ".template"
+            if not template_dir.exists():
+                raise Exception('Missing ".template" directory')
 
-        # Look for necessary directory and files
-        template_dir = Path(directory) / ".template"
-        if not template_dir.exists():
-            raise Exception("Invalid template directory")
+            gear_template_directives = template_dir / "gear_template_directives.json"
+            if not gear_template_directives.exists():
+                raise Exception('Missing ".template/gear_template_directives.json"')
+            template_directives = json.loads(gear_template_directives.read_text())
 
-        gear_template_directives = template_dir / "gear_template_directives.json"
-        if not gear_template_directives.exists():
-            raise Exception("Missing gear_template_directives.json")
-        template_directives = json.loads(gear_template_directives.read_text())
-
-        # make it point to the template_dir
-        template_directives["base_dir"] = str(template_dir)
-        # save a copy of template directives in ~/.gearbuilder/gear_library/
-        gear_library = Path(os.path.expanduser("~") + "/.gearbuilder/gear_library/")
-        if not gear_library.exists():
-            gear_library.mkdir(parents=True)
-        gear_library_template_dir = gear_library / template_directives["template_name"]
-        gear_library_template_dir.mkdir(parents=True, exist_ok=True)
-        gear_library_template_dir /= "gear_template_directives.json"
-        gear_library_template_dir.write_text(json.dumps(template_directives))
-        self.init_gear_templates()
+            # make it point to the template_dir
+            template_directives["base_dir"] = str(template_dir)
+            # save a copy of template directives in ~/.gearbuilder/gear_library/
+            gear_library = Path(os.path.expanduser("~") + "/.gearbuilder/gear_library/")
+            if not gear_library.exists():
+                gear_library.mkdir(parents=True)
+            gear_library_template_dir = (
+                gear_library / template_directives["template_name"]
+            )
+            gear_library_template_dir.mkdir(parents=True, exist_ok=True)
+            gear_library_template_dir /= "gear_template_directives.json"
+            gear_library_template_dir.write_text(json.dumps(template_directives))
+            self.init_gear_templates()
+        except Exception as exc:
+            qm = QMessageBox()
+            qm.warning(
+                self.main_window,
+                "Warning",
+                "Error importing gear template: " + str(exc),
+            )
 
     def init_gear_templates(self):
         """
@@ -144,7 +153,15 @@ class Template_Management:
                                     json.dumps(template_directive)
                                 )
                         else:
-                            # if the origin of the template does not exist, remove it
+                            qm = QMessageBox()
+                            qm.warning(
+                                self.main_window,
+                                "Warning",
+                                (
+                                    "Template files are missing. Removing template."
+                                    "Reinstall to activate."
+                                ),
+                            )
                             shutil.rmtree(template_dir)
                             continue
 
@@ -187,7 +204,6 @@ class Template_Management:
         self.base_dir = Path(data["base_dir"])
         if (self.base_dir / ".template.gear.json").exists() and self.reload_template:
             qm = QMessageBox()
-
             ret = qm.question(
                 self.main_window,
                 "",
@@ -225,7 +241,6 @@ class Template_Management:
                 self.reload_template = False
                 self.ui.cbo_gear_template.setCurrentIndex(index)
                 self.reload_template = True
-                # self._update_template_options(reload_template)
                 break
 
         for i in range(self.ui.fbox.rowCount()):
@@ -382,6 +397,7 @@ class Template_Management:
                 template_file_out = renderer.render(template_file_out, gear_def)
 
             # iterate through directories with wildcard
+            # TODO: recursively iterate through directories
             if "*" in template_file:
                 if not template_file_in:
                     template_file_in = template_file
