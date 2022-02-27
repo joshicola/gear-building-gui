@@ -1,5 +1,7 @@
 {
-    "template_name": "Bids App Template",
+    "template_name": "bids-app-template",
+    "template_version": "1.0",
+    "template_description": "Bids App Template",
     "base_dir": "script_library/bids-app-template/",
     "tags": {
         "bids_command": "echo",

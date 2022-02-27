@@ -57,11 +57,13 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
             )
         )
         if op.exists(directory):
-            self.manifest.save(directory)
-            self.manifest.save_draft_readme(directory)
-            self.dockerfile.save(directory)
-            self.scripts.save(directory)
-            self.save_gear_def(directory)
+            self.manifest._update_manifest_from_form()
+            gear_path = Path(directory) / self.gear_def["manifest"]["name"]
+            gear_path.mkdir(parents=True, exist_ok=True)
+            self.manifest.save(gear_path)
+
+            self.scripts.render_and_copy_templates(gear_path)
+            self.save_gear_def(gear_path)
 
 
 if __name__ == "__main__":
