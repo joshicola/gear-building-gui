@@ -339,6 +339,10 @@ class Template_Management:
             gear_def (dict): Dictionary of manifest, docker, and other attributes.
         """
         local_manifest = gear_def["manifest"]
+
+        # replace "-" with "_" in manifest.name
+        local_manifest["name_underscored"] = local_manifest["name"].replace("-", "_")
+
         # Check for non-zero number of inputs
         if len(local_manifest["inputs"].keys()) > 0:
             local_manifest["has_inputs"] = True
@@ -398,6 +402,8 @@ class Template_Management:
 
             # iterate through directories with wildcard
             # TODO: recursively iterate through directories
+            # if Path(template_file_in).is_dir():
+            # for root, dirs, files in os.walk(template_file):
             if "*" in template_file:
                 if not template_file_in:
                     template_file_in = template_file
