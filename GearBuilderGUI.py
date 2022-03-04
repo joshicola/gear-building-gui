@@ -10,7 +10,7 @@ from PyQt5 import QtGui, QtWidgets, uic
 from gear_builder_gui.dockerfile import Dockerfile
 from gear_builder_gui.manifest import Manifest
 from gear_builder_gui.menus import Gear_Builder_Menus
-from gear_builder_gui.template_management import Template_Management
+from gear_builder_gui.template_management import TemplateManagement
 
 
 class GearBuilderGUI(QtWidgets.QMainWindow):
@@ -38,7 +38,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
         # individual development
         self.manifest = Manifest(self)
         self.dockerfile = Dockerfile(self)
-        self.templates = Template_Management(self)
+        self.templates = TemplateManagement(self)
 
         self.menus = Gear_Builder_Menus(self)
 
