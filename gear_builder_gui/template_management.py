@@ -7,8 +7,8 @@ from collections import OrderedDict
 from pathlib import Path
 
 import pystache
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
     QCheckBox,
     QFileDialog,
     QFormLayout,
@@ -185,8 +185,12 @@ class TemplateManagement:
         self.widget.setLayout(self.ui.fbox)
 
         # Scroll Area Properties
-        self.ui.scrOptions.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.ui.scrOptions.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.scrOptions.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn
+        )
+        self.ui.scrOptions.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         self.ui.scrOptions.setWidgetResizable(True)
         self.ui.scrOptions.setWidget(self.widget)
 
@@ -208,10 +212,10 @@ class TemplateManagement:
                 self.main_window,
                 "",
                 "Would you like to load default values for this template?",
-                qm.Yes | qm.No,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             )
 
-            if ret == qm.Yes:
+            if ret == QMessageBox.StandardButton.Yes:
                 self.main_window.gear_def.clear()
                 with open(self.base_dir / ".template.gear.json", "r") as fp:
                     self.main_window.gear_def.update(json.load(fp))

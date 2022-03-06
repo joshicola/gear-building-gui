@@ -5,7 +5,7 @@ import os.path as op
 import sys
 from pathlib import Path
 
-from PyQt5 import QtGui, QtWidgets, uic
+from PyQt6 import QtGui, QtWidgets, uic
 
 from gear_builder_gui.dockerfile import Dockerfile
 from gear_builder_gui.manifest import Manifest
@@ -69,7 +69,7 @@ class GearBuilderGUI(QtWidgets.QMainWindow):
 if __name__ == "__main__":
 
     source_dir = Path(os.path.dirname(os.path.realpath(__file__)))
-    app = QtWidgets.QApplication([])
+    app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(
         QtGui.QIcon(str(source_dir / "gear_builder_gui/resources/flywheel.png"))
     )

@@ -1,7 +1,7 @@
 import os
 import os.path as op
 
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 
 # from .config import Ui_dlg_config
 
