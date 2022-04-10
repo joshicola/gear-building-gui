@@ -8,7 +8,7 @@ Written in PyQt, this cross-platform graphical user interface eases the pain and
 * A draft of the gear's README.md file
     - With details filled in from the manifest.
 * A minimal, yet fully functional, Dockerfile
-    - With appropriately asigned apt and pip packages
+    - With appropriately assigned apt and pip packages
     - Assigning environment variables
 * A minimal, yet fully functional, script/package/module structure
     - Manually customize for specific application
