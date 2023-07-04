@@ -7,8 +7,8 @@ from collections import OrderedDict
 from pathlib import Path
 
 import pystache
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
     QCheckBox,
     QFileDialog,
     QFormLayout,
@@ -18,7 +18,6 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-# TODO: This should be named "Gear Template Management"
 """
 Provide the base run.py and utils package.
 Creating build/validate/execute functional modules around specific command-line
@@ -34,7 +33,7 @@ notify on pep8 violations(??)
 """
 
 
-class Template_Management:
+class TemplateManagement:
     """
     Class for template management.
     """
@@ -48,6 +47,7 @@ class Template_Management:
         """
         self.main_window = main_window
         self.ui = main_window.ui
+        self.base_dir = None
 
         self.template_def = main_window.gear_def["template"]
         self.reload_template = True
@@ -79,28 +79,37 @@ class Template_Management:
                 ),
             )
         )
+        try:
+            # Look for necessary directory and files
+            template_dir = Path(directory) / ".template"
+            if not template_dir.exists():
+                raise Exception('Missing ".template" directory')
 
-        # Look for necessary directory and files
-        template_dir = Path(directory) / ".template"
-        if not template_dir.exists():
-            raise Exception("Invalid template directory")
+            gear_template_directives = template_dir / "gear_template_directives.json"
+            if not gear_template_directives.exists():
+                raise Exception('Missing ".template/gear_template_directives.json"')
+            template_directives = json.loads(gear_template_directives.read_text())
 
-        gear_template_directives = template_dir / "gear_template_directives.json"
-        if not gear_template_directives.exists():
-            raise Exception("Missing gear_template_directives.json")
-        template_directives = json.loads(gear_template_directives.read_text())
-
-        # make it point to the template_dir
-        template_directives["base_dir"] = str(template_dir)
-        # save a copy of template directives in ~/.gearbuilder/gear_library/
-        gear_library = Path(os.path.expanduser("~") + "/.gearbuilder/gear_library/")
-        if not gear_library.exists():
-            gear_library.mkdir(parents=True)
-        gear_library_template_dir = gear_library / template_directives["template_name"]
-        gear_library_template_dir.mkdir(parents=True, exist_ok=True)
-        gear_library_template_dir /= "gear_template_directives.json"
-        gear_library_template_dir.write_text(json.dumps(template_directives))
-        self.init_gear_templates()
+            # make it point to the template_dir
+            template_directives["base_dir"] = str(template_dir)
+            # save a copy of template directives in ~/.gearbuilder/gear_library/
+            gear_library = Path(os.path.expanduser("~") + "/.gearbuilder/gear_library/")
+            if not gear_library.exists():
+                gear_library.mkdir(parents=True)
+            gear_library_template_dir = (
+                gear_library / template_directives["template_name"]
+            )
+            gear_library_template_dir.mkdir(parents=True, exist_ok=True)
+            gear_library_template_dir /= "gear_template_directives.json"
+            gear_library_template_dir.write_text(json.dumps(template_directives))
+            self.init_gear_templates()
+        except Exception as exc:
+            qm = QMessageBox()
+            qm.warning(
+                self.main_window,
+                "Warning",
+                "Error importing gear template: " + str(exc),
+            )
 
     def init_gear_templates(self):
         """
@@ -144,7 +153,15 @@ class Template_Management:
                                     json.dumps(template_directive)
                                 )
                         else:
-                            # if the origin of the template does not exist, remove it
+                            qm = QMessageBox()
+                            qm.warning(
+                                self.main_window,
+                                "Warning",
+                                (
+                                    "Template files are missing. Removing template."
+                                    "Reinstall to activate."
+                                ),
+                            )
                             shutil.rmtree(template_dir)
                             continue
 
@@ -168,8 +185,12 @@ class Template_Management:
         self.widget.setLayout(self.ui.fbox)
 
         # Scroll Area Properties
-        self.ui.scrOptions.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.ui.scrOptions.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.ui.scrOptions.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn
+        )
+        self.ui.scrOptions.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         self.ui.scrOptions.setWidgetResizable(True)
         self.ui.scrOptions.setWidget(self.widget)
 
@@ -187,15 +208,14 @@ class Template_Management:
         self.base_dir = Path(data["base_dir"])
         if (self.base_dir / ".template.gear.json").exists() and self.reload_template:
             qm = QMessageBox()
-
             ret = qm.question(
                 self.main_window,
                 "",
                 "Would you like to load default values for this template?",
-                qm.Yes | qm.No,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             )
 
-            if ret == qm.Yes:
+            if ret == QMessageBox.StandardButton.Yes:
                 self.main_window.gear_def.clear()
                 with open(self.base_dir / ".template.gear.json", "r") as fp:
                     self.main_window.gear_def.update(json.load(fp))
@@ -204,13 +224,13 @@ class Template_Management:
         for k, v in data["tags"].items():
             Label = QLabel(k + ":")
             if isinstance(v, bool):
-                object = QCheckBox()
-                object.setChecked(v)
+                gui_object = QCheckBox()
+                gui_object.setChecked(v)
             else:
-                object = QLineEdit()
-                object.setText(v)
-            object.setObjectName(k)
-            self.ui.fbox.addRow(Label, object)
+                gui_object = QLineEdit()
+                gui_object.setText(v)
+            gui_object.setObjectName(k)
+            self.ui.fbox.addRow(Label, gui_object)
 
     def _update_form_from_template_def(self):
         """
@@ -225,7 +245,6 @@ class Template_Management:
                 self.reload_template = False
                 self.ui.cbo_gear_template.setCurrentIndex(index)
                 self.reload_template = True
-                # self._update_template_options(reload_template)
                 break
 
         for i in range(self.ui.fbox.rowCount()):
@@ -324,6 +343,10 @@ class Template_Management:
             gear_def (dict): Dictionary of manifest, docker, and other attributes.
         """
         local_manifest = gear_def["manifest"]
+
+        # replace "-" with "_" in manifest.name
+        local_manifest["name_underscored"] = local_manifest["name"].replace("-", "_")
+
         # Check for non-zero number of inputs
         if len(local_manifest["inputs"].keys()) > 0:
             local_manifest["has_inputs"] = True
@@ -369,47 +392,50 @@ class Template_Management:
         """
         renderer = pystache.Renderer()
         # Iterate through the templates and render them
-        for template_file in gear_directives["templates"]:
-            # there may be multiple templates for a template directive
-            # this is where we initialize these flags
-            template_files = None
-            template_file_in, template_file_out = None, None
+        for template_path in gear_directives["templates"]:
             # ":" is the delimiter between "source" and "destination"
-            if ":" in template_file:
-                template_file_in, template_file_out = template_file.split(":")
+            if ":" in template_path:
+                template_path_in, template_path_out = template_path.split(":")
                 # the "destination" may be a mustache template to render to
                 # a specified path
-                template_file_out = renderer.render(template_file_out, gear_def)
+                template_path_out = renderer.render(template_path_out, gear_def)
 
-            # iterate through directories with wildcard
-            if "*" in template_file:
-                if not template_file_in:
-                    template_file_in = template_file
-                    template_file_out = template_file_in.replace("*", "")
-                template_files = glob.glob(str(self.base_dir / template_file_in))
+                template_path_in = self.base_dir / template_path_in
+                template_path_out = Path(output_dir) / template_path_out
+            else:
+                template_path_in = self.base_dir / template_path
+                template_path_out = Path(output_dir) / template_path
 
-            # iterating through the wildcards
-            if template_files:
-                for template_fl in template_files:
-                    with open(self.base_dir / template_fl, "r") as fp:
-                        template = fp.read()
-                    rendered_template = renderer.render(template, gear_def)
-                    if template_file_out:
-                        output_path = output_dir / template_file_out
-                        output_fl = output_path / Path(template_fl).name
-                    else:
-                        output_fl = Path(output_dir) / template_fl
+            # recurse through the directory and render all as templates
+            if template_path_in.is_dir():
+                for root, _, files in os.walk(template_path_in):
+                    for file in files:
+                        # Read, Render, and Write the file
+                        file_path = Path(root) / file
+                        rendered_template = renderer.render(
+                            file_path.read_text(), gear_def
+                        )
 
-                    output_path.mkdir(parents=True, exist_ok=True)
-                    with open(output_fl, "w") as fp:
-                        fp.write(rendered_template)
+                        rendered_path = (
+                            Path(
+                                root.replace(
+                                    str(template_path_in), str(template_path_out)
+                                )
+                            )
+                            / file
+                        )
+                        rendered_path.parent.mkdir(parents=True, exist_ok=True)
+                        rendered_path.write_text(rendered_template)
 
             # or rendering the file-level template
             else:
-                with open(self.base_dir / template_file, "r") as fp:
+                with open(template_path_in, "r") as fp:
                     template = fp.read()
+
                 rendered_template = renderer.render(template, gear_def)
-                with open(output_dir / template_file.replace(".mu", ""), "w") as fp:
+
+                template_path_out.parent.mkdir(parents=True, exist_ok=True)
+                with open(str(template_path_out).replace(".mu", ""), "w") as fp:
                     fp.write(rendered_template)
 
     def _copy_files(self, gear_directives, output_dir):
