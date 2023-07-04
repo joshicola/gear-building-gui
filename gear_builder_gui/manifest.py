@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 import pystache
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from gear_builder_gui.config_dialog import config_dialog
 from gear_builder_gui.input_dialog import input_dialog
@@ -226,7 +226,10 @@ class Manifest:
 
         manifest["config"] = config
         # The command
-        manifest["command"] = "/flywheel/v0/run.py"
+        if self.main_window.manifest.manifest.get("command"):
+            manifest["command"] = self.main_window.manifest.manifest.get("command")
+        else:
+            manifest["command"] = "/flywheel/v0/run.py"
 
         # Using an "update" here instead of a total replace preserves items that may
         # have been loaded.
@@ -444,16 +447,16 @@ class Manifest:
                     text_obj.maxLength = gear_spec_item["maxLength"]
 
                 if "pattern" in gear_spec_item.keys():
-                    rx = QtCore.QRegExp(gear_spec_item["pattern"])
-                    val = QtGui.QRegExpValidator(rx, self.main_window)
+                    rx = QtCore.QRegularExpression(gear_spec_item["pattern"])
+                    val = QtGui.QRegularExpressionValidator(rx, self.main_window)
                     text_obj.setValidator(val)
                 elif key == "version":
-                    rx = QtCore.QRegExp(
+                    rx = QtCore.QRegularExpression(
                         "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)"
                         "(?:-_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)"
                         "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
                     )
-                    val = QtGui.QRegExpValidator(rx, self.main_window)
+                    val = QtGui.QRegularExpressionValidator(rx, self.main_window)
                     text_obj.setValidator(val)
 
                 if text_type == QtWidgets.QPlainTextEdit:

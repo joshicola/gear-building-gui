@@ -17,7 +17,7 @@ Written in PyQt, this cross-platform graphical user interface eases the pain and
 
 See notes below for current and proposed functionality.
 
-This project is build in PyQt5, a platform-independent gui framework. Build on any operating system, deploy on every operating system. The PyQt5 framework is available through both both conda and pip installers.
+This project is build in PyQt6, a platform-independent gui framework. Build on any operating system, deploy on every operating system. The PyQt6 framework is available through both both conda and pip installers.
 
 ## Current Functionality
 

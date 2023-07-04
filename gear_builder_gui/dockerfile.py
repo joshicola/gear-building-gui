@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 import pystache
-from PyQt5 import QtWidgets
+from PyQt6 import QtWidgets
 
 
 class Dockerfile:
@@ -23,15 +23,21 @@ class Dockerfile:
         self.ui.btn_APT_add.clicked.connect(self.add_row)
         self.ui.btn_APT_del.clicked.connect(self.del_row)
         # Set the APT table to select row only
-        self.ui.tblAPT.setSelectionBehavior(1)
+        self.ui.tblAPT.setSelectionBehavior(
+            QtWidgets.QTableWidget.SelectionBehavior.SelectRows
+        )
         self.ui.btn_PIP_add.clicked.connect(self.add_row)
         self.ui.btn_PIP_del.clicked.connect(self.del_row)
         # Set the PIP table to select row only
-        self.ui.tblPIP.setSelectionBehavior(1)
+        self.ui.tblPIP.setSelectionBehavior(
+            QtWidgets.QTableWidget.SelectionBehavior.SelectRows
+        )
         self.ui.btn_ENV_add.clicked.connect(self.add_row)
         self.ui.btn_ENV_del.clicked.connect(self.del_row)
         # Set the ENV table to select row only
-        self.ui.tblENV.setSelectionBehavior(1)
+        self.ui.tblENV.setSelectionBehavior(
+            QtWidgets.QTableWidget.SelectionBehavior.SelectRows
+        )
 
         # Set Docker maintainer label to match manifest
         self.ui.txt_maintainer_2.textChanged.connect(self._update_maintainers)
