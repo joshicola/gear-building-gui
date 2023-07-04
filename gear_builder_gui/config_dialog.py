@@ -39,12 +39,12 @@ class config_dialog(QtWidgets.QDialog):
         self.ui.btn_del.clicked.connect(self.del_enum)
         self.ui.txt_name.textChanged.connect(self.changed_name)
         # disable OK button on create.
-        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok)
         btn.setEnabled(False)
         # Create a validation protocol
         self.ui.txt_name.maxLength = 30
-        rx = QtCore.QRegExp("^[a-z0-9\\-\\_]+$")
-        val = QtGui.QRegExpValidator(rx, self)
+        rx = QtCore.QRegularExpression("^[a-z0-9\\-\\_]+$")
+        val = QtGui.QRegularExpressionValidator(rx, self)
         self.ui.txt_name.setValidator(val)
         if cbo_val is not None:
             self.name, self.data = cbo_val
@@ -107,20 +107,20 @@ class config_dialog(QtWidgets.QDialog):
             if obj.currentText() == "integer":
                 if not self.ui.txt_default.text().isdigit():
                     self.ui.txt_default.setText("0")
-                rx = QtCore.QRegExp("^([0-9]+)$")
-                val = QtGui.QRegExpValidator(rx, self)
+                rx = QtCore.QRegularExpression("^([0-9]+)$")
+                val = QtGui.QRegularExpressionValidator(rx, self)
                 text_obj.setValidator(val)
             elif obj.currentText() == "number":
                 try:
                     float(self.ui.txt_default.text())
                 except ValueError:
                     self.ui.txt_default.setText("0.0")
-                rx = QtCore.QRegExp("^([0-9]+)\\.([0-9]+)$")
-                val = QtGui.QRegExpValidator(rx, self)
+                rx = QtCore.QRegularExpression("^([0-9]+)\\.([0-9]+)$")
+                val = QtGui.QRegularExpressionValidator(rx, self)
                 text_obj.setValidator(val)
             else:
-                rx = QtCore.QRegExp(".+")
-                val = QtGui.QRegExpValidator(rx, self)
+                rx = QtCore.QRegularExpression(".+")
+                val = QtGui.QRegularExpressionValidator(rx, self)
                 text_obj.setValidator(val)
 
     def add_enum(self):
@@ -159,7 +159,7 @@ class config_dialog(QtWidgets.QDialog):
         """
         # We will not allow for a config name to be less than 1 character
         txt_name = self.ui.txt_name
-        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok)
         if len(txt_name.text()) < 1:
             btn.setEnabled(False)
         else:
@@ -216,7 +216,7 @@ class config_dialog(QtWidgets.QDialog):
         """
 
         dialog = config_dialog(parent, cbo_val)
-        ret_val = dialog.exec_()
+        ret_val = dialog.exec()
         if ret_val:
             return dialog.cbo_value()
         else:

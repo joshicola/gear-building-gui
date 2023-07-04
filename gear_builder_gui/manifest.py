@@ -226,7 +226,10 @@ class Manifest:
 
         manifest["config"] = config
         # The command
-        manifest["command"] = "/flywheel/v0/run.py"
+        if self.main_window.manifest.manifest.get("command"):
+            manifest["command"] = self.main_window.manifest.manifest.get("command")
+        else:
+            manifest["command"] = "/flywheel/v0/run.py"
 
         # Using an "update" here instead of a total replace preserves items that may
         # have been loaded.

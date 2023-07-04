@@ -28,12 +28,12 @@ class input_dialog(QtWidgets.QDialog):
         self.ui.setupUi(self)
         self.ui.txt_name.textChanged.connect(self.changed_name)
         # disable OK button on create.
-        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok)
         btn.setEnabled(False)
         # Create a validation protocol
         self.ui.txt_name.maxLength = 30
-        rx = QtCore.QRegExp("^[a-z0-9\\-\\_]+$")
-        val = QtGui.QRegExpValidator(rx, self)
+        rx = QtCore.QRegularExpression("^[a-z0-9\\-\\_]+$")
+        val = QtGui.QRegularExpressionValidator(rx, self)
         self.ui.txt_name.setValidator(val)
         if cbo_val is not None:
             name, editD = cbo_val
@@ -77,7 +77,7 @@ class input_dialog(QtWidgets.QDialog):
         """
         # We will not allow for a config name to be less than 1 character
         txt_name = self.ui.txt_name
-        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+        btn = self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok)
         if len(txt_name.text()) < 1:
             btn.setEnabled(False)
         else:
@@ -97,7 +97,7 @@ class input_dialog(QtWidgets.QDialog):
             tuple: Name/data pair
         """
         dialog = input_dialog(parent, cbo_val)
-        ret_val = dialog.exec_()
+        ret_val = dialog.exec()
         if ret_val:
             return dialog.cbo_value()
         else:
